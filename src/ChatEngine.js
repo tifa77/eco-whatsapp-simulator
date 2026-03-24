@@ -177,8 +177,12 @@ export const getFlows = (projectName, goals = [], lang = 'ar') => {
     };
 
     // Deep Integration of Pain Points: Overriding Flows Dynamically
+    // IMPORTANT: Deep-clone each flow's responses before mutating to prevent
+    // cross-call contamination when getFlows() is called more than once.
     Object.keys(baseFlows).forEach(nicheKey => {
         const flow = baseFlows[nicheKey];
+        // Deep copy responses so mutations don't bleed into subsequent calls
+        flow.responses = JSON.parse(JSON.stringify(flow.responses));
 
         // Bugfix: Do NOT artificially push the "Send Location" button into initial greeting array.
         // It should natively be handled ONLY during checkout or deeply within a menu.

@@ -79,6 +79,7 @@ const ChatSimulatorInner = ({ config, onBack, onChangePlatform }) => {
 
     const [isDemoEnded, setIsDemoEnded] = useState(false);
     const [isCatalogSheetOpen, setIsCatalogSheetOpen] = useState(false);
+    const catalogNiches = ['restaurant', 'ecommerce', 'retail', 'services', 'realestate', 'consulting'];
 
     const initialized = useRef(false);
     const messagesEndRef = useRef(null);
@@ -971,7 +972,15 @@ const ChatSimulatorInner = ({ config, onBack, onChangePlatform }) => {
                         </div>
                     </div>
                 </div>
-                <div className={`flex items-center gap-4 ${headerIcons}`}>
+                <div className={`flex items-center gap-3 ${headerIcons}`}>
+                    {catalogNiches.includes(niche) && !isDemoEnded && (
+                        <button
+                            onClick={() => setIsCatalogSheetOpen(true)}
+                            className="flex items-center gap-1.5 bg-cyan-900/40 hover:bg-cyan-700/50 border border-cyan-500/40 text-cyan-300 text-[11px] font-bold px-3 py-1.5 rounded-full transition-all"
+                        >
+                            🛒 {isAr ? 'فتح المنيو' : 'View Catalog'}
+                        </button>
+                    )}
                     <Video size={22} className="cursor-pointer hover:text-cyan-400 transition-colors" />
                     <Phone size={19} className="cursor-pointer hover:text-cyan-400 transition-colors" />
                     {!isInsta && <MoreVertical size={20} className="cursor-pointer hover:text-cyan-400 transition-colors" />}
