@@ -114,14 +114,15 @@ function TypingIndicator({ isAr }) {
 }
 
 // ─── CTA Screen (demo ended) ───────────────────────────────────────────────────
-function CTAScreen({ lang, onRetry }) {
+function CTAScreen({ lang, onRetry, projectName }) {
     const isAr = lang === 'ar';
     const [step, setStep] = useState('main'); // 'main' | 'no'
 
     const openWhatsApp = () => {
+        const pn = projectName || '';
         const msg = isAr
-            ? 'مرحباً، أريد متجر واتساب لنشاطي التجاري 🚀'
-            : 'Hello, I want a WhatsApp store for my business 🚀';
+            ? `مرحباً، أريد متجر واتساب لمشروعي${pn ? ': ' + pn : ''} 🚀`
+            : `Hello, I want a WhatsApp store${pn ? ' for: ' + pn : ''} 🚀`;
         window.open(`https://wa.me/96566305551?text=${encodeURIComponent(msg)}`, '_blank');
     };
 
@@ -552,7 +553,7 @@ const ChatSimulatorInner = ({ config, onBack }) => {
 
     // ─ Narrator bar ─
     const NarratorBar = () => (
-        <div className="absolute bottom-[72px] left-0 right-0 z-[59] pointer-events-none px-2">
+        <div className="absolute bottom-[72px] left-0 right-0 z-[45] pointer-events-none px-2">
             <AnimatePresence>
                 {narratorText && (
                     <motion.div
@@ -643,7 +644,7 @@ const ChatSimulatorInner = ({ config, onBack }) => {
                             animate={{ opacity: 1, y: 0 }}
                             className="mt-4 mb-2"
                         >
-                            <CTAScreen lang={lang} onRetry={handleRetry} />
+                            <CTAScreen lang={lang} onRetry={handleRetry} projectName={projectName} />
                         </motion.div>
                     )}
 
@@ -655,8 +656,8 @@ const ChatSimulatorInner = ({ config, onBack }) => {
 
             {/* Input Bar */}
             <div
-                className="absolute bottom-0 left-0 right-0 z-[58] flex items-center gap-2 px-3 py-2"
-                style={{ background: '#F0F0F0', borderTop: '1px solid rgba(0,0,0,0.08)' }}
+                className="absolute bottom-0 left-0 right-0 flex items-center gap-2 px-3 py-2"
+                style={{ background: '#F0F0F0', borderTop: '1px solid rgba(0,0,0,0.08)', zIndex: 40 }}
             >
                 <button className="text-[#54656F] p-1.5"><Smile size={22} /></button>
                 <form onSubmit={handleSendText} className="flex-1 flex items-center bg-white rounded-full px-4 gap-2 shadow-sm border border-black/5">
