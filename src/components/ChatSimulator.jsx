@@ -135,13 +135,10 @@ function CTAScreen({ lang, onRetry }) {
             >
                 <div className="text-center text-3xl mb-3">⏳</div>
                 <h3 className="text-white font-black text-center text-[15px] mb-2">
-                    {isAr ? 'لا تفوّت هذه الفرصة!' : "Don't miss this chance!"}
+                    {isAr ? 'لا تفوّت — تجربة مجانية + خصم 70% اليوم فقط' : "Don't miss out — Free trial + 70% OFF today only"}
                 </h3>
-                <p className="text-yellow-300 text-center text-[12px] font-bold mb-1">
-                    {isAr ? 'تجربة مجانية + خصم 70% اليوم فقط' : 'Free trial + 70% OFF today only'}
-                </p>
                 <p className="text-slate-400 text-center text-[11px] mb-4">
-                    {isAr ? 'سيُبنى متجرك كاملاً بأسلوبك وهويتك ✨' : 'Your store built your way ✨'}
+                    {isAr ? 'سيُبنى متجرك كاملاً بأسلوبك وهويتك ✨' : 'Your store fully built your way ✨'}
                 </p>
                 <button
                     onClick={openWhatsApp}
@@ -172,8 +169,11 @@ function CTAScreen({ lang, onRetry }) {
                 {[1,2,3,4,5].map(i => <Star key={i} size={14} className="text-yellow-400 fill-yellow-400" />)}
             </div>
             <h3 className="text-white font-black text-center text-[15px] mb-1">
-                {isAr ? '🚀 هل تريد متجر واتساب لنشاطك؟' : '🚀 Want a WhatsApp store for your business?'}
+                {isAr ? '🚀 هل تريد متجر واتساب يبيع بدلاً عنك؟' : '🚀 Want a WhatsApp store that sells for you?'}
             </h3>
+            <p className="text-slate-400 text-center text-[11px] mb-1">
+                {isAr ? 'لا مزيد من الردود اليدوية — الأتمتة تتولى كل شيء' : 'No more manual replies — automation handles everything'}
+            </p>
             <p className="text-cyan-300 text-center text-[11px] mb-3">
                 {isAr ? '✨ سيُبنى متجرك كاملاً بأسلوبك وهويتك' : '✨ Your store will be fully built your way'}
             </p>
@@ -532,9 +532,12 @@ const ChatSimulatorInner = ({ config, onBack }) => {
                     </svg>
                 </button>
             )}
-            <div className="w-9 h-9 rounded-full bg-[#25d366] flex items-center justify-center text-white font-black text-sm shrink-0">
-                {projectName?.charAt(0)?.toUpperCase() || 'م'}
-            </div>
+            <img
+                src="/Logo.png"
+                alt=""
+                className="w-8 h-8 rounded-full object-cover bg-[#25d366] shrink-0"
+                onError={e => { e.target.outerHTML = '<div class="w-8 h-8 rounded-full bg-[#25d366] flex items-center justify-center text-white font-black text-sm shrink-0">' + (projectName?.charAt(0)?.toUpperCase() || 'م') + '</div>'; }}
+            />
             <div className="flex-1 min-w-0">
                 <p className="text-white font-bold text-[13px] truncate">{projectName}</p>
                 <p className="text-green-200 text-[10px]">{isAr ? 'متصل الآن ✓' : 'Online ✓'}</p>
