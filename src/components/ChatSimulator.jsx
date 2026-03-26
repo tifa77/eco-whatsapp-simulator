@@ -17,9 +17,9 @@ class ErrorBoundary extends React.Component {
             return (
                 <div className="w-full h-full flex flex-col items-center justify-center p-6 text-center text-white bg-[#0A0A0A]">
                     <Bot size={48} className="text-red-500 mb-4" />
-                    <h2 className="text-xl font-bold mb-2">خطأ داخلي</h2>
+                    <h2 className="text-xl font-bold mb-2">خطأ داخلي | Internal Error</h2>
                     <button onClick={() => window.location.reload()} className="bg-cyan-600 text-white px-6 py-2 rounded-xl mt-4 font-bold">
-                        إعادة التشغيل
+                        إعادة التشغيل | Restart
                     </button>
                 </div>
             );
@@ -346,6 +346,25 @@ const ChatSimulatorInner = ({ config, onBack }) => {
             return;
         }
 
+        // Location Type choice
+        if (flowStep === 'ask_location_type') {
+            const isDelivery = btn.includes('توصيل') || btn.includes('Deliver');
+            setIsTyping(true);
+            setNarratorText(isAr ? 'يعالج النظام خيار الاستلام 📦' : 'Processing delivery option 📦');
+            
+            setTimeout(() => {
+                const msg = isDelivery
+                    ? (isAr ? "اختر طريقة الدفع 💳" : "Choose payment method 💳")
+                    : (isAr ? "سيكون طلبك جاهز خلال 20 دقيقة ✅\nاختر طريقة الدفع 💳" : "Your order will be ready in 20 mins ✅\nChoose payment method 💳");
+                
+                setMessages(prev => [...prev, { id: Date.now(), text: msg, sender: 'bot', timestamp: new Date() }]);
+                setActiveButtons(isAr ? ['💵 كاش عند الاستلام', '💳 دفع بالبطاقة'] : ['💵 Cash on Delivery', '💳 Pay by Card']);
+                setIsTyping(false);
+                setFlowStep('ask_payment');
+            }, 1000);
+            return;
+        }
+
         // Payment choice
         if (flowStep === 'ask_payment') {
             const isCash = btn.includes('كاش') || btn.includes('Cash');
@@ -356,8 +375,8 @@ const ChatSimulatorInner = ({ config, onBack }) => {
                 setTimeout(() => {
                     const orderNum = generateOrderNum();
                     const msg = isAr
-                        ? `تم تأكيد طلبك ✅\n🧾 رقم الطلب: #${orderNum}\nسيصلك خلال 30-45 دقيقة 🚀`
-                        : `Order confirmed ✅\n🧾 Order #: #${orderNum}\nArrives in 30-45 minutes 🚀`;
+                        ? `تم تأكيد طلبك ✅\n🧾 رقم الطلب: #${orderNum}\nسيصلك قريباً 🚀`
+                        : `Order confirmed ✅\n🧾 Order #: #${orderNum}\nArrives soon 🚀`;
                     setMessages(prev => [...prev, { id: Date.now(), text: msg, sender: 'bot', timestamp: new Date() }]);
                     setIsTyping(false);
                     setNarratorText(isAr ? 'تم إصدار رقم الطلب بنجاح ✅' : 'Order number issued ✅');
@@ -379,8 +398,8 @@ const ChatSimulatorInner = ({ config, onBack }) => {
                         setIsTyping(true);
                         setTimeout(() => {
                             const confirmMsg = isAr
-                                ? `تم استلام الدفع 🎉\nتم تأكيد طلبك برقم #${generateOrderNum()}\nشكراً ${customerName || ''} 😊`
-                                : `Payment received 🎉\nOrder confirmed #${generateOrderNum()}\nThank you ${customerName || ''} 😊`;
+                                ? `تم استلام الدفع 🎉\nتم تأكيد طلبك برقم #${generateOrderNum()}\nشكراً لك 😊`
+                                : `Payment received 🎉\nOrder confirmed #${generateOrderNum()}\nThank you 😊`;
                             setMessages(prev => [...prev, { id: Date.now(), text: confirmMsg, sender: 'bot', timestamp: new Date() }]);
                             setIsTyping(false);
                             setFlowStep('ended');
@@ -418,26 +437,20 @@ const ChatSimulatorInner = ({ config, onBack }) => {
         setIsTyping(true);
         setNarratorText(isAr ? 'النظام يعرض ملخص الطلب ويطلب الاسم 📋' : 'System shows order summary and asks for name 📋');
 
-        // Step 3: Order summary
+        // Step 3: Order summary and Ask Location Type
         setTimeout(() => {
             const summaryMsg = isAr
-                ? `ممتاز! 🛍️ طلبك جاهز\nالإجمالي: ${formattedTotal}`
-                : `Great! 🛍️ Your order is ready\nTotal: ${formattedTotal}`;
+                ? `ممتاز! 🛍️ إجمالي طلبك: ${formattedTotal}\nكيف تريد استلام طلبك؟`
+                : `Great! 🛍️ Your total: ${formattedTotal}\nHow would you like to receive your order?`;
             setMessages(prev => [...prev, { id: Date.now(), text: summaryMsg, sender: 'bot', timestamp: new Date() }]);
-
-            // Step 4: Ask name
-            setTimeout(() => {
-                setIsTyping(true);
-                setTimeout(() => {
-                    setMessages(prev => [...prev, {
-                        id: Date.now(), text: isAr ? 'ما اسمك الكريم؟ ✍️' : "What's your name? ✍️",
-                        sender: 'bot', timestamp: new Date()
-                    }]);
-                    setIsTyping(false);
-                    setFlowStep('ask_name');
-                    setNarratorText(isAr ? 'النظام يطلب اسم العميل (Lead Gen) 📝' : 'System requests customer name (Lead Gen) 📝');
-                }, 800);
-            }, 600);
+            
+            setActiveButtons(isAr
+                ? ['📍 توصيل لموقعي', '🏪 استلام من الفرع']
+                : ['📍 Deliver to My Location', '🏪 Pickup from Branch']
+            );
+            setIsTyping(false);
+            setFlowStep('ask_location_type');
+            setNarratorText(isAr ? 'النظام يطرح خيارات الاستلام 📦' : 'System asks for delivery options 📦');
         }, 1500);
     };
 
@@ -449,42 +462,6 @@ const ChatSimulatorInner = ({ config, onBack }) => {
         setInputText('');
         addUserMsg(text);
         setIsTyping(true);
-
-        if (flowStep === 'ask_name') {
-            const looksLikeName = /[\p{L}]/u.test(text);
-            const name = looksLikeName ? text : '';
-            if (name) setCustomerName(name);
-            setNarratorText(isAr ? 'النظام يحفظ الاسم ويطلب الموقع 📍' : 'System saves name and requests location 📍');
-
-            setTimeout(() => {
-                const nameGreet = name
-                    ? (isAr ? `شكراً ${name}! 😊` : `Thank you ${name}! 😊`)
-                    : (isAr ? 'شكراً! 😊' : 'Thank you! 😊');
-                setMessages(prev => [...prev, { id: Date.now(), text: nameGreet, sender: 'bot', timestamp: new Date() }]);
-
-                setTimeout(() => {
-                    setIsTyping(true);
-                    setTimeout(() => {
-                        setMessages(prev => [...prev, {
-                            id: Date.now(),
-                            text: isAr ? 'أرسل موقعك للتوصيل 📍' : 'Send your location for delivery 📍',
-                            sender: 'bot', timestamp: new Date()
-                        }]);
-                        setIsTyping(false);
-                        setActiveButtons([isAr ? 'إرسال موقعي الحالي 📍' : 'Send My Location 📍']);
-                        setFlowStep('ask_location');
-                    }, 800);
-                }, 500);
-            }, 1200);
-            return;
-        }
-
-        if (flowStep === 'ask_location') {
-            // treat text as location address
-            handleLocationReceived();
-            return;
-        }
-
         // fallback
         setTimeout(() => {
             setMessages(prev => [...prev, {
@@ -499,26 +476,6 @@ const ChatSimulatorInner = ({ config, onBack }) => {
         }, 1000);
     };
 
-    const handleLocationReceived = () => {
-        setActiveButtons([]);
-        setIsTyping(true);
-        setNarratorText(isAr ? 'يستلم النظام الموقع ويطرح خيارات الدفع 💳' : 'System receives location and shows payment options 💳');
-
-        setTimeout(() => {
-            setMessages(prev => [...prev, {
-                id: Date.now(),
-                text: isAr ? 'تم استلام موقعك 👍\nكيف تفضل الدفع؟' : 'Location received 👍\nHow would you like to pay?',
-                sender: 'bot', timestamp: new Date()
-            }]);
-            setIsTyping(false);
-            setActiveButtons([
-                isAr ? 'كاش عند الاستلام 💵' : 'Cash on Delivery 💵',
-                isAr ? 'دفع بالبطاقة 💳' : 'Pay by Card 💳',
-            ]);
-            setFlowStep('ask_payment');
-        }, 1300);
-    };
-
     // Handle location button
     useEffect(() => {
         // If the user taps the location button it goes through handleButtonClick which won't match
@@ -529,7 +486,7 @@ const ChatSimulatorInner = ({ config, onBack }) => {
         if (btn.includes('موقع') || btn.includes('Location') || btn.includes('موقعي') || btn.includes('My Location')) {
             addUserMsg(btn);
             setActiveButtons([]);
-            handleLocationReceived();
+            handleButtonClick(btn); // fallback to location type logic if needed
             return;
         }
         handleButtonClick(btn);

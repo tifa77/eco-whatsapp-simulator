@@ -25,7 +25,10 @@
     background-color: #475569;
 }
 
-@keyframes floatPhone {
-  0%, 100% { transform: perspective(1000px) rotateY(-15deg) rotateX(5deg) translateY(0px); }
-  50% { transform: perspective(1000px) rotateY(-15deg) rotateX(5deg) translateY(-15px); }
+@keyframes waveFloat {
+  0%   { transform: perspective(1200px) rotateY(-12deg) rotateX(4deg) translateY(0px); }
+  25%  { transform: perspective(1200px) rotateY(-14deg) rotateX(6deg) translateY(-8px); }
+  50%  { transform: perspective(1200px) rotateY(-10deg) rotateX(3deg) translateY(-14px); }
+  75%  { transform: perspective(1200px) rotateY(-13deg) rotateX(5deg) translateY(-6px); }
+  100% { transform: perspective(1200px) rotateY(-12deg) rotateX(4deg) translateY(0px); }
 }

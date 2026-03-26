@@ -87,143 +87,196 @@ function Testimonials({ lang }) {
 
 /* ═══════════════════ 3D PHONE ════════════════════════════════════════════════ */
 function Phone3D({ children, isAr }) {
-    const [phoneRotation, setPhoneRotation] = useState({ x: 5, y: -15 });
-    const [isAutoRotating, setIsAutoRotating] = useState(true);
     const [isSpinning, setIsSpinning] = useState(false);
-
-    const handleMouseMove = (e) => {
-        const rect = e.currentTarget.getBoundingClientRect();
-        const x = ((e.clientY - rect.top) / rect.height - 0.5) * 20;
-        const y = ((e.clientX - rect.left) / rect.width - 0.5) * -30;
-        setPhoneRotation({ x, y });
-        setIsAutoRotating(false);
-    };
-
-    const handleMouseLeave = () => {
-        setPhoneRotation({ x: 5, y: -15 });
-        setIsAutoRotating(true);
-    };
+    const [clickCount, setClickCount] = useState(0);
+    const clickTimer = useRef(null);
 
     const handlePhoneClick = () => {
-        if (isSpinning) return;
-        setIsSpinning(true);
-        setTimeout(() => setIsSpinning(false), 1000);
+        setClickCount(prev => {
+            const next = prev + 1;
+            if (next === 2) {
+                // ضغطتان → دوران كامل
+                setIsSpinning(true);
+                setTimeout(() => setIsSpinning(false), 1200);
+                clearTimeout(clickTimer.current);
+                return 0;
+            }
+            // انتظر 400ms للضغطة الثانية
+            clickTimer.current = setTimeout(() => setClickCount(0), 400);
+            return next;
+        });
     };
 
     return (
         <div className="relative w-full flex flex-col items-center justify-center py-2">
-            <div className="relative" onClick={handlePhoneClick}>
-                {/* Green glow behind phone (from prompt) */}
-                <div className="absolute inset-[-25px] rounded-[65px] pointer-events-none"
-                    style={{ background: 'radial-gradient(ellipse, rgba(37,211,102,0.12) 0%, rgba(6,182,212,0.06) 40%, transparent 70%)' }} />
+            <div
+                onClick={handlePhoneClick}
+                className="relative w-[300px] sm:w-[340px] h-[620px] sm:h-[690px]"
+                style={{
+                    transform: isSpinning
+                        ? 'perspective(1200px) rotateY(360deg)'
+                        : 'perspective(1200px) rotateY(-12deg) rotateX(4deg)',
+                    transition: isSpinning
+                        ? 'transform 1.2s cubic-bezier(0.4, 0, 0.2, 1)'
+                        : 'transform 0.3s ease',
+                    animation: isSpinning ? 'none' : 'waveFloat 5s ease-in-out infinite',
+                    transformStyle: 'preserve-3d',
+                    cursor: 'pointer',
+                }}
+            >
+                {/* ─ Front Face ─ */}
+                <div style={{
+                    background: 'linear-gradient(145deg, #f5d078, #c8952a, #f5d078, #a67c2e)',
+                    borderRadius: '54px',
+                    padding: '12px',
+                    boxShadow: `
+                        0 0 0 1px #b8860b,
+                        inset 0 0 0 1px rgba(255,220,100,0.4),
+                        0 30px 80px rgba(198,150,40,0.5),
+                        0 0 60px rgba(245,208,120,0.3)
+                    `,
+                    position: 'absolute', inset: 0,
+                    backfaceVisibility: 'hidden',
+                }}>
+                    {/* الحواف المعدنية الجانبية */}
+                    <div style={{
+                        position: 'absolute', inset: '0',
+                        borderRadius: '54px',
+                        background: 'linear-gradient(90deg, rgba(255,220,80,0.6) 0%, transparent 20%, transparent 80%, rgba(255,220,80,0.6) 100%)',
+                        pointerEvents: 'none'
+                    }}/>
 
-                {/* Reflection */}
-                <div className="absolute -bottom-16 left-[8%] right-[8%] h-[80px] rounded-full pointer-events-none"
-                    style={{ background: 'linear-gradient(180deg, rgba(37,211,102,0.08) 0%, transparent 100%)', filter: 'blur(20px)' }} />
+                    {/* الجزاءة الداخلية السوداء */}
+                    <div style={{
+                        background: '#000',
+                        borderRadius: '46px',
+                        overflow: 'hidden',
+                        position: 'absolute', inset: '12px',
+                    }}>
+                        {/* Dynamic Island — أصغر */}
+                        <div style={{
+                            width: '90px', height: '28px',
+                            background: '#000',
+                            borderRadius: '20px',
+                            margin: '10px auto 0',
+                            position: 'relative', zIndex: 10,
+                            boxShadow: 'inset 0 0 0 1px rgba(255,255,255,0.1)'
+                        }}>
+                            {/* كاميرا صغيرة */}
+                            <div style={{
+                                width: '10px', height: '10px',
+                                borderRadius: '50%',
+                                background: '#1a1a2e',
+                                border: '2px solid #333',
+                                position: 'absolute', right: '14px', top: '50%',
+                                transform: 'translateY(-50%)'
+                            }}/>
+                        </div>
 
-                {/* Phone Frame — realistic iPhone with interactive transform */}
-                <div
-                    onMouseMove={handleMouseMove}
-                    onMouseLeave={handleMouseLeave}
-                    className="relative w-[300px] sm:w-[340px] h-[620px] sm:h-[690px] rounded-[46px] overflow-hidden cursor-pointer"
-                    style={{
-                        background: 'linear-gradient(145deg, #2a2a3e, #1a1a28, #0f0f18)',
-                        border: '6px solid #2a2a3e',
-                        transform: isSpinning
-                            ? 'perspective(1000px) rotateY(360deg)'
-                            : `perspective(1000px) rotateY(${phoneRotation.y}deg) rotateX(${phoneRotation.x}deg)`,
-                        transition: isSpinning ? 'transform 1s ease' : 'transform 0.1s ease',
-                        filter: 'drop-shadow(0 30px 60px rgba(0,200,100,0.4))',
-                        animation: (isAutoRotating && !isSpinning) ? 'floatPhone 4s ease-in-out infinite' : 'none'
-                    }}
-                >
-                    {/* إضاءة glow خضراء حول الهاتف (حسب البرومت) */}
-                    <div className="absolute inset-0 rounded-[40px] pointer-events-none"
-                      style={{ boxShadow: '0 0 60px rgba(37,211,102,0.3), 0 0 120px rgba(37,211,102,0.1)' }}
-                    />
+                        {/* محتوى الشاشة (WhatsApp Simulator) */}
+                        <div className="absolute inset-0 pt-[38px] rounded-[46px] overflow-hidden">
+                            {children}
+                        </div>
 
-                    {/* Left edge highlight (light source) */}
-                    <div className="absolute top-0 left-0 w-[2px] h-full bg-gradient-to-b from-white/[0.15] via-white/[0.06] to-transparent z-[56] pointer-events-none" />
-
-                    {/* Top edge highlight */}
-                    <div className="absolute top-0 left-0 right-0 h-[2px] bg-gradient-to-r from-white/[0.12] via-white/[0.04] to-transparent z-[56] pointer-events-none" />
-
-                    {/* Dynamic Island */}
-                    <div className="absolute top-[10px] left-1/2 -translate-x-1/2 z-[60] flex items-center justify-center gap-2"
-                        style={{ width: '100px', height: '28px', background: '#000000', borderRadius: '16px', boxShadow: 'inset 0 0 3px rgba(0,0,0,0.8)' }}>
-                        <div className="w-[10px] h-[10px] rounded-full bg-[#0a0a12] border border-[#1a1a28]" />
-                        <div className="w-[25px] h-[3px] rounded-full bg-[#0a0a12]" />
+                        {/* Home indicator */}
+                        <div className="absolute bottom-[8px] left-1/2 -translate-x-1/2 w-[110px] h-[4px] bg-white rounded-full z-[60]" />
                     </div>
+                </div>
 
-                    {/* Screen — WhatsApp BG fills the whole screen */}
-                    <div className="absolute inset-0 overflow-hidden rounded-[40px]">
-                        {children}
+                {/* ─ Back Face ─ */}
+                <div style={{
+                    background: 'linear-gradient(145deg, #f5d078, #c8952a, #e8c060)',
+                    borderRadius: '54px',
+                    position: 'absolute', inset: 0,
+                    display: 'flex', flexDirection: 'column',
+                    alignItems: 'center', justifyContent: 'center', gap: '20px',
+                    backfaceVisibility: 'hidden',
+                    transform: 'rotateY(180deg)'
+                }}>
+                    {/* كاميرا خلفية */}
+                    <div style={{
+                        width: '100px', height: '100px',
+                        background: 'linear-gradient(135deg, #1a1a1a, #2a2a2a)',
+                        borderRadius: '28px',
+                        border: '3px solid rgba(255,200,60,0.5)',
+                        display: 'flex', flexWrap: 'wrap',
+                        gap: '6px', padding: '14px',
+                        boxShadow: '0 4px 20px rgba(0,0,0,0.5)',
+                        position: 'absolute', top: '35px', left: '35px'
+                    }}>
+                        {[...Array(3)].map((_, i) => (
+                            <div key={i} style={{
+                                width: '28px', height: '28px',
+                                borderRadius: '50%',
+                                background: 'radial-gradient(circle, #2a2a3a, #111)',
+                                border: '2px solid rgba(255,200,60,0.3)'
+                            }}/>
+                        ))}
                     </div>
-
-                    {/* Home indicator */}
-                    <div className="absolute bottom-[6px] left-1/2 -translate-x-1/2 w-[100px] h-[4px] bg-white/20 rounded-full z-[60]" />
+                    {/* Apple Logo (optional, just using standard Logo here slightly translucent) */}
+                    <img src="/Logo.png" style={{ width: '40px', opacity: 0.6 }} alt="Logo" />
                 </div>
             </div>
 
             {/* Hint text under phone */}
-            <p className="text-slate-500 text-xs mt-3 animate-pulse">
-                {isAr ? '🖱️ حرّك الماوس فوق الهاتف وانقر للدوران' : '🖱️ Hover over the phone and click to spin'}
+            <p className="text-slate-500 text-xs mt-6 animate-pulse font-medium">
+                {isAr ? '👆 اضغط مرتين لرؤية الخلف' : '👆 Double-tap to flip the phone'}
             </p>
         </div>
     );
 }
 
 /* ═══════════════════ PHONE PREVIEW ═══════════════════════════════════════════ */
-function PhonePreview() {
+function PhonePreview({ isAr = true }) {
     return (
-        <div className="w-full h-full flex flex-col" style={{ background: '#ECE5DD' }} dir="rtl">
+        <div className="w-full h-full flex flex-col" style={{ background: '#ECE5DD' }} dir={isAr ? "rtl" : "ltr"}>
             {/* WA header */}
-            <div className="flex items-center gap-2 px-3 py-2.5 mt-[38px]" style={{ background: 'linear-gradient(180deg, #128C7E, #075E54)' }}>
+            <div className={`flex items-center gap-2 px-3 py-2.5 mt-[38px] ${isAr ? '' : 'flex-row'}`} style={{ background: 'linear-gradient(180deg, #128C7E, #075E54)' }}>
                 <img src="/Logo.png" alt="" className="w-8 h-8 rounded-full object-cover bg-[#25d366] border border-white/20"
-                    onError={e => { e.target.outerHTML = '<div class="w-8 h-8 rounded-full bg-[#25d366] flex items-center justify-center text-white text-xs font-black border border-white/20">م</div>'; }} />
-                <div className="flex-1 text-right">
-                    <p className="text-white font-bold text-[12px]">متجر واتساب Demo</p>
-                    <p className="text-green-200/80 text-[9px]">متصل الآن ✓</p>
+                    onError={e => { e.target.outerHTML = `<div class="w-8 h-8 rounded-full bg-[#25d366] flex items-center justify-center text-white text-xs font-black border border-white/20">${isAr ? 'م' : 'S'}</div>`; }} />
+                <div className={`flex-1 ${isAr ? 'text-right' : 'text-left'}`}>
+                    <p className="text-white font-bold text-[12px]">{isAr ? 'متجر واتساب Demo' : 'WhatsApp Store Demo'}</p>
+                    <p className="text-green-200/80 text-[9px]">{isAr ? 'متصل الآن ✓' : 'Online ✓'}</p>
                 </div>
             </div>
             {/* Chat area */}
             <div className="flex flex-col gap-[6px] px-3 py-3 flex-1">
-                <BubbleBot text="أهلاً 👋 كيف نقدر نخدمك اليوم؟" />
-                <div className="flex flex-wrap gap-1.5 justify-end mt-0.5">
-                    {['🛍️ تصفح المنتجات', '🔥 العروض'].map((b,i) => (
+                <BubbleBot text={isAr ? "أهلاً 👋 كيف نقدر نخدمك اليوم؟" : "Hello 👋 How can we help you today?"} isAr={isAr} />
+                <div className={`flex flex-wrap gap-1.5 mt-0.5 ${isAr ? 'justify-end' : 'justify-start'}`}>
+                    {(isAr ? ['🛍️ تصفح المنتجات', '🔥 العروض'] : ['🛍️ Browse Products', '🔥 Offers']).map((b,i) => (
                         <div key={i} className="bg-white border border-[#128C7E]/20 text-[#128C7E] text-[9px] font-bold px-2.5 py-1 rounded-full">{b}</div>
                     ))}
                 </div>
-                <BubbleUser text="تصفح المنتجات 🛍️" />
-                <BubbleBot text="بكل سرور! اختر من منتجاتنا 👇" />
-                <div className="self-start bg-white rounded-2xl rounded-tl-sm px-2 py-2 max-w-[78%] shadow-sm">
+                <BubbleUser text={isAr ? "تصفح المنتجات 🛍️" : "Browse Products 🛍️"} isAr={isAr} />
+                <BubbleBot text={isAr ? "بكل سرور! اختر من منتجاتنا 👇" : "Sure! Choose from our products 👇"} isAr={isAr} />
+                <div className={`bg-white rounded-2xl px-2 py-2 max-w-[78%] shadow-sm ${isAr ? 'self-start rounded-tl-sm' : 'self-start rounded-tr-sm'}`}>
                     <div className="w-full h-[50px] rounded-lg overflow-hidden mb-1 bg-gradient-to-br from-[#128C7E]/20 to-[#25d366]/10 flex items-center justify-center">
                         <ShoppingCart size={16} className="text-[#128C7E]" />
                     </div>
-                    <p className="text-gray-800 text-[9px] font-bold">🛍️ الكاتلوج الذكي</p>
-                    <p className="text-gray-500 text-[8px]">8 منتجات متوفرة</p>
+                    <p className="text-gray-800 text-[9px] font-bold">{isAr ? '🛍️ الكاتلوج الذكي' : '🛍️ Smart Catalog'}</p>
+                    <p className="text-gray-500 text-[8px]">{isAr ? '8 منتجات متوفرة' : '8 products available'}</p>
                 </div>
-                <BubbleUser text="أريد: 2x سماعات + 1x ساعة" />
-                <BubbleBot text="✅ تم استلام طلبك!\nرقم الطلب: #8472" />
+                <BubbleUser text={isAr ? "أريد: 2x سماعات + 1x ساعة" : "I want: 2x Headphones + 1x Watch"} isAr={isAr} />
+                <BubbleBot text={isAr ? "✅ تم استلام طلبك!\nرقم الطلب: #8472" : "✅ Order received!\nOrder #: #8472"} isAr={isAr} />
             </div>
         </div>
     );
 }
 
-function BubbleBot({ text }) {
+function BubbleBot({ text, isAr }) {
     return (
-        <div className="self-start bg-white rounded-2xl rounded-tl-[4px] px-2.5 py-1.5 max-w-[78%] shadow-sm">
+        <div className={`bg-white rounded-2xl px-2.5 py-1.5 max-w-[78%] shadow-sm ${isAr ? 'self-start rounded-tl-[4px]' : 'self-start rounded-tr-[4px]'}`}>
             <p className="text-gray-800 text-[10px] leading-relaxed whitespace-pre-line">{text}</p>
-            <p className="text-gray-400 text-[7px] text-left mt-0.5">10:30 ص</p>
+            <p className={`text-gray-400 text-[7px] mt-0.5 ${isAr ? 'text-left' : 'text-right'}`}>10:30 {isAr ? 'ص' : 'AM'}</p>
         </div>
     );
 }
-function BubbleUser({ text }) {
+function BubbleUser({ text, isAr }) {
     return (
-        <div className="self-end bg-[#DCF8C6] rounded-2xl rounded-tr-[4px] px-2.5 py-1.5 max-w-[65%] shadow-sm">
+        <div className={`bg-[#DCF8C6] rounded-2xl px-2.5 py-1.5 max-w-[65%] shadow-sm ${isAr ? 'self-end rounded-tr-[4px]' : 'self-end rounded-tl-[4px]'}`}>
             <p className="text-gray-800 text-[10px]">{text}</p>
-            <div className="flex items-center justify-end gap-0.5 mt-0.5">
-                <p className="text-gray-500 text-[7px]">10:31 ص</p>
+            <div className={`flex items-center gap-0.5 mt-0.5 ${isAr ? 'justify-end' : 'justify-start'}`}>
+                <p className="text-gray-500 text-[7px]">10:31 {isAr ? 'ص' : 'AM'}</p>
                 <svg width="12" height="7" viewBox="0 0 16 9" fill="#53bdeb"><path d="M15 1L5.5 8 3 5.5M11 1L1.5 8"/></svg>
             </div>
         </div>
@@ -378,7 +431,7 @@ function App() {
                         <motion.div initial={{ opacity: 0, scale: 0.93 }} animate={{ opacity: 1, scale: 1 }} transition={{ delay: 0.3, duration: 0.8 }}
                             className="w-full max-w-md mb-4">
                             <Phone3D isAr={isAr}>
-                                <PhonePreview />
+                                <PhonePreview isAr={isAr} />
                             </Phone3D>
                         </motion.div>
 
