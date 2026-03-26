@@ -24,3 +24,8 @@
 ::-webkit-scrollbar-thumb:hover {
     background-color: #475569;
 }
+
+@keyframes floatPhone {
+  0%, 100% { transform: perspective(1000px) rotateY(-15deg) rotateX(5deg) translateY(0px); }
+  50% { transform: perspective(1000px) rotateY(-15deg) rotateX(5deg) translateY(-15px); }
+}

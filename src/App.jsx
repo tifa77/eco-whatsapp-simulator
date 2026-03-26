@@ -86,15 +86,34 @@ function Testimonials({ lang }) {
 }
 
 /* ═══════════════════ 3D PHONE ════════════════════════════════════════════════ */
-function Phone3D({ children }) {
+function Phone3D({ children, isAr }) {
+    const [phoneRotation, setPhoneRotation] = useState({ x: 5, y: -15 });
+    const [isAutoRotating, setIsAutoRotating] = useState(true);
+    const [isSpinning, setIsSpinning] = useState(false);
+
+    const handleMouseMove = (e) => {
+        const rect = e.currentTarget.getBoundingClientRect();
+        const x = ((e.clientY - rect.top) / rect.height - 0.5) * 20;
+        const y = ((e.clientX - rect.left) / rect.width - 0.5) * -30;
+        setPhoneRotation({ x, y });
+        setIsAutoRotating(false);
+    };
+
+    const handleMouseLeave = () => {
+        setPhoneRotation({ x: 5, y: -15 });
+        setIsAutoRotating(true);
+    };
+
+    const handlePhoneClick = () => {
+        if (isSpinning) return;
+        setIsSpinning(true);
+        setTimeout(() => setIsSpinning(false), 1000);
+    };
+
     return (
-        <div className="relative w-full flex items-center justify-center py-2">
-            <motion.div
-                animate={{ y: [0, -8, 0] }}
-                transition={{ duration: 5, repeat: Infinity, ease: 'easeInOut' }}
-                className="relative"
-            >
-                {/* Green glow behind phone */}
+        <div className="relative w-full flex flex-col items-center justify-center py-2">
+            <div className="relative" onClick={handlePhoneClick}>
+                {/* Green glow behind phone (from prompt) */}
                 <div className="absolute inset-[-25px] rounded-[65px] pointer-events-none"
                     style={{ background: 'radial-gradient(ellipse, rgba(37,211,102,0.12) 0%, rgba(6,182,212,0.06) 40%, transparent 70%)' }} />
 
@@ -102,33 +121,32 @@ function Phone3D({ children }) {
                 <div className="absolute -bottom-16 left-[8%] right-[8%] h-[80px] rounded-full pointer-events-none"
                     style={{ background: 'linear-gradient(180deg, rgba(37,211,102,0.08) 0%, transparent 100%)', filter: 'blur(20px)' }} />
 
-                {/* Shadow */}
-                <div className="absolute -bottom-10 left-1/2 -translate-x-1/2 w-[60%] h-[18px] bg-black/40 blur-xl rounded-full" />
-
-                {/* Phone Frame — realistic iPhone */}
+                {/* Phone Frame — realistic iPhone with interactive transform */}
                 <div
-                    className="relative w-[300px] sm:w-[340px] h-[620px] sm:h-[690px] rounded-[46px] overflow-hidden"
+                    onMouseMove={handleMouseMove}
+                    onMouseLeave={handleMouseLeave}
+                    className="relative w-[300px] sm:w-[340px] h-[620px] sm:h-[690px] rounded-[46px] overflow-hidden cursor-pointer"
                     style={{
                         background: 'linear-gradient(145deg, #2a2a3e, #1a1a28, #0f0f18)',
                         border: '6px solid #2a2a3e',
-                        boxShadow: `
-                            0 50px 100px rgba(0,0,0,0.95),
-                            0 0 80px rgba(37,211,102,0.1),
-                            0 0 0 1px rgba(255,255,255,0.05),
-                            inset 0 1px 0 rgba(255,255,255,0.08),
-                            inset 0 -1px 0 rgba(0,0,0,0.5)
-                        `,
-                        transform: 'perspective(1000px) rotateY(-15deg) rotateX(5deg)',
+                        transform: isSpinning
+                            ? 'perspective(1000px) rotateY(360deg)'
+                            : `perspective(1000px) rotateY(${phoneRotation.y}deg) rotateX(${phoneRotation.x}deg)`,
+                        transition: isSpinning ? 'transform 1s ease' : 'transform 0.1s ease',
+                        filter: 'drop-shadow(0 30px 60px rgba(0,200,100,0.4))',
+                        animation: (isAutoRotating && !isSpinning) ? 'floatPhone 4s ease-in-out infinite' : 'none'
                     }}
                 >
+                    {/* إضاءة glow خضراء حول الهاتف (حسب البرومت) */}
+                    <div className="absolute inset-0 rounded-[40px] pointer-events-none"
+                      style={{ boxShadow: '0 0 60px rgba(37,211,102,0.3), 0 0 120px rgba(37,211,102,0.1)' }}
+                    />
+
                     {/* Left edge highlight (light source) */}
                     <div className="absolute top-0 left-0 w-[2px] h-full bg-gradient-to-b from-white/[0.15] via-white/[0.06] to-transparent z-[56] pointer-events-none" />
 
                     {/* Top edge highlight */}
                     <div className="absolute top-0 left-0 right-0 h-[2px] bg-gradient-to-r from-white/[0.12] via-white/[0.04] to-transparent z-[56] pointer-events-none" />
-
-                    {/* Screen glare */}
-                    <div className="absolute top-0 left-0 w-[45%] h-[35%] bg-gradient-to-br from-white/[0.04] to-transparent z-[51] pointer-events-none rounded-tl-[40px]" />
 
                     {/* Dynamic Island */}
                     <div className="absolute top-[10px] left-1/2 -translate-x-1/2 z-[60] flex items-center justify-center gap-2"
@@ -145,13 +163,12 @@ function Phone3D({ children }) {
                     {/* Home indicator */}
                     <div className="absolute bottom-[6px] left-1/2 -translate-x-1/2 w-[100px] h-[4px] bg-white/20 rounded-full z-[60]" />
                 </div>
+            </div>
 
-                {/* Physical buttons */}
-                <div className="absolute left-[-8px] top-[120px] w-[3px] h-[28px] rounded-l-full bg-[#2a2a3e]" style={{ boxShadow: '1px 0 3px rgba(0,0,0,0.4)' }} />
-                <div className="absolute left-[-8px] top-[160px] w-[3px] h-[50px] rounded-l-full bg-[#2a2a3e]" style={{ boxShadow: '1px 0 3px rgba(0,0,0,0.4)' }} />
-                <div className="absolute left-[-8px] top-[220px] w-[3px] h-[50px] rounded-l-full bg-[#2a2a3e]" style={{ boxShadow: '1px 0 3px rgba(0,0,0,0.4)' }} />
-                <div className="absolute right-[-8px] top-[165px] w-[3px] h-[65px] rounded-r-full bg-[#2a2a3e]" style={{ boxShadow: '-1px 0 3px rgba(0,0,0,0.4)' }} />
-            </motion.div>
+            {/* Hint text under phone */}
+            <p className="text-slate-500 text-xs mt-3 animate-pulse">
+                {isAr ? '🖱️ حرّك الماوس فوق الهاتف وانقر للدوران' : '🖱️ Hover over the phone and click to spin'}
+            </p>
         </div>
     );
 }
@@ -360,7 +377,7 @@ function App() {
                         {/* ─ 3D Phone ─ */}
                         <motion.div initial={{ opacity: 0, scale: 0.93 }} animate={{ opacity: 1, scale: 1 }} transition={{ delay: 0.3, duration: 0.8 }}
                             className="w-full max-w-md mb-4">
-                            <Phone3D>
+                            <Phone3D isAr={isAr}>
                                 <PhonePreview />
                             </Phone3D>
                         </motion.div>
