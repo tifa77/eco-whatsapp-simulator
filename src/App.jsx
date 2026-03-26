@@ -229,29 +229,31 @@ function App() {
     };
 
     const t = isAr ? {
-        headline: 'حوّل واتساب إلى متجر يبيع لك 24/7 — بدون موظفين',
-        sub: 'اعرض منتجاتك، استقبل الطلبات، وأغلق البيع تلقائياً عبر الكاتلوج الذكي',
-        pain1: '⏳ تضيع طلبات بسبب تأخر الرد؟',
-        pain2: '🔁 العملاء يسألون نفس الأسئلة يومياً؟',
-        pain3: '📱 ما عندك طريقة سهلة تعرض منتجاتك؟',
-        solution: 'واتساب يتحول من دردشة… إلى ماكينة مبيعات 🚀',
+        headline: 'زد مبيعاتك 3x — واتساب يبيع بدلاً عنك 🚀',
+        sub: 'عرض منتجاتك، استقبال الطلبات، وتحصيل الدفع — تلقائياً 24/7 🤖',
+        pain1: '💸 تخسر آلاف الدنانير يومياً بسبب ردود بطيئة',
+        pain2: '📉 منافسوك يبيعون وأنت تكتب ردوداً يدوية',
+        pain3: '😴 عملاؤك يطلبون الساعة 2 فجراً — ومن يرد؟',
+        pain4: '🔁 موظفوك يكررون نفس الإجابات كل يوم',
+        solution: '✅ بوت واتساب ذكي يعرض، يقنع، ويغلق الصفقة — بدون موظف',
         nameLabel: 'ما اسم مشروعك؟',
         namePlaceholder: 'مثال: مطعم / متجر / عيادة',
-        btn: '🚀 جرّب المتجر الآن',
+        btn: '👇 شاهد كيف يشتري عميلك الآن — مجاناً',
         loading: 'جارٍ بناء متجرك...',
         counter: 'أكثر من 500+ متجر يستخدم النظام للبيع عبر واتساب',
         trust: '⭐ موثوق من +500 نشاط تجاري',
         ai: '🤖 مدعوم بالذكاء الاصطناعي للرد والإقناع',
     } : {
-        headline: 'Turn WhatsApp Into a Store That Sells 24/7 — No Staff Needed',
-        sub: 'Display products, receive orders, and close sales automatically via smart catalog',
-        pain1: '⏳ Losing orders because of late replies?',
-        pain2: '🔁 Customers asking the same questions daily?',
-        pain3: '📱 No easy way to showcase your products?',
-        solution: 'WhatsApp transforms from chat… to a sales machine 🚀',
+        headline: '3x Your Sales — WhatsApp Sells For You 🚀',
+        sub: 'Showcase products, receive orders, collect payment — automatically 24/7 🤖',
+        pain1: '💸 Losing thousands daily from slow replies',
+        pain2: '📉 Competitors selling while you type manually',
+        pain3: '😴 Customers ordering at 2AM — who answers?',
+        pain4: '🔁 Staff repeating the same answers every day',
+        solution: '✅ Smart WhatsApp bot that showcases, convinces & closes — no staff needed',
         nameLabel: 'What is your project name?',
         namePlaceholder: 'e.g., Restaurant / Store / Clinic',
-        btn: '🚀 Try the Store Now',
+        btn: '👇 See How Your Customer Buys Now — Free',
         loading: 'Building your store...',
         counter: '500+ stores already selling via WhatsApp',
         trust: '⭐ Trusted by 500+ businesses',
@@ -317,11 +319,11 @@ function App() {
 
                         {/* ─ Pain Points ─ */}
                         <motion.div initial={{ opacity: 0, y: 8 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.2 }}
-                            className="text-center mb-2 max-w-md space-y-1">
-                            {[t.pain1, t.pain2, t.pain3].map((p, i) => (
+                            className="text-center mb-4 max-w-md space-y-1.5">
+                            {[t.pain1, t.pain2, t.pain3, t.pain4].map((p, i) => (
                                 <motion.p key={i} initial={{ opacity: 0, x: isAr ? 15 : -15 }} animate={{ opacity: 1, x: 0 }}
                                     transition={{ delay: 0.25 + i * 0.08 }}
-                                    className="text-white/40 text-[13px] leading-relaxed">
+                                    className="text-white/60 text-[13px] sm:text-[14px] leading-relaxed font-semibold">
                                     {p}
                                 </motion.p>
                             ))}
