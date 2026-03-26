@@ -587,7 +587,15 @@ const ChatSimulatorInner = ({ config, onBack }) => {
                 onError={e => { e.target.outerHTML = '<div class="w-8 h-8 rounded-full bg-[#25d366] flex items-center justify-center text-white font-black text-sm shrink-0">' + (projectName?.charAt(0)?.toUpperCase() || 'م') + '</div>'; }}
             />
             <div className="flex-1 min-w-0">
-                <p className="text-white font-bold text-[13px] truncate">{projectName}</p>
+                <div className="flex items-center gap-1">
+                    <h3 className="text-white font-semibold text-[15px] truncate max-w-[150px]">
+                      {projectName}
+                    </h3>
+                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" className="shrink-0 mt-0.5">
+                        <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2Z" fill="#25D366"/>
+                        <path d="M10.0001 14.17L6.41006 10.58L5.00006 12L10.0001 17L19.5001 7.5L18.0901 6.09L10.0001 14.17Z" fill="white"/>
+                    </svg>
+                </div>
                 <p className="text-green-200 text-[10px]">{isAr ? 'متصل الآن ✓' : 'Online ✓'}</p>
             </div>
             <div className="flex items-center gap-3 text-white/80">
