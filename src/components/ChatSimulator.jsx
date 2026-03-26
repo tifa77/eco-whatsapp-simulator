@@ -245,7 +245,7 @@ const ChatSimulatorInner = ({ config, onBack }) => {
 
     const generateOrderNum = () => Math.floor(1000 + Math.random() * 9000).toString();
 
-    // ── Init (Step 1: Welcome + open catalog) ──
+    // ── Init (Step 1: Welcome with 4 buttons) ──
     useEffect(() => {
         if (initialized.current) return;
         initialized.current = true;
@@ -259,15 +259,16 @@ const ChatSimulatorInner = ({ config, onBack }) => {
 
             setTimeout(() => {
                 const greetMsg = isAr
-                    ? `أهلاً! 👋 اكتشف منتجاتنا واطلب بكل سهولة`
-                    : `Hello! 👋 Discover our products and order with ease`;
+                    ? `أهلاً 👋 كيف نقدر نخدمك اليوم؟`
+                    : `Hello 👋 How can we help you today?`;
                 setMessages(prev => [...prev, { id: Date.now(), text: greetMsg, sender: 'bot', timestamp: new Date() }]);
                 setToast('');
 
-                // Small delay then show catalog button
                 setTimeout(() => {
                     setIsTyping(false);
-                    setActiveButtons([isAr ? 'تصفح المنتجات 🛍️' : 'Browse Products 🛍️']);
+                    setActiveButtons(isAr
+                        ? ['🛒 تصفح المنتجات', '🔥 العروض', '📦 تتبع الطلب', '💬 تواصل معنا']
+                        : ['🛒 Browse Products', '🔥 Offers', '📦 Track Order', '💬 Contact Us']);
                     setFlowStep('catalog');
                 }, 800);
             }, 1500);
@@ -279,7 +280,8 @@ const ChatSimulatorInner = ({ config, onBack }) => {
         addUserMsg(btn);
         setActiveButtons([]);
 
-        if (btn.includes('تصفح') || btn.includes('Browse')) {
+        // Products / Browse
+        if (btn.includes('تصفح') || btn.includes('Browse') || btn.includes('Products')) {
             setIsTyping(true);
             setNarratorText(isAr ? 'يفتح النظام الكاتلوج تلقائياً 🛒' : 'System opens catalog automatically 🛒');
             setTimeout(() => {
@@ -289,6 +291,51 @@ const ChatSimulatorInner = ({ config, onBack }) => {
                 }]);
                 setIsTyping(false);
                 setTimeout(() => setIsCatalogOpen(true), 400);
+            }, 1000);
+            return;
+        }
+
+        // Offers
+        if (btn.includes('العروض') || btn.includes('Offers')) {
+            setIsTyping(true);
+            setNarratorText(isAr ? 'عرض العروض الحالية 🔥' : 'Showing current offers 🔥');
+            setTimeout(() => {
+                const msg = isAr
+                    ? '🔥 عروضنا الحالية:\n\n✅ خصم 20% على الإلكترونيات\n✅ اشتري 2 واحصل على الثالث مجاناً\n✅ توصيل مجاني للطلبات فوق 50 د.ك\n\n🛒 تصفح المنتجات للاستفادة من العروض!'
+                    : '🔥 Current offers:\n\n✅ 20% off Electronics\n✅ Buy 2 Get 1 Free\n✅ Free delivery on orders over $50\n\n🛒 Browse products to grab the deals!';
+                setMessages(prev => [...prev, { id: Date.now(), text: msg, sender: 'bot', timestamp: new Date() }]);
+                setIsTyping(false);
+                setActiveButtons([isAr ? '🛒 تصفح المنتجات' : '🛒 Browse Products']);
+            }, 1200);
+            return;
+        }
+
+        // Track Order
+        if (btn.includes('تتبع') || btn.includes('Track')) {
+            setIsTyping(true);
+            setNarratorText(isAr ? 'عرض حالة الطلب 📦' : 'Showing order status 📦');
+            setTimeout(() => {
+                const msg = isAr
+                    ? '📦 آخر طلب لك:\n\nرقم الطلب: #7231\nالحالة: جاري التوصيل 🚚\nالوصول المتوقع: 25 دقيقة\n\nهل تريد طلب جديد؟ 🛒'
+                    : '📦 Your latest order:\n\nOrder #: #7231\nStatus: Out for delivery 🚚\nETA: 25 minutes\n\nWant to place a new order? 🛒';
+                setMessages(prev => [...prev, { id: Date.now(), text: msg, sender: 'bot', timestamp: new Date() }]);
+                setIsTyping(false);
+                setActiveButtons([isAr ? '🛒 تصفح المنتجات' : '🛒 Browse Products']);
+            }, 1200);
+            return;
+        }
+
+        // Contact
+        if (btn.includes('تواصل') || btn.includes('Contact')) {
+            setIsTyping(true);
+            setNarratorText(isAr ? 'تحويل للدعم 💬' : 'Connecting to support 💬');
+            setTimeout(() => {
+                const msg = isAr
+                    ? '💬 فريقنا جاهز لمساعدتك!\n\n📞 هاتف: 96566305551+\n⏰ أوقات العمل: 9 ص - 10 م\n\nأو يمكنك تصفح منتجاتنا مباشرة 👇'
+                    : '💬 Our team is ready to help!\n\n📞 Phone: +96566305551\n⏰ Hours: 9 AM - 10 PM\n\nOr browse our products directly 👇';
+                setMessages(prev => [...prev, { id: Date.now(), text: msg, sender: 'bot', timestamp: new Date() }]);
+                setIsTyping(false);
+                setActiveButtons([isAr ? '🛒 تصفح المنتجات' : '🛒 Browse Products']);
             }, 1000);
             return;
         }
@@ -447,7 +494,7 @@ const ChatSimulatorInner = ({ config, onBack }) => {
             }]);
             setIsTyping(false);
             if (activeButtons.length === 0) {
-                setActiveButtons([isAr ? 'تصفح المنتجات 🛍️' : 'Browse Products 🛍️']);
+                setActiveButtons([isAr ? '🛒 تصفح المنتجات' : '🛒 Browse Products']);
             }
         }, 1000);
     };
