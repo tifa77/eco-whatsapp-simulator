@@ -598,23 +598,7 @@ const ChatSimulatorInner = ({ config, onBack }) => {
         </div>
     );
 
-    // ─ Narrator bar ─
-    const NarratorBar = () => (
-        <div className="absolute bottom-[72px] left-0 right-0 z-[45] pointer-events-none px-2">
-            <AnimatePresence>
-                {narratorText && (
-                    <motion.div
-                        initial={{ opacity: 0, y: 4 }}
-                        animate={{ opacity: 1, y: 0 }}
-                        exit={{ opacity: 0, y: -4 }}
-                        className="bg-[#1a1a2e]/90 backdrop-blur-sm border border-cyan-500/20 rounded-xl px-3 py-2 text-center"
-                    >
-                        <p className="text-cyan-300 text-[10px] font-bold">{narratorText}</p>
-                    </motion.div>
-                )}
-            </AnimatePresence>
-        </div>
-    );
+
 
     return (
         <div className="absolute inset-0 flex flex-col overflow-hidden" dir={isAr ? 'rtl' : 'ltr'}>
@@ -632,12 +616,27 @@ const ChatSimulatorInner = ({ config, onBack }) => {
                     backgroundSize: '20px 20px'
                 }} />
 
-                <div className="relative z-10 px-3 py-4">
-                    {/* "End-to-end encrypted" note */}
-                    <div className="flex items-center justify-center mb-4">
-                        <div className="bg-[#D9F7BE] text-[#075E54] text-[10px] px-3 py-1.5 rounded-xl shadow-sm flex items-center gap-1.5">
+                <div className="relative z-10 px-3 py-4 flex flex-col">
+                    {/* Top Note Container */}
+                    <div className="flex flex-col items-center mb-4 gap-2 mt-2">
+                        {/* "End-to-end encrypted" note */}
+                        <div className="bg-[#D9F7BE] text-[#075E54] text-[10.5px] px-3 py-1.5 rounded-[12px] shadow-[0_1px_1px_rgba(0,0,0,0.05)] flex items-center gap-1.5 font-medium">
                             🔒 {isAr ? 'الرسائل محمية بتشفير طرف إلى طرف' : 'Messages are end-to-end encrypted'}
                         </div>
+
+                        {/* Helper Status Note (Replaces old Narrator Bar) */}
+                        <AnimatePresence>
+                            {narratorText && (
+                                <motion.div
+                                    initial={{ opacity: 0, y: -5, scale: 0.95 }}
+                                    animate={{ opacity: 1, y: 0, scale: 1 }}
+                                    exit={{ opacity: 0, scale: 0.95 }}
+                                    className="bg-[#E1F3FB] text-[#54656F] text-[10.5px] px-3 py-1.5 rounded-[10px] shadow-[0_1px_1px_rgba(0,0,0,0.05)] border border-black/5 text-center leading-relaxed font-semibold max-w-[85%]"
+                                >
+                                    {narratorText}
+                                </motion.div>
+                            )}
+                        </AnimatePresence>
                     </div>
 
                     {messages.map(msg => (
@@ -648,41 +647,26 @@ const ChatSimulatorInner = ({ config, onBack }) => {
                         {isTyping && <TypingIndicator isAr={isAr} />}
                     </AnimatePresence>
 
-                    {/* Action Buttons */}
+                    {/* Action Buttons (Meta WhatsApp Business Style) */}
                     <AnimatePresence>
                         {activeButtons.length > 0 && !isDemoEnded && (
                             <motion.div
-                                initial={{ opacity: 0, y: 8 }}
-                                animate={{ opacity: 1, y: 0 }}
-                                className="flex flex-wrap gap-2 mt-3 justify-center"
+                                initial={{ opacity: 0, scale: 0.95, y: 5 }}
+                                animate={{ opacity: 1, scale: 1, y: 0 }}
+                                className={`flex flex-col w-[85%] sm:max-w-[75%] bg-white rounded-xl overflow-hidden shadow-[0_1px_2px_rgba(0,0,0,0.1)] mb-2 ${isAr ? 'self-start mr-1' : 'self-start ml-1'}`}
                             >
                                 {activeButtons.map((btn, i) => (
-                                    <motion.button
+                                    <button
                                         key={i}
-                                        whileHover={{ scale: 1.03 }}
-                                        whileTap={{ scale: 0.97 }}
                                         onClick={() => handleButtonClickWrapper(btn)}
-                                        className="bg-white text-[#128C7E] font-bold text-[12px] px-4 py-2 rounded-full border border-[#128C7E]/20 shadow-sm hover:bg-[#128C7E]  hover:text-white hover:shadow-md transition-all"
+                                        className={`w-full py-3.5 px-4 text-[#00A884] font-semibold text-[14px] text-center active:bg-gray-50 hover:bg-gray-50 transition-colors flex items-center justify-center gap-2 ${i < activeButtons.length - 1 ? 'border-b border-gray-100' : ''}`}
                                     >
                                         {btn}
-                                    </motion.button>
+                                    </button>
                                 ))}
                             </motion.div>
                         )}
                     </AnimatePresence>
-
-                    {/* Floating Catalog Button inside chat (if catalog-step passed) */}
-                    {(flowStep !== 'welcome' && flowStep !== 'catalog' && !isDemoEnded) && (
-                        <div className="flex justify-center mt-3">
-                            <button
-                                onClick={() => setIsCatalogOpen(true)}
-                                className="flex items-center gap-1.5 bg-[#25d366] text-white text-[11px] font-bold px-4 py-2 rounded-full shadow-md hover:bg-[#1da851] transition-all"
-                            >
-                                <ShoppingCart size={13} />
-                                {isAr ? 'إعادة فتح الكاتلوج 🛍️' : 'Reopen Catalog 🛍️'}
-                            </button>
-                        </div>
-                    )}
 
                     {/* CTA Screen */}
                     {isDemoEnded && (
@@ -699,9 +683,7 @@ const ChatSimulatorInner = ({ config, onBack }) => {
                 </div>
             </div>
 
-            <NarratorBar />
-
-            {/* Input Bar */}
+            {/* No Narrator Bar */}            {/* Input Bar */}
             <div
                 className="absolute bottom-0 left-0 right-0 flex items-center gap-2 px-3 py-2"
                 style={{ background: '#F0F0F0', borderTop: '1px solid rgba(0,0,0,0.08)', zIndex: 40 }}
