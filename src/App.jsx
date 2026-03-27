@@ -32,16 +32,26 @@ function Particles() {
 
 /* ═══════════════════ BRAND MARQUEE ═══════════════════════════════════════════ */
 function BrandMarquee() {
-    const brands = ['FLAVOR HOUSE', 'NICHE STYLE', 'CLOUD STORE', 'URBAN BITES', 'LUXE BEAUTY', 'TECH ZONE', 'PRIME WEAR', 'GLOW UP', 'FRESH MART', 'ELITE SHOP'];
+    const brands = [
+        'LUXE BEAUTY', 'URBAN BITES', 'CLOUD STORE',
+        'NICHE STYLE', 'FLAVOR HOUSE', 'NOVA FASHION',
+        'SWIFT MARKET', 'GOLDEN TOUCH', 'PEAK STORE', 'VELVET CO'
+    ];
     return (
-        <div className="w-full overflow-hidden py-3 relative">
-            <div className="absolute inset-y-0 left-0 w-20 bg-gradient-to-r from-[#0A0A0A] to-transparent z-10" />
-            <div className="absolute inset-y-0 right-0 w-20 bg-gradient-to-l from-[#0A0A0A] to-transparent z-10" />
-            <motion.div className="flex gap-14 whitespace-nowrap"
+        <div style={{ overflow: 'hidden', width: '100%', marginTop: '32px' }}>
+            <motion.div
                 animate={{ x: ['0%', '-50%'] }}
-                transition={{ duration: 28, repeat: Infinity, ease: 'linear' }}>
-                {[...brands, ...brands].map((b, i) => (
-                    <span key={i} className="text-white/[0.08] text-xs font-black tracking-[0.25em] uppercase select-none">{b}</span>
+                transition={{ repeat: Infinity, duration: 20, ease: 'linear' }}
+                style={{ display: 'flex', gap: '48px', width: 'max-content' }}
+            >
+                {[...brands, ...brands].map((brand, i) => (
+                    <span key={i} style={{
+                        color: 'rgba(255,255,255,0.25)', fontSize: '13px',
+                        fontWeight: '700', letterSpacing: '3px', whiteSpace: 'nowrap',
+                        fontFamily: 'Cairo'
+                    }}>
+                        {brand}
+                    </span>
                 ))}
             </motion.div>
         </div>
@@ -51,89 +61,101 @@ function BrandMarquee() {
 /* ═══════════════════ TESTIMONIALS ════════════════════════════════════════════ */
 function Testimonials({ lang }) {
     const isAr = lang === 'ar';
-    const reviews = isAr ? [
-        { text: 'رفعنا مبيعاتنا 3x في أول أسبوع! 🔥', name: 'سارة م.', role: 'صاحبة متجر عبايات' },
-        { text: 'ما عدنا نرد يدوياً على أي طلب ✅', name: 'فهد ع.', role: 'مطعم برجر' },
-        { text: 'أفضل استثمار عملناه لمتجرنا 💯', name: 'نورة ك.', role: 'متجر إكسسوارات' },
-    ] : [
-        { text: 'We tripled sales in the first week! 🔥', name: 'Sarah M.', role: 'Abaya Store Owner' },
-        { text: 'We no longer reply manually to any order ✅', name: 'Fahad A.', role: 'Burger Restaurant' },
-        { text: 'Best investment we made for our store 💯', name: 'Noura K.', role: 'Accessories Store' },
-    ];
+    const allTestimonials = {
+      ar: [
+        { name: "سارة الغامدي", role: "متجر عبايات", avatar: "س", stars: 5, text: "أول أسبوع 47 طلب وأنا نايمة! البوت يرد ويبيع بدوني 😭🔥" },
+        { name: "فهد المطيري", role: "مطعم برجر", avatar: "ف", stars: 5, text: "المبيعات ارتفعت 40% في شهر — مافي طلب يضيع الحين 📈" },
+        { name: "نورة الكندي", role: "متجر إكسسوارات", avatar: "ن", stars: 5, text: "وفّرت راتب موظفتين! البوت أحسن من أي موظف 💯" },
+        { name: "محمد الشهري", role: "متجر إلكترونيات", avatar: "م", stars: 5, text: "العميل يختار ويدفع تلقائي — أنا بس أشحن 😂" },
+        { name: "ريم العنزي", role: "كيك هوم", avatar: "ر", stars: 5, text: "طلبات الساعة 11 بالليل والبوت يرد فوراً 😍" },
+        { name: "خالد الدوسري", role: "ملابس رجالي", avatar: "خ", stars: 5, text: "وفّرت ساعتين يومياً من الردود اليدوية 🙌" },
+        { name: "هند الزهراني", role: "صالون تجميل", avatar: "ه", stars: 5, text: "الحجوزات زادت 3 أضعاف — العميلات يحبون السرعة ✅" },
+        { name: "عبدالله القحطاني", role: "متجر عطور", avatar: "ع", stars: 5, text: "80% من طلباتي الحين من الكاتلوج التلقائي 🤩" },
+        { name: "منى السبيعي", role: "ملابس أطفال", avatar: "م", stars: 5, text: "بيزنس صغير ونتائج كبيرة — البوت ما يتعب 😄" },
+        { name: "راشد المنصور", role: "وجبات صحية", avatar: "ر", stars: 5, text: "استرجعت تكلفة النظام 10 مرات في الشهر الأول 🏆" },
+      ],
+      en: [
+        { name: "Sarah Al-Ghamdi", role: "Abaya Store", avatar: "S", stars: 5, text: "47 orders in the first week while sleeping! 😭🔥" },
+        { name: "Fahad Al-Mutairi", role: "Burger Restaurant", avatar: "F", stars: 5, text: "Sales up 40% in one month — zero lost orders 📈" },
+        { name: "Noura Al-Kindi", role: "Accessories Store", avatar: "N", stars: 5, text: "Saved cost of 2 employees! Bot works better 💯" },
+        { name: "Mohammed Al-Shahri", role: "Electronics Store", avatar: "M", stars: 5, text: "Customer selects & pays automatically — I just ship 😂" },
+        { name: "Reem Al-Anazi", role: "Home Bakery", avatar: "R", stars: 5, text: "11pm orders — bot replies instantly while I sleep 😍" },
+        { name: "Khalid Al-Dosari", role: "Men's Clothing", avatar: "K", stars: 5, text: "Saved 2 hours daily from manual replies 🙌" },
+        { name: "Hind Al-Zahrani", role: "Beauty Salon", avatar: "H", stars: 5, text: "Bookings tripled — clients love the instant replies ✅" },
+        { name: "Abdullah Al-Qahtani", role: "Perfume Store", avatar: "A", stars: 5, text: "80% of orders now come through the auto catalog 🤩" },
+        { name: "Mona Al-Subai", role: "Kids' Clothing", avatar: "M", stars: 5, text: "Small business, big results — bot never rests 😄" },
+        { name: "Rashed Al-Mansour", role: "Healthy Meals", avatar: "R", stars: 5, text: "Recovered system cost 10x in the first month 🏆" },
+      ]
+    };
+    const reviews = allTestimonials[isAr ? 'ar' : 'en'];
+
     return (
-        <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 w-full max-w-3xl">
-            {reviews.map((r, i) => (
-                <motion.div key={i} initial={{ opacity: 0, y: 12 }} animate={{ opacity: 1, y: 0 }}
-                    transition={{ delay: 0.7 + i * 0.12 }}
-                    className="bg-white/[0.03] border border-white/[0.06] rounded-2xl p-4 backdrop-blur-md hover:border-cyan-500/20 transition-all duration-300">
-                    <div className="flex gap-0.5 mb-2">
-                        {[1,2,3,4,5].map(s => <Star key={s} size={10} className="text-yellow-400 fill-yellow-400" />)}
-                    </div>
-                    <p className="text-white/90 text-[12px] font-bold leading-relaxed mb-3">"{r.text}"</p>
-                    <div className="flex items-center gap-2">
-                        <div className="w-6 h-6 rounded-full bg-gradient-to-br from-cyan-500 to-green-500 flex items-center justify-center text-white text-[9px] font-black">
-                            {r.name.charAt(0)}
+        <div className="w-full flex overflow-hidden py-4 -mx-4 px-4 mask-edges" dir={isAr ? 'rtl' : 'ltr'}>
+            <motion.div
+                className="flex gap-4 items-stretch"
+                animate={{ x: isAr ? ['0%', '50%'] : ['0%', '-50%'] }}
+                transition={{ duration: 40, ease: "linear", repeat: Infinity }}
+            >
+                {[...reviews, ...reviews].map((r, i) => (
+                    <motion.div key={i} whileHover={{ y: -4, scale: 1.02 }} className="w-[280px] shrink-0 p-4 rounded-3xl border border-white/10"
+                        style={{ background: 'rgba(255,255,255,0.03)', backdropFilter: 'blur(20px)', boxShadow: 'inset 0 1px 1px rgba(255,255,255,0.1), 0 10px 30px rgba(0,0,0,0.5)' }}>
+                        <div className="flex gap-1 mb-2">
+                            {[1, 2, 3, 4, 5].map(s => <Star key={s} size={10} className="text-yellow-400 fill-yellow-400" />)}
                         </div>
-                        <div>
-                            <p className="text-white/80 text-[10px] font-bold">{r.name}</p>
-                            <p className="text-slate-500 text-[9px]">{r.role}</p>
+                        <p className="text-white/90 text-sm font-semibold mb-4 leading-relaxed line-clamp-2">"{r.text}"</p>
+                        <div className="flex items-center gap-2 mt-auto">
+                            <div className="min-w-8 min-h-8 rounded-full bg-gradient-to-br from-cyan-500/20 to-blue-500/20 border border-cyan-500/30 flex items-center justify-center text-cyan-300 font-bold text-xs">
+                                {r.avatar || r.name[0]}
+                            </div>
+                            <div>
+                                <h4 className="text-white text-[11px] font-bold">{r.name}</h4>
+                                <p className="text-white/40 text-[9px]">{r.role}</p>
+                            </div>
                         </div>
-                    </div>
-                </motion.div>
-            ))}
+                    </motion.div>
+                ))}
+            </motion.div>
         </div>
     );
 }
 
 /* ═══════════════════ 3D PHONE ════════════════════════════════════════════════ */
-function Phone3D({ children, isAr }) {
-    const [isSpinning, setIsSpinning] = useState(false);
-    const [clickCount, setClickCount] = useState(0);
-    const clickTimer = useRef(null);
+function Phone3D({ children }) {
+    const isFlipped = false; // Based on new spec, facing the camera natively
 
-    const handlePhoneClick = () => {
-        setClickCount(prev => {
-            const next = prev + 1;
-            if (next === 2) {
-                // ضغطتان → دوران كامل
-                setIsSpinning(true);
-                setTimeout(() => setIsSpinning(false), 1200);
-                clearTimeout(clickTimer.current);
-                return 0;
-            }
-            // انتظر 400ms للضغطة الثانية
-            clickTimer.current = setTimeout(() => setClickCount(0), 400);
-            return next;
-        });
+    const phoneStyle = {
+        transform: isFlipped
+          ? 'perspective(1200px) rotateY(180deg)'
+          : 'perspective(1200px) rotateY(0deg) rotateX(0deg)',
+        transition: 'transform 1s ease',
+        animation: isFlipped ? 'none' : 'subtleFloat 6s ease-in-out infinite',
+        transformStyle: 'preserve-3d',
+        filter: 'drop-shadow(0 40px 80px rgba(198,150,40,0.5)) drop-shadow(0 0 40px rgba(37,211,102,0.2))',
     };
 
     return (
         <div className="relative w-full flex flex-col items-center justify-center py-2">
+            <style>{`
+            @keyframes subtleFloat {
+              0%, 100% { transform: perspective(1200px) rotateY(0deg) translateY(0px); }
+              33%      { transform: perspective(1200px) rotateY(2deg)  translateY(-10px); }
+              66%      { transform: perspective(1200px) rotateY(-2deg) translateY(-6px); }
+            }
+            `}</style>
             <div
-                onClick={handlePhoneClick}
-                className="relative w-[300px] sm:w-[340px] h-[620px] sm:h-[690px]"
-                style={{
-                    transform: isSpinning
-                        ? 'perspective(1200px) rotateY(360deg)'
-                        : 'perspective(1200px) rotateY(-12deg) rotateX(4deg)',
-                    transition: isSpinning
-                        ? 'transform 1.2s cubic-bezier(0.4, 0, 0.2, 1)'
-                        : 'transform 0.3s ease',
-                    animation: isSpinning ? 'none' : 'waveFloat 5s ease-in-out infinite',
-                    transformStyle: 'preserve-3d',
-                    cursor: 'pointer',
-                }}
+                className="relative w-[340px] h-[670px] max-w-[85vw]"
+                style={phoneStyle}
             >
                 {/* ─ Front Face ─ */}
                 <div style={{
-                    background: 'linear-gradient(145deg, #f5d078, #c8952a, #f5d078, #a67c2e)',
+                    background: 'linear-gradient(160deg, #1f2c34 0%, #0b141a 100%)',
                     borderRadius: '54px',
                     padding: '12px',
                     boxShadow: `
-                        0 0 0 1px #b8860b,
-                        inset 0 0 0 1px rgba(255,220,100,0.4),
-                        0 30px 80px rgba(198,150,40,0.5),
-                        0 0 60px rgba(245,208,120,0.3)
+                        0 0 0 1px #2a3942,
+                        inset 0 0 0 1px rgba(255,255,255,0.05),
+                        0 30px 80px rgba(11,20,26,0.9),
+                        0 0 60px rgba(37,211,102,0.15)
                     `,
                     position: 'absolute', inset: 0,
                     backfaceVisibility: 'hidden',
@@ -218,47 +240,76 @@ function Phone3D({ children, isAr }) {
                 </div>
             </div>
 
-            {/* Hint text under phone */}
-            <p className="text-slate-500 text-xs mt-6 animate-pulse font-medium">
-                {isAr ? '👆 اضغط مرتين لرؤية الخلف' : '👆 Double-tap to flip the phone'}
-            </p>
+            {/* No hint under phone since orientation is fixed */}
         </div>
     );
 }
 
-/* ═══════════════════ PHONE PREVIEW ═══════════════════════════════════════════ */
-function PhonePreview({ isAr = true }) {
+/* ═══════════════════ PHONE PREVIEW (ONBOARDING) ═════════════════════════════ */
+function PhonePreview({ isAr = true, projectName, setProjectName, handleStart }) {
     return (
-        <div className="w-full h-full flex flex-col" style={{ background: '#ECE5DD' }} dir={isAr ? "rtl" : "ltr"}>
-            {/* WA header */}
-            <div className={`flex items-center gap-2 px-3 py-2.5 mt-[38px] ${isAr ? '' : 'flex-row'}`} style={{ background: 'linear-gradient(180deg, #128C7E, #075E54)' }}>
-                <img src="/Logo.png" alt="" className="w-8 h-8 rounded-full object-cover bg-[#25d366] border border-white/20"
-                    onError={e => { e.target.outerHTML = `<div class="w-8 h-8 rounded-full bg-[#25d366] flex items-center justify-center text-white text-xs font-black border border-white/20">${isAr ? 'م' : 'S'}</div>`; }} />
-                <div className={`flex-1 ${isAr ? 'text-right' : 'text-left'}`}>
-                    <p className="text-white font-bold text-[12px]">{isAr ? 'متجر واتساب Demo' : 'WhatsApp Store Demo'}</p>
-                    <p className="text-green-200/80 text-[9px]">{isAr ? 'متصل الآن ✓' : 'Online ✓'}</p>
-                </div>
+        <div style={{
+            background: 'linear-gradient(160deg, #0a0a0a 0%, #0d1f0f 100%)',
+            height: '100%', display: 'flex', flexDirection: 'column',
+            alignItems: 'center', justifyContent: 'center',
+            padding: '32px 24px', gap: '24px'
+        }}>
+            {/* اللوجو */}
+            <img src="/Logo.png" style={{ 
+                width: '72px', marginBottom: '8px',
+                filter: 'drop-shadow(0 0 20px rgba(37,211,102,0.5))' 
+            }} />
+
+            {/* الاسم */}
+            <p style={{ color: '#25D366', fontSize: '13px', letterSpacing: '3px', fontWeight: '700', fontFamily: 'Cairo' }}>
+                ELEGANT OPTIONS
+            </p>
+
+            {/* العنوان */}
+            <div style={{ textAlign: 'center' }}>
+                <h2 style={{ color: '#fff', fontSize: '18px', fontWeight: '800', fontFamily: 'Cairo', lineHeight: 1.4 }}>
+                    {isAr ? 'جرّب نظام البيع الذكي' : 'Try the Smart Sales System'}
+                </h2>
+                <p style={{ color: '#8696a0', fontSize: '12px', marginTop: '6px' }}>
+                    {isAr ? 'اكتشف كيف يشتري عميلك منتجاتك عبر واتساب' : 'See how your customer buys through WhatsApp'}
+                </p>
             </div>
-            {/* Chat area */}
-            <div className="flex flex-col gap-[6px] px-3 py-3 flex-1">
-                <BubbleBot text={isAr ? "أهلاً 👋 كيف نقدر نخدمك اليوم؟" : "Hello 👋 How can we help you today?"} isAr={isAr} />
-                <div className={`flex flex-wrap gap-1.5 mt-0.5 ${isAr ? 'justify-end' : 'justify-start'}`}>
-                    {(isAr ? ['🛍️ تصفح المنتجات', '🔥 العروض'] : ['🛍️ Browse Products', '🔥 Offers']).map((b,i) => (
-                        <div key={i} className="bg-white border border-[#128C7E]/20 text-[#128C7E] text-[9px] font-bold px-2.5 py-1 rounded-full">{b}</div>
-                    ))}
-                </div>
-                <BubbleUser text={isAr ? "تصفح المنتجات 🛍️" : "Browse Products 🛍️"} isAr={isAr} />
-                <BubbleBot text={isAr ? "بكل سرور! اختر من منتجاتنا 👇" : "Sure! Choose from our products 👇"} isAr={isAr} />
-                <div className={`bg-white rounded-2xl px-2 py-2 max-w-[78%] shadow-sm ${isAr ? 'self-start rounded-tl-sm' : 'self-start rounded-tr-sm'}`}>
-                    <div className="w-full h-[50px] rounded-lg overflow-hidden mb-1 bg-gradient-to-br from-[#128C7E]/20 to-[#25d366]/10 flex items-center justify-center">
-                        <ShoppingCart size={16} className="text-[#128C7E]" />
-                    </div>
-                    <p className="text-gray-800 text-[9px] font-bold">{isAr ? '🛍️ الكاتلوج الذكي' : '🛍️ Smart Catalog'}</p>
-                    <p className="text-gray-500 text-[8px]">{isAr ? '8 منتجات متوفرة' : '8 products available'}</p>
-                </div>
-                <BubbleUser text={isAr ? "أريد: 2x سماعات + 1x ساعة" : "I want: 2x Headphones + 1x Watch"} isAr={isAr} />
-                <BubbleBot text={isAr ? "✅ تم استلام طلبك!\nرقم الطلب: #8472" : "✅ Order received!\nOrder #: #8472"} isAr={isAr} />
+
+            {/* حقل الاسم */}
+            <div style={{ width: '100%' }}>
+                <label style={{ color: '#8696a0', fontSize: '11px', display: 'block', marginBottom: '8px', textAlign: isAr ? 'right' : 'left' }}>
+                    {isAr ? 'اسم متجرك أو مشروعك' : 'Your store or project name'}
+                </label>
+                <input
+                    type="text"
+                    value={projectName}
+                    onChange={(e) => setProjectName(e.target.value)}
+                    placeholder={isAr ? 'مثال: متجر الأناقة، مطعم نوار...' : 'e.g. Noor Store, Burger Hub...'}
+                    style={{
+                        width: '100%', background: '#1f2c34', border: '1px solid #2a3942',
+                        borderRadius: '12px', padding: '12px 16px', color: '#e9edef',
+                        fontSize: '14px', fontFamily: 'Cairo', outline: 'none',
+                        textAlign: isAr ? 'right' : 'left'
+                    }}
+                />
             </div>
+
+            {/* زر البدء */}
+            <button
+                onClick={handleStart}
+                disabled={!projectName.trim()}
+                style={{
+                    width: '100%', padding: '14px',
+                    background: projectName.trim() ? 'linear-gradient(135deg, #25D366, #128C7E)' : '#2a3942',
+                    borderRadius: '14px', border: 'none',
+                    color: '#fff', fontSize: '15px', fontWeight: '800',
+                    fontFamily: 'Cairo', cursor: projectName.trim() ? 'pointer' : 'not-allowed',
+                    boxShadow: projectName.trim() ? '0 4px 20px rgba(37,211,102,0.4)' : 'none',
+                    transition: 'all 0.3s ease'
+                }}
+            >
+                {isAr ? '🚀 ابدأ التجربة ←' : '🚀 Start Demo →'}
+            </button>
         </div>
     );
 }
