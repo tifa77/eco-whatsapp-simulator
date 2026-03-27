@@ -79,7 +79,7 @@ const PRODUCTS = [
 ];
 
 /* ═══════════════════ COMPONENT ═══════════════════════════════════════════════ */
-export default function CatalogFlowSheet({ isOpen, onClose, onSubmit, lang = 'ar', niche = 'products' }) {
+export default function CatalogFlowSheet({ isOpen, onClose, onSubmit, onReturnToMain, lang = 'ar', niche = 'ecommerce' }) {
     const isAr = lang === 'ar';
     const [cart, setCart] = useState({});
     const [activeCategory, setActiveCategory] = useState('electronics');
@@ -151,9 +151,32 @@ export default function CatalogFlowSheet({ isOpen, onClose, onSubmit, lang = 'ar
                                         {isAr ? 'الكاتلوج' : 'Catalog'}
                                     </h2>
                                 </div>
-                                <button onClick={onClose} className="w-7 h-7 rounded-full bg-gray-100 flex items-center justify-center text-gray-500 hover:bg-gray-200 transition-colors">
-                                    <X size={15} />
-                                </button>
+                                <div className="flex items-center gap-2">
+                                    <button
+                                        onClick={() => {
+                                            onClose();
+                                            if (onReturnToMain) onReturnToMain();
+                                        }}
+                                        style={{
+                                            background: '#f8fafc',
+                                            border: '1px solid #e2e8f0',
+                                            borderRadius: '8px',
+                                            color: '#64748b',
+                                            padding: '4px 8px',
+                                            fontSize: '11px',
+                                            fontFamily: 'Cairo',
+                                            cursor: 'pointer',
+                                            display: 'flex',
+                                            alignItems: 'center',
+                                            gap: '4px'
+                                        }}
+                                    >
+                                        {isAr ? '🏠 الرئيسية' : '🏠 Main'}
+                                    </button>
+                                    <button onClick={onClose} className="w-7 h-7 rounded-full bg-gray-100 flex items-center justify-center text-gray-500 hover:bg-gray-200 transition-colors">
+                                        <X size={15} />
+                                    </button>
+                                </div>
                             </div>
 
                             {/* Categories pills — sticky */}

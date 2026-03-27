@@ -268,8 +268,8 @@ const ChatSimulatorInner = ({ config, onBack }) => {
                 setTimeout(() => {
                     setIsTyping(false);
                     setActiveButtons(isAr
-                        ? ['🛒 تصفح المنتجات', '🔥 العروض', '📦 تتبع الطلب', '💬 تواصل معنا']
-                        : ['🛒 Browse Products', '🔥 Offers', '📦 Track Order', '💬 Contact Us']);
+                        ? ['🛒 تصفح المنتجات', '🔥 العروض', '📦 تتبع الطلب', '💬 خدمة العملاء']
+                        : ['🛒 Browse Products', '🔥 Offers', '📦 Track Order', '💬 Customer Service']);
                     setFlowStep('catalog');
                 }, 800);
             }, 1500);
@@ -306,7 +306,10 @@ const ChatSimulatorInner = ({ config, onBack }) => {
                     : '🔥 Current offers:\n\n✅ 20% off Electronics\n✅ Buy 2 Get 1 Free\n✅ Free delivery on orders over $50\n\n🛒 Browse products to grab the deals!';
                 setMessages(prev => [...prev, { id: Date.now(), text: msg, sender: 'bot', timestamp: new Date() }]);
                 setIsTyping(false);
-                setActiveButtons([isAr ? '🛒 تصفح المنتجات' : '🛒 Browse Products']);
+                setActiveButtons([
+                    isAr ? '🛒 تصفح المنتجات' : '🛒 Browse Products',
+                    isAr ? '💬 خدمة العملاء' : '💬 Customer Service'
+                ]);
             }, 1200);
             return;
         }
@@ -327,13 +330,13 @@ const ChatSimulatorInner = ({ config, onBack }) => {
         }
 
         // Contact
-        if (btn.includes('تواصل') || btn.includes('Contact')) {
+        if (btn.includes('خدمة') || btn.includes('Customer') || btn.includes('تواصل') || btn.includes('Contact')) {
             setIsTyping(true);
-            setNarratorText(isAr ? 'تحويل للدعم 💬' : 'Connecting to support 💬');
+            setNarratorText(isAr ? 'تحويل للخدمة 💬' : 'Connecting to service 💬');
             setTimeout(() => {
                 const msg = isAr
-                    ? '💬 فريقنا جاهز لمساعدتك!\n\n📞 هاتف: 96566305551+\n⏰ أوقات العمل: 9 ص - 10 م\n\nأو يمكنك تصفح منتجاتنا مباشرة 👇'
-                    : '💬 Our team is ready to help!\n\n📞 Phone: +96566305551\n⏰ Hours: 9 AM - 10 PM\n\nOr browse our products directly 👇';
+                    ? '💬 فريقنا للخدمة جاهز لمساعدتك!\n\n📞 هاتف: 96566305551+\n⏰ أوقات العمل: 9 ص - 10 م\n\nأو يمكنك تصفح منتجاتنا مباشرة 👇'
+                    : '💬 Our service team is ready to help!\n\n📞 Phone: +96566305551\n⏰ Hours: 9 AM - 10 PM\n\nOr browse our products directly 👇';
                 setMessages(prev => [...prev, { id: Date.now(), text: msg, sender: 'bot', timestamp: new Date() }]);
                 setIsTyping(false);
                 setActiveButtons([isAr ? '🛒 تصفح المنتجات' : '🛒 Browse Products']);
@@ -526,6 +529,32 @@ const ChatSimulatorInner = ({ config, onBack }) => {
         }, 300);
     };
 
+    const returnToMainMenu = () => {
+        setMessages([]);
+        setActiveButtons([]);
+        setIsTyping(false);
+        setIsDemoEnded(false);
+        setFlowStep('welcome');
+        setCustomerName('');
+        setOrderTotal(0);
+        setOrderSummary('');
+        setLocationSelected(false);
+        setNarratorText(isAr ? 'العودة للقائمة الرئيسية 🏠' : 'Returning to main menu 🏠');
+        
+        setTimeout(() => {
+            const greetMsg = isAr
+                ? `أهلاً 👋 كيف نقدر نخدمك اليوم؟`
+                : `Hello 👋 How can we help you today?`;
+            setMessages([
+                { id: Date.now(), text: greetMsg, sender: 'bot', timestamp: new Date() }
+            ]);
+            setActiveButtons(isAr
+                ? ['🛒 تصفح المنتجات', '🔥 العروض', '📦 تتبع الطلب', '💬 خدمة العملاء']
+                : ['🛒 Browse Products', '🔥 Offers', '📦 Track Order', '💬 Customer Service']
+            );
+        }, 300);
+    };
+
     // ── WhatsApp Header ──
     const WaHeader = () => (
         <div
@@ -558,9 +587,25 @@ const ChatSimulatorInner = ({ config, onBack }) => {
                 </div>
                 <p className="text-green-200 text-[10px]">{isAr ? 'متصل الآن ✓' : 'Online ✓'}</p>
             </div>
-            <div className="flex items-center gap-3 text-white/80">
-                <Video size={20} />
-                <Phone size={18} />
+            <div className="flex items-center gap-2 text-white/80">
+                <button
+                    onClick={returnToMainMenu}
+                    style={{
+                        background: 'rgba(0,0,0,0.2)',
+                        border: '1px solid rgba(255,255,255,0.15)',
+                        borderRadius: '12px',
+                        color: '#f8fafc',
+                        padding: '4px 8px',
+                        fontSize: '11px',
+                        fontFamily: 'Cairo',
+                        cursor: 'pointer',
+                        display: 'flex',
+                        alignItems: 'center',
+                        gap: '4px'
+                    }}
+                >
+                    {isAr ? '🏠 القائمة الرئيسية' : '🏠 Main Menu'}
+                </button>
                 <MoreVertical size={20} />
             </div>
         </div>
@@ -687,6 +732,7 @@ const ChatSimulatorInner = ({ config, onBack }) => {
                 isOpen={isCatalogOpen}
                 onClose={() => setIsCatalogOpen(false)}
                 onSubmit={handleCatalogSubmit}
+                onReturnToMain={returnToMainMenu}
                 lang={lang}
                 niche={niche}
             />
