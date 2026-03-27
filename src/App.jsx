@@ -294,17 +294,16 @@ function PhonePreview({ isAr = true, projectName, setProjectName, handleStart })
                 />
             </div>
 
-            {/* زر البدء */}
             <button
                 onClick={handleStart}
-                disabled={!projectName.trim()}
+                disabled={!(projectName || '').trim()}
                 style={{
                     width: '100%', padding: '14px',
-                    background: projectName.trim() ? 'linear-gradient(135deg, #25D366, #128C7E)' : '#2a3942',
+                    background: (projectName || '').trim() ? 'linear-gradient(135deg, #25D366, #128C7E)' : '#2a3942',
                     borderRadius: '14px', border: 'none',
                     color: '#fff', fontSize: '15px', fontWeight: '800',
-                    fontFamily: 'Cairo', cursor: projectName.trim() ? 'pointer' : 'not-allowed',
-                    boxShadow: projectName.trim() ? '0 4px 20px rgba(37,211,102,0.4)' : 'none',
+                    fontFamily: 'Cairo', cursor: (projectName || '').trim() ? 'pointer' : 'not-allowed',
+                    boxShadow: (projectName || '').trim() ? '0 4px 20px rgba(37,211,102,0.4)' : 'none',
                     transition: 'all 0.3s ease'
                 }}
             >
@@ -343,7 +342,7 @@ function App() {
     const isAr = lang === 'ar';
 
     const startSimulator = () => {
-        const name = projectName.trim() || (isAr ? 'متجر واتساب Demo' : 'WhatsApp Store Demo');
+        const name = (projectName || '').trim() || (isAr ? 'متجر واتساب Demo' : 'WhatsApp Store Demo');
         setProjectName(name);
         setView('loading');
         setTimeout(() => setView('simulator'), 2200);
