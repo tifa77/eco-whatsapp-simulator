@@ -452,9 +452,9 @@ function App() {
 
                         {/* ─ Encouraging Text ─ */}
                         <motion.p initial={{ opacity: 0, y: 8 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.5 }}
-                            style={{
-                                color: '#8696a0', fontSize: '14px', textAlign: 'center', fontFamily: 'Cairo', marginBottom: '16px'
-                            }}>
+                            style={{ fontFamily: 'Cairo', marginBottom: '16px' }}
+                            className="text-[22px] font-extrabold text-white text-center animate-pulse drop-shadow-[0_0_10px_rgba(37,211,102,0.6)] leading-relaxed"
+                        >
                             {isAr ? '👇 اكتب اسم مشروعك وشاهد كيف يبيع واتساب بدلاً عنك' : '👇 Enter your project name and see WhatsApp sell for you'}
                         </motion.p>
 

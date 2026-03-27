@@ -212,6 +212,7 @@ const ChatSimulatorInner = ({ config, onBack }) => {
 
     // ── State ──
     const [messages, setMessages] = useState([]);
+    const [locationSelected, setLocationSelected] = useState(false);
     const [inputText, setInputText] = useState('');
     const [activeButtons, setActiveButtons] = useState([]);
     const [isTyping, setIsTyping] = useState(false);
@@ -389,25 +390,29 @@ const ChatSimulatorInner = ({ config, onBack }) => {
                 // Card payment
                 setTimeout(() => {
                     const msg = isAr
-                        ? `ممتاز! تفضل رابط الدفع الآمن:\n🔗 https://pay.elegantoptions.com/checkout\n(بانتظار تأكيد الدفع... ⏳)`
-                        : `Great! Here is your secure payment link:\n🔗 https://pay.elegantoptions.com/checkout\n(Waiting for payment... ⏳)`;
+                        ? '🔗 رابط الدفع الآمن:\nhttps://pay.elegantoptions.com/checkout\n\nبعد إتمام الدفع اضغط الزر أدناه 👇'
+                        : '🔗 Secure payment link:\nhttps://pay.elegantoptions.com/checkout\n\nAfter payment, press the button below 👇';
                     setMessages(prev => [...prev, { id: Date.now(), text: msg, sender: 'bot', timestamp: new Date() }]);
+                    setActiveButtons([isAr ? '✅ تم الدفع' : '✅ Payment Done']);
+                    setFlowStep('confirm_payment_btn');
                     setIsTyping(false);
-
-                    setTimeout(() => {
-                        setIsTyping(true);
-                        setTimeout(() => {
-                            const confirmMsg = isAr
-                                ? `تم استلام الدفع 🎉\nتم تأكيد طلبك برقم #${generateOrderNum()}\nشكراً لك 😊`
-                                : `Payment received 🎉\nOrder confirmed #${generateOrderNum()}\nThank you 😊`;
-                            setMessages(prev => [...prev, { id: Date.now(), text: confirmMsg, sender: 'bot', timestamp: new Date() }]);
-                            setIsTyping(false);
-                            setFlowStep('ended');
-                            setTimeout(addFinalMsg, 1500);
-                        }, 2500);
-                    }, 800);
                 }, 1400);
             }
+            return;
+        }
+
+        // --- NEW STEP: confirm_payment_btn ---
+        if (flowStep === 'confirm_payment_btn') {
+            setIsTyping(true);
+            setTimeout(() => {
+                const confirmMsg = isAr
+                    ? `🎉 تم استلام دفعتك بنجاح!\n✅ تم تأكيد طلبك\n📦 رقم الطلب: #${generateOrderNum()}\n🚀 سيصلك خلال 30-45 دقيقة`
+                    : `🎉 Payment received successfully!\n✅ Order confirmed\n📦 Order #: #${generateOrderNum()}\n🚀 Arrives in 30-45 mins`;
+                setMessages(prev => [...prev, { id: Date.now(), text: confirmMsg, sender: 'bot', timestamp: new Date() }]);
+                setIsTyping(false);
+                setFlowStep('ended');
+                setTimeout(addFinalMsg, 1500);
+            }, 1000);
             return;
         }
     };
@@ -483,11 +488,9 @@ const ChatSimulatorInner = ({ config, onBack }) => {
     }, []);
 
     const handleButtonClickWrapper = (btn) => {
-        if (btn.includes('موقع') || btn.includes('Location') || btn.includes('موقعي') || btn.includes('My Location')) {
-            addUserMsg(btn);
-            setActiveButtons([]);
-            handleButtonClick(btn); // fallback to location type logic if needed
-            return;
+        if (btn.includes('موقع') || btn.includes('Location') || btn.includes('توصيل') || btn.includes('Deliver')) {
+            if (locationSelected) return;
+            setLocationSelected(true);
         }
         handleButtonClick(btn);
     };
