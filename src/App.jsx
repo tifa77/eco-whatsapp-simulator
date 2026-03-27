@@ -349,13 +349,11 @@ function App() {
     };
 
     const t = isAr ? {
-        headline: 'زد مبيعاتك 3x — واتساب يبيع بدلاً عنك 🚀',
-        sub: 'عرض منتجاتك، استقبال الطلبات، وتحصيل الدفع — تلقائياً 24/7 🤖',
-        pain1: '💸 تخسر آلاف الدنانير يومياً بسبب ردود بطيئة',
-        pain2: '📉 منافسوك يبيعون وأنت تكتب ردوداً يدوية',
-        pain3: '😴 عملاؤك يطلبون الساعة 2 فجراً — ومن يرد؟',
-        pain4: '🔁 موظفوك يكررون نفس الإجابات كل يوم',
-        solution: '✅ بوت واتساب ذكي يعرض، يقنع، ويغلق الصفقة — بدون موظف',
+        headline: 'حوّل واتساب إلى آلة بيع فعّالة',
+        sub: 'ضاعف مبيعاتك 3 أضعاف',
+        desc1: 'اعرض منتجاتك، استقبل الطلبات، وتابع العملاء تلقائياً',
+        desc2: 'كل شيء يتم داخل واتساب — بسرعة واحترافية',
+        solution: 'تجربة بيع أسهل… ومبيعات أعلى',
         nameLabel: 'ما اسم مشروعك؟',
         namePlaceholder: 'مثال: مطعم / متجر / عيادة',
         btn: '👇 شاهد كيف يشتري عميلك الآن — مجاناً',
@@ -364,13 +362,11 @@ function App() {
         trust: '⭐ موثوق من +500 نشاط تجاري',
         ai: '🤖 مدعوم بالذكاء الاصطناعي للرد والإقناع',
     } : {
-        headline: '3x Your Sales — WhatsApp Sells For You 🚀',
-        sub: 'Showcase products, receive orders, collect payment — automatically 24/7 🤖',
-        pain1: '💸 Losing thousands daily from slow replies',
-        pain2: '📉 Competitors selling while you type manually',
-        pain3: '😴 Customers ordering at 2AM — who answers?',
-        pain4: '🔁 Staff repeating the same answers every day',
-        solution: '✅ Smart WhatsApp bot that showcases, convinces & closes — no staff needed',
+        headline: 'Turn WhatsApp into an Effective Sales Machine',
+        sub: 'Triple your sales',
+        desc1: 'Showcase products, receive orders, and follow up automatically',
+        desc2: 'Everything inside WhatsApp — fast and professional',
+        solution: 'Easier selling experience… higher sales',
         nameLabel: 'What is your project name?',
         namePlaceholder: 'e.g., Restaurant / Store / Clinic',
         btn: '👇 See How Your Customer Buys Now — Free',
@@ -425,33 +421,32 @@ function App() {
 
                         {/* ─ Headline ─ */}
                         <motion.div initial={{ opacity: 0, y: -10 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.12 }}
-                            className="text-center max-w-2xl mb-3">
-                            <h1 className="text-[26px] sm:text-[32px] lg:text-[40px] font-black leading-[1.3] text-white">
+                            className="text-center max-w-3xl mb-1">
+                            <h1 className="text-[36px] sm:text-[44px] lg:text-[52px] font-black leading-[1.3] text-white tracking-tight">
                                 {t.headline}
                             </h1>
                         </motion.div>
 
                         {/* ─ Subheadline ─ */}
-                        <motion.p initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 0.16 }}
-                            className="text-white/50 text-sm sm:text-[15px] text-center max-w-xl mb-6 leading-relaxed">
+                        <motion.h2 initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 0.16 }}
+                            className="text-[20px] sm:text-[24px] text-white/90 font-bold mb-5 text-center">
                             {t.sub}
-                        </motion.p>
+                        </motion.h2>
 
-                        {/* ─ Pain Points ─ */}
+                        {/* ─ Description ─ */}
                         <motion.div initial={{ opacity: 0, y: 8 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.2 }}
-                            className="text-center mb-4 max-w-md space-y-1.5">
-                            {[t.pain1, t.pain2, t.pain3, t.pain4].map((p, i) => (
-                                <motion.p key={i} initial={{ opacity: 0, x: isAr ? 15 : -15 }} animate={{ opacity: 1, x: 0 }}
-                                    transition={{ delay: 0.25 + i * 0.08 }}
-                                    className="text-white/60 text-[13px] sm:text-[14px] leading-relaxed font-semibold">
-                                    {p}
-                                </motion.p>
-                            ))}
+                            className="text-center mb-6 max-w-md space-y-2">
+                            <p className="text-white/70 text-[15px] sm:text-[16px] leading-relaxed font-medium">
+                                {t.desc1}
+                            </p>
+                            <p className="text-white/70 text-[15px] sm:text-[16px] leading-relaxed font-medium">
+                                {t.desc2}
+                            </p>
                         </motion.div>
 
-                        {/* ─ Solution Line ─ */}
+                        {/* ─ Closing Statement ─ */}
                         <motion.p initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 0.45 }}
-                            className="text-cyan-400 font-bold text-[14px] text-center mb-6">
+                            className="text-cyan-400 font-bold text-[16px] sm:text-[18px] text-center mb-8 bg-cyan-500/10 px-6 py-2 rounded-full border border-cyan-500/20 inline-block">
                             {t.solution}
                         </motion.p>
 
