@@ -338,14 +338,14 @@ function App() {
     const [view, setView] = useState('landing');
     const [lang, setLang] = useState('ar');
     const [projectName, setProjectName] = useState('');
+    const [isZooming, setIsZooming] = useState(false);
     const [nameActive, setNameActive] = useState(false);
     const isAr = lang === 'ar';
 
     const startSimulator = () => {
-        const name = (projectName || '').trim() || (isAr ? 'متجر واتساب Demo' : 'WhatsApp Store Demo');
-        setProjectName(name);
-        setView('loading');
-        setTimeout(() => setView('simulator'), 2200);
+        if (!(projectName || '').trim()) return;
+        setIsZooming(true);
+        setTimeout(() => setView('simulator'), 800);
     };
 
     const t = isAr ? {
@@ -450,56 +450,24 @@ function App() {
                             {t.solution}
                         </motion.p>
 
-                        {/* ─ Project Name Input (glassmorphism) ─ */}
-                        <motion.div initial={{ opacity: 0, y: 8 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.5 }}
-                            className="w-full max-w-sm mb-5">
-                            <label className="block text-white/50 text-[12px] font-bold mb-2 text-center">{t.nameLabel}</label>
-                            <motion.div
-                                animate={nameActive ? { boxShadow: '0 0 25px rgba(6,182,212,0.15), 0 0 0 1px rgba(6,182,212,0.3)' } : { boxShadow: '0 0 0 rgba(0,0,0,0), 0 0 0 1px rgba(255,255,255,0.08)' }}
-                                className="rounded-xl overflow-hidden"
-                                style={{ background: 'rgba(255,255,255,0.04)', backdropFilter: 'blur(20px)' }}
-                            >
-                                <input
-                                    type="text"
-                                    value={projectName}
-                                    onChange={e => setProjectName(e.target.value)}
-                                    onFocus={() => setNameActive(true)}
-                                    onBlur={() => setNameActive(false)}
-                                    placeholder={t.namePlaceholder}
-                                    className="w-full bg-transparent px-4 py-3.5 text-white text-sm placeholder:text-white/20 focus:outline-none text-center"
-                                    dir={isAr ? 'rtl' : 'ltr'}
-                                />
-                            </motion.div>
-                        </motion.div>
+                        {/* ─ Encouraging Text ─ */}
+                        <motion.p initial={{ opacity: 0, y: 8 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.5 }}
+                            style={{
+                                color: '#8696a0', fontSize: '14px', textAlign: 'center', fontFamily: 'Cairo', marginBottom: '16px'
+                            }}>
+                            {isAr ? '👇 اكتب اسم مشروعك وشاهد كيف يبيع واتساب بدلاً عنك' : '👇 Enter your project name and see WhatsApp sell for you'}
+                        </motion.p>
 
                         {/* ─ 3D Phone ─ */}
-                        <motion.div initial={{ opacity: 0, scale: 0.93 }} animate={{ opacity: 1, scale: 1 }} transition={{ delay: 0.3, duration: 0.8 }}
-                            className="w-full max-w-md mb-4">
+                        <motion.div 
+                            initial={{ opacity: 0, scale: 0.93, y: 0 }} 
+                            animate={isZooming ? { scale: 3, opacity: 0, y: -50 } : { opacity: 1, scale: 1, y: 0 }} 
+                            transition={{ duration: 0.8, ease: [0.4, 0, 0.2, 1] }}
+                            className="w-full max-w-md mb-8 flex justify-center z-50">
                             <Phone3D isAr={isAr}>
-                                <PhonePreview isAr={isAr} />
+                                <PhonePreview isAr={isAr} projectName={projectName} setProjectName={setProjectName} handleStart={startSimulator} />
                             </Phone3D>
                         </motion.div>
-
-                        {/* ─ CTA Button (glassmorphism + glow) ─ */}
-                        <motion.button
-                            initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.55 }}
-                            whileHover={{ scale: 1.04, y: -3, boxShadow: '0 0 60px rgba(6,182,212,0.5), 0 0 120px rgba(37,211,102,0.2)' }}
-                            whileTap={{ scale: 0.97 }}
-                            onClick={startSimulator}
-                            className="relative inline-flex items-center justify-center gap-2.5 text-white font-black text-lg px-12 py-4.5 rounded-2xl transition-all overflow-hidden mb-4"
-                            style={{
-                                background: 'linear-gradient(135deg, #06b6d4, #22c55e)',
-                                boxShadow: '0 0 40px rgba(6,182,212,0.4), 0 0 80px rgba(37,211,102,0.15), inset 0 1px 0 rgba(255,255,255,0.2)',
-                                border: '1px solid rgba(255,255,255,0.15)',
-                            }}
-                        >
-                            <motion.div
-                                animate={{ x: ['-100%', '200%'] }}
-                                transition={{ repeat: Infinity, duration: 3, ease: 'linear', repeatDelay: 1.5 }}
-                                className="absolute inset-0 bg-gradient-to-r from-transparent via-white/20 to-transparent skew-x-12"
-                            />
-                            <span className="relative z-10 text-[17px]">{t.btn}</span>
-                        </motion.button>
 
                         {/* ─ Trust Badges ─ */}
                         <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 0.6 }}
