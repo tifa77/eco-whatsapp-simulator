@@ -47,7 +47,7 @@ function BrandMarquee() {
                                 src={brand.logo} 
                                 alt={brand.name} 
                                 style={{ 
-                                    height: '120px', 
+                                    height: '240px', 
                                     width: 'auto',
                                     opacity: 0.9, 
                                     filter: 'grayscale(1) brightness(2.8)' 
