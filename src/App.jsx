@@ -32,105 +32,39 @@ function Particles() {
 }
 
 /* ═══════════════════ BRAND MARQUEE ═══════════════════════════════════════════ */
-/* ═══════════════════ BRAND MARQUEE ═══════════════════════════════════════════ */
-function BrandMarquee() {
-    return (
-        <div style={{
-            overflow: 'hidden',
-            width: '100%',
-            padding: '24px 0',
-            maskImage: 'linear-gradient(to right, transparent 0%, black 8%, black 92%, transparent 100%)',
-            WebkitMaskImage: 'linear-gradient(to right, transparent 0%, black 8%, black 92%, transparent 100%)'
-        }}>
-            <div className="brands-track">
-                {/* النسخة الأولى */}
-                {BRAND_LOGOS.map((brand, i) => (
-                    <div key={`a-${i}`} style={{
-                        display: 'flex',
-                        alignItems: 'center',
-                        justifyContent: 'center',
-                        minWidth: '200px',
-                        height: '120px',
-                        padding: '0 40px',
-                        flexShrink: 0
-                    }}>
-                        <img
-                            src={brand.logo}
-                            alt={brand.name}
-                            onError={(e) => {
-                                e.target.style.display = 'none';
-                                e.target.nextSibling.style.display = 'flex';
-                            }}
-                            style={{
-                                height: '100px',
-                                width: 'auto',
-                                maxWidth: '180px',
-                                objectFit: 'contain',
-                                filter: 'none',
-                                opacity: 1,
-                                display: 'block',
-                                filter: 'drop-shadow(0 2px 8px rgba(255,255,255,0.15))'
-                            }}
-                        />
-                        <span style={{
-                            display: 'none',
-                            color: 'rgba(255,255,255,0.5)',
-                            fontSize: '14px',
-                            fontWeight: '700',
-                            letterSpacing: '2px',
-                            whiteSpace: 'nowrap',
-                            alignItems: 'center',
-                            justifyContent: 'center'
-                        }}>
-                            {brand.name}
-                        </span>
-                    </div>
-                ))}
+/* ═══════════════════ BRAND STRIP ═══════════════════════════════════════════ */
+const BrandStrip = () => {
+  // كرر المصفوفة 4 مرات لضمان امتلاء الشاشة وعدم الانقطاع
+  const repeated = [
+    ...BRAND_LOGOS,
+    ...BRAND_LOGOS,
+    ...BRAND_LOGOS,
+    ...BRAND_LOGOS
+  ];
 
-                {/* النسخة الثانية — مطابقة تماماً لضمان الاستمرارية */}
-                {BRAND_LOGOS.map((brand, i) => (
-                    <div key={`b-${i}`} style={{
-                        display: 'flex',
-                        alignItems: 'center',
-                        justifyContent: 'center',
-                        minWidth: '200px',
-                        height: '120px',
-                        padding: '0 40px',
-                        flexShrink: 0
-                    }}>
-                        <img
-                            src={brand.logo}
-                            alt={brand.name}
-                            onError={(e) => {
-                                e.target.style.display = 'none';
-                                e.target.nextSibling.style.display = 'flex';
-                            }}
-                            style={{
-                                height: '100px',
-                                width: 'auto',
-                                maxWidth: '180px',
-                                objectFit: 'contain',
-                                filter: 'drop-shadow(0 2px 8px rgba(255,255,255,0.15))',
-                                opacity: 1,
-                                display: 'block'
-                            }}
-                        />
-                        <span style={{
-                            display: 'none',
-                            color: 'rgba(255,255,255,0.5)',
-                            fontSize: '14px',
-                            fontWeight: '700',
-                            letterSpacing: '2px',
-                            whiteSpace: 'nowrap'
-                        }}>
-                            {brand.name}
-                        </span>
-                    </div>
-                ))}
-            </div>
-        </div>
-    );
-}
+  return (
+    <div className="brand-marquee-wrapper">
+      <div className="brand-marquee-track">
+        {repeated.map((brand, index) => (
+          <div key={index} className="brand-item">
+            <img
+              src={brand.logo}
+              alt={brand.name}
+              loading="lazy"
+              onError={(e) => {
+                // عند فشل تحميل الصورة → أخفِ الصورة وأظهر الاسم
+                e.currentTarget.style.display = 'none';
+                const fallback = e.currentTarget.nextElementSibling;
+                if (fallback) fallback.style.display = 'block';
+              }}
+            />
+            <span className="brand-fallback">{brand.name}</span>
+          </div>
+        ))}
+      </div>
+    </div>
+  );
+};
 
 /* ═══════════════════ TESTIMONIALS ════════════════════════════════════════════ */
 function Testimonials({ lang }) {
@@ -566,7 +500,7 @@ function App() {
                                 <span className="text-white/40 text-[12px] font-bold mx-1">{t.counter}</span>
                             </div>
                             <Testimonials lang={lang} />
-                            <BrandMarquee />
+                            <BrandStrip />
                         </div>
                     </motion.div>
                 )}
