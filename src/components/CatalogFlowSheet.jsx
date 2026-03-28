@@ -1,8 +1,6 @@
 import React, { useState, useMemo, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { X, Plus, Minus, ShoppingBag, ShoppingCart } from 'lucide-react';
 
-/* ─── Categories ────────────────────────────────────────────────────────────── */
 const CATEGORIES = [
     { id: 'electronics', nameAr: 'إلكترونيات 💻', nameEn: 'Electronics 💻' },
     { id: 'fashion', nameAr: 'أزياء 👗', nameEn: 'Fashion 👗' },
@@ -10,86 +8,73 @@ const CATEGORIES = [
     { id: 'beauty', nameAr: 'عناية وجمال 💄', nameEn: 'Beauty 💄' },
 ];
 
-/* ─── Products ──────────────────────────────────────────────────────────────── */
 const PRODUCTS = [
     {
         id: 'p1', category: 'electronics',
         nameAr: 'سماعات أبل AirPods Pro', nameEn: 'Apple AirPods Pro',
         price: 59.99,
-        descAr: 'عزل ضوضاء نشط، جودة صوت استثنائية، مقاومة للماء',
-        descEn: 'Active noise cancellation, exceptional sound, water resistant',
         img: 'https://images.unsplash.com/photo-1588423771073-b8903fbb85b5?w=600&q=80',
     },
     {
         id: 'p2', category: 'electronics',
         nameAr: 'ساعة سامسونج الذكية', nameEn: 'Samsung Smart Watch',
         price: 89.99,
-        descAr: 'شاشة AMOLED، تتبع اللياقة، بطارية 40 ساعة',
-        descEn: 'AMOLED display, fitness tracking, 40h battery',
         img: 'https://images.unsplash.com/photo-1523275335684-37898b6baf30?w=600&q=80',
     },
     {
         id: 'p3', category: 'fashion',
         nameAr: 'جاكيت شتوي فاخر', nameEn: 'Luxury Winter Jacket',
         price: 44.99,
-        descAr: 'قماش صوف عالي الجودة، تصميم عصري، دافئ للغاية',
-        descEn: 'Premium wool, modern design, very warm',
         img: 'https://images.unsplash.com/photo-1551028719-00167b16eac5?w=600&q=80',
     },
     {
         id: 'p4', category: 'fashion',
         nameAr: 'حذاء رياضي نايكي', nameEn: 'Nike Sport Shoes',
         price: 34.99,
-        descAr: 'مريح للجري، تقنية Air Max المتقدمة',
-        descEn: 'Running comfort, advanced Air Max tech',
         img: 'https://images.unsplash.com/photo-1542291026-7eec264c27ff?w=600&q=80',
     },
     {
         id: 'p5', category: 'accessories',
         nameAr: 'ساعة جلد كلاسيكية', nameEn: 'Classic Leather Watch',
         price: 75.00,
-        descAr: 'حزام جلد طبيعي، ميناء أنيق، مقاومة للماء',
-        descEn: 'Genuine leather strap, elegant dial, water resistant',
         img: 'https://images.unsplash.com/photo-1524592094714-0f0654e20314?w=600&q=80',
     },
     {
         id: 'p6', category: 'accessories',
         nameAr: 'حقيبة يد نسائية فاخرة', nameEn: 'Luxury Handbag',
         price: 69.99,
-        descAr: 'جلد إيطالي أصيل، تصميم حديث وأنيق',
-        descEn: 'Genuine Italian leather, modern elegant design',
         img: 'https://images.unsplash.com/photo-1584917865442-de89df76afd3?w=600&q=80',
     },
     {
         id: 'p7', category: 'beauty',
         nameAr: 'عطر رجالي مميز', nameEn: 'Signature Perfume',
         price: 49.99,
-        descAr: 'عطر فواح يدوم طوال اليوم، تركيز عالي',
-        descEn: 'Long-lasting fragrance, high concentration',
         img: 'https://images.unsplash.com/photo-1541643600914-78b084683702?w=600&q=80',
     },
     {
         id: 'p8', category: 'beauty',
         nameAr: 'مجموعة العناية بالبشرة', nameEn: 'Skincare Set',
         price: 39.99,
-        descAr: 'غسول + مرطب + سيروم، لجميع أنواع البشرة',
-        descEn: 'Cleanser + moisturizer + serum, all skin types',
         img: 'https://images.unsplash.com/photo-1620916566398-39f1143ab7be?w=600&q=80',
     },
 ];
 
-/* ═══════════════════ COMPONENT ═══════════════════════════════════════════════ */
-export default function CatalogFlowSheet({ isOpen, onClose, onSubmit, onReturnToMain, lang = 'ar', niche = 'ecommerce' }) {
+export default function CatalogFlowSheet({ isOpen, onClose, onSubmit, lang, niche, projectName, onReturnToMain }) {
     const isAr = lang === 'ar';
     const [cart, setCart] = useState({});
-    const [activeCategory, setActiveCategory] = useState('electronics');
-
-    useEffect(() => {
-        if (isOpen) setActiveCategory('electronics');
-    }, [isOpen]);
+    const [activeCategory, setActiveCategory] = useState(CATEGORIES[0].id);
 
     const handleAdd = (id) => {
         setCart(prev => ({ ...prev, [id]: (prev[id] || 0) + 1 }));
+    };
+
+    const handleSub = (id) => {
+        setCart(prev => {
+            const newCart = { ...prev };
+            if (newCart[id] > 1) newCart[id]--;
+            else delete newCart[id];
+            return newCart;
+        });
     };
 
     const totalItems = Object.values(cart).reduce((a, b) => a + b, 0);
@@ -99,7 +84,7 @@ export default function CatalogFlowSheet({ isOpen, onClose, onSubmit, onReturnTo
             return sum + ((item?.price || 0) * qty);
         }, 0), [cart]);
 
-    const filtered = PRODUCTS.filter(p => p.category === activeCategory);
+    const filteredItems = PRODUCTS.filter(p => p.category === activeCategory);
 
     const handleSubmit = () => {
         if (totalItems === 0) return;
@@ -116,41 +101,47 @@ export default function CatalogFlowSheet({ isOpen, onClose, onSubmit, onReturnTo
             {isOpen && (
                 <>
                     {/* Backdrop */}
-                    <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}
+                    <motion.div
+                        initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}
                         onClick={onClose}
-                        className="absolute inset-0 bg-black/60 backdrop-blur-sm z-[60]" />
+                        style={{ position: 'absolute', inset: 0, background: 'rgba(0,0,0,0.5)', zIndex: 60 }}
+                    />
 
-                    {/* Meta-style Catalog Sheet */}
+                    {/* Bottom Sheet */}
                     <motion.div
                         initial={{ y: '100%' }} animate={{ y: 0 }} exit={{ y: '100%' }}
-                        transition={{ type: 'spring', damping: 30, stiffness: 300, mass: 0.8 }}
-                        className="absolute bottom-0 left-0 right-0 rounded-t-[20px] z-[70] flex flex-col overflow-hidden"
-                        style={{ height: '90%', background: '#f0f2f5' }}
+                        transition={{ type: 'spring', damping: 25, stiffness: 200 }}
+                        style={{
+                            position: 'absolute', bottom: 0, left: 0, right: 0,
+                            height: '90%', zIndex: 70, display: 'flex',
+                            flexDirection: 'column', background: '#fff',
+                            borderRadius: '16px 16px 0 0', overflow: 'hidden'
+                        }}
                         dir={isAr ? 'rtl' : 'ltr'}
                     >
-                        {/* 1. Header (Meta Style) */}
+
+                        {/* ① هيدر المتجر — مطابق Meta */}
                         <div style={{
-                            background: '#fff',
-                            padding: '12px 16px',
-                            borderBottom: '1px solid #f0f2f5',
-                            display: 'flex',
-                            alignItems: 'center',
-                            gap: '12px'
-                        }} className="shrink-0">
-                            <div className="w-10 h-10 rounded-full bg-[#25D366] flex items-center justify-center text-white font-black text-xs overflow-hidden shrink-0 shadow-sm border border-black/5">
-                                <img src="/Logo.png" alt="" className="w-full h-full object-cover" 
-                                     onError={(e) => { e.target.style.display='none'; }}/>
-                                <span className="absolute">M</span>
-                            </div>
-                            <div className="flex-1 min-w-0">
-                                <p style={{ fontSize: '15px', fontWeight: '800', color: '#111', margin: 0, fontFamily: 'Cairo' }} className="truncate">
-                                    {isAr ? 'متجرنا الإلكتروني' : 'Our Digital Store'}
+                            display: 'flex', alignItems: 'center', gap: '10px',
+                            padding: '12px 16px', background: '#fff',
+                            borderBottom: '1px solid #f0f2f5'
+                        }}>
+                            <img src="/Logo.png" style={{
+                                width: '40px', height: '40px',
+                                borderRadius: '50%', objectFit: 'cover',
+                                border: '1px solid #f0f2f5'
+                            }} />
+                            <div style={{ flex: 1 }}>
+                                <p style={{ margin: 0, fontSize: '15px', fontWeight: '700',
+                                    color: '#111', fontFamily: 'Cairo' }}>
+                                    {projectName || (isAr ? 'المتجر' : 'Store')}
                                 </p>
-                                <p style={{ fontSize: '12px', color: '#8696a0', margin: 0, fontFamily: 'Cairo', fontWeight: 'bold' }}>
-                                    {isAr ? 'كاتلوج المنتجات' : 'Product Catalog'}
+                                <p style={{ margin: 0, fontSize: '12px', color: '#8696a0',
+                                    fontFamily: 'Cairo' }}>
+                                    {isAr ? '🟢 متصل الآن' : '🟢 Online now'}
                                 </p>
                             </div>
-                            <div className="flex items-center gap-2">
+                            <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
                                 <button
                                     onClick={() => { onClose(); if (onReturnToMain) onReturnToMain(); }}
                                     style={{
@@ -161,36 +152,33 @@ export default function CatalogFlowSheet({ isOpen, onClose, onSubmit, onReturnTo
                                 >
                                     🏠 {isAr ? 'الرئيسية' : 'Main'}
                                 </button>
-                                <button onClick={onClose} style={{ background: '#f1f1f1', border: 'none', cursor: 'pointer', padding: '6px', borderRadius: '50%', color: '#666' }}>
-                                    <X size={18} />
-                                </button>
+                                <button onClick={onClose} style={{
+                                    background: '#f0f2f5', border: 'none',
+                                    borderRadius: '50%', width: '32px', height: '32px',
+                                    cursor: 'pointer', fontSize: '16px', color: '#555'
+                                }}>✕</button>
                             </div>
                         </div>
 
-                        {/* 2. Horizontal Categories list */}
+                        {/* ② شريط الفئات — مطابق Meta */}
                         <div style={{
-                            display: 'flex', gap: '8px', overflowX: 'auto',
-                            padding: '12px 16px', background: '#fff',
-                            borderBottom: '1px solid #f0f2f5',
-                            scrollbarWidth: 'none'
-                        }} className="shrink-0 no-scrollbar">
+                            display: 'flex', gap: '0px', overflowX: 'auto',
+                            background: '#fff', borderBottom: '1px solid #f0f2f5',
+                            padding: '0 16px'
+                        }}>
                             {CATEGORIES.map(cat => (
                                 <button
                                     key={cat.id}
                                     onClick={() => setActiveCategory(cat.id)}
                                     style={{
-                                        flexShrink: 0,
-                                        padding: '7px 16px',
-                                        borderRadius: '24px',
-                                        border: activeCategory === cat.id ? '2px solid #25D366' : '1.5px solid #eef0f2',
-                                        background: activeCategory === cat.id ? '#e8fef0' : '#fff',
-                                        color: activeCategory === cat.id ? '#128C7E' : '#555',
-                                        fontSize: '13px',
-                                        fontWeight: '800',
-                                        fontFamily: 'Cairo',
-                                        whiteSpace: 'nowrap',
-                                        cursor: 'pointer',
-                                        transition: 'all 0.2s'
+                                        padding: '12px 16px', border: 'none',
+                                        background: 'none', cursor: 'pointer',
+                                        fontSize: '14px', fontFamily: 'Cairo',
+                                        fontWeight: activeCategory === cat.id ? '700' : '400',
+                                        color: activeCategory === cat.id ? '#25D366' : '#555',
+                                        borderBottom: activeCategory === cat.id
+                                            ? '2px solid #25D366' : '2px solid transparent',
+                                        whiteSpace: 'nowrap', transition: 'all 0.2s'
                                     }}
                                 >
                                     {isAr ? cat.nameAr : cat.nameEn}
@@ -198,127 +186,172 @@ export default function CatalogFlowSheet({ isOpen, onClose, onSubmit, onReturnTo
                             ))}
                         </div>
 
-                        {/* 3. Products Grid (Meta layout: 2 columns) */}
+                        {/* ③ شبكة المنتجات 2×2 — مطابق Meta */}
                         <div style={{
+                            flex: 1, overflowY: 'auto',
                             display: 'grid',
-                            gridTemplateColumns: 'repeat(2, 1fr)',
-                            gap: '1px',
-                            background: '#e9edef',
-                            flex: 1,
-                            overflowY: 'auto',
-                            paddingBottom: totalItems > 0 ? '60px' : '0'
-                        }} className="no-scrollbar">
-                            <AnimatePresence mode="wait">
-                                {filtered.map(item => (
-                                    <motion.div
-                                        key={item.id}
-                                        initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}
-                                        style={{ background: '#fff', display: 'flex', flexDirection: 'column', cursor: 'pointer', position: 'relative' }}
-                                        onClick={() => handleAdd(item.id)}
-                                    >
-                                        {/* 1:1 Aspect Ratio Image Wrapper */}
-                                        <div style={{ width: '100%', paddingTop: '100%', position: 'relative', overflow: 'hidden', background: '#f9f9f9' }}>
-                                            <img
-                                                src={item.img}
-                                                alt=""
-                                                style={{ position: 'absolute', inset: 0, width: '100%', height: '100%', objectFit: 'cover' }}
-                                            />
-                                            {/* Badge */}
-                                            {item.price > 80 && (
-                                                <span style={{
-                                                    position: 'absolute', top: '8px',
-                                                    [isAr ? 'right' : 'left']: '8px',
-                                                    background: '#25D366', color: '#fff',
-                                                    fontSize: '9px', fontWeight: '900',
-                                                    padding: '2px 8px', borderRadius: '12px',
-                                                    fontFamily: 'Cairo', textTransform: 'uppercase'
-                                                }}>
-                                                    {isAr ? 'الأكثر مبيعاً' : 'Best Seller'}
-                                                </span>
-                                            )}
-                                            {/* Count Overlay if in cart */}
-                                            {cart[item.id] > 0 && (
+                            gridTemplateColumns: '1fr 1fr',
+                            gap: '1px', background: '#f0f2f5',
+                            paddingBottom: totalItems > 0 ? '70px' : '0'
+                        }}>
+                            {filteredItems.map(item => (
+                                <div key={item.id} style={{
+                                    background: '#fff', cursor: 'pointer',
+                                    position: 'relative'
+                                }}>
+                                    {/* صورة مربعة 1:1 */}
+                                    <div style={{
+                                        width: '100%', paddingTop: '100%',
+                                        position: 'relative', overflow: 'hidden',
+                                        background: '#f9f9f9'
+                                    }} onClick={() => handleAdd(item.id)}>
+                                        <img
+                                            src={item.img}
+                                            alt={isAr ? item.nameAr : item.nameEn}
+                                            style={{
+                                                position: 'absolute', inset: 0,
+                                                width: '100%', height: '100%',
+                                                objectFit: 'cover'
+                                            }}
+                                        />
+                                        {/* علامة الاختيار */}
+                                        {cart[item.id] > 0 && (
+                                            <div style={{
+                                                position: 'absolute', top: '8px',
+                                                right: isAr ? '8px' : 'auto',
+                                                left: isAr ? 'auto' : '8px',
+                                                width: '24px', height: '24px',
+                                                borderRadius: '50%', background: '#25D366',
+                                                display: 'flex', alignItems: 'center',
+                                                justifyContent: 'center',
+                                                color: '#fff', fontSize: '14px', fontWeight: '700'
+                                            }}>✓</div>
+                                        )}
+                                    </div>
+
+                                    {/* بيانات المنتج */}
+                                    <div style={{ padding: '8px 10px 12px' }}>
+                                        <p style={{
+                                            margin: '0 0 2px', fontSize: '13px',
+                                            fontWeight: '600', color: '#111',
+                                            fontFamily: 'Cairo', lineHeight: 1.3,
+                                            overflow: 'hidden', textOverflow: 'ellipsis',
+                                            display: '-webkit-box',
+                                            WebkitLineClamp: 2,
+                                            WebkitBoxOrient: 'vertical'
+                                        }}>
+                                            {isAr ? item.nameAr : item.nameEn}
+                                        </p>
+                                        <p style={{
+                                            margin: 0, fontSize: '13px',
+                                            fontWeight: '700', color: '#25D366'
+                                        }}>
+                                            {isAr
+                                                ? `${item.price.toFixed(2)} د.ك`
+                                                : `$${item.price.toFixed(2)}`}
+                                        </p>
+
+                                        {/* زر إضافة/إزالة — مطابق Meta */}
+                                        <div style={{ marginTop: '8px' }}>
+                                            {!cart[item.id] ? (
+                                                <button
+                                                    onClick={() => handleAdd(item.id)}
+                                                    style={{
+                                                        width: '100%', padding: '7px 0',
+                                                        background: '#e8fef0',
+                                                        border: '1px solid #25D366',
+                                                        borderRadius: '8px', cursor: 'pointer',
+                                                        color: '#25D366', fontSize: '13px',
+                                                        fontWeight: '700', fontFamily: 'Cairo'
+                                                    }}
+                                                >
+                                                    {isAr ? '+ إضافة' : '+ Add'}
+                                                </button>
+                                            ) : (
                                                 <div style={{
-                                                    position: 'absolute', inset: 0,
-                                                    background: 'rgba(37,211,102,0.12)',
                                                     display: 'flex', alignItems: 'center',
-                                                    justifyContent: 'center',
-                                                    backdropFilter: 'blur(1px)'
+                                                    justifyContent: 'space-between',
+                                                    border: '1px solid #25D366',
+                                                    borderRadius: '8px', overflow: 'hidden'
                                                 }}>
-                                                    <div style={{
-                                                        width: '36px', height: '36px',
-                                                        borderRadius: '50%',
-                                                        background: '#25D366',
-                                                        display: 'flex', alignItems: 'center',
-                                                        justifyContent: 'center',
-                                                        fontSize: '20px', color: '#fff', fontWeight: '900',
-                                                        boxShadow: '0 4px 12px rgba(0,0,0,0.1)'
-                                                    }}>
+                                                    <button onClick={() => handleSub(item.id)}
+                                                        style={{ flex: 1, padding: '7px', background: '#fff',
+                                                            border: 'none', cursor: 'pointer',
+                                                            color: '#25D366', fontSize: '16px', fontWeight: '700' }}>
+                                                        −
+                                                    </button>
+                                                    <span style={{ padding: '0 8px', fontSize: '13px',
+                                                        fontWeight: '700', color: '#111' }}>
                                                         {cart[item.id]}
-                                                    </div>
+                                                    </span>
+                                                    <button onClick={() => handleAdd(item.id)}
+                                                        style={{ flex: 1, padding: '7px', background: '#25D366',
+                                                            border: 'none', cursor: 'pointer',
+                                                            color: '#fff', fontSize: '16px', fontWeight: '700' }}>
+                                                        +
+                                                    </button>
                                                 </div>
                                             )}
                                         </div>
-
-                                        {/* Product Details */}
-                                        <div style={{ padding: '10px 12px' }}>
-                                            <p style={{
-                                                fontSize: '14px', fontWeight: '700',
-                                                color: '#111', margin: '0 0 3px',
-                                                fontFamily: 'Cairo',
-                                                overflow: 'hidden', textOverflow: 'ellipsis',
-                                                whiteSpace: 'nowrap'
-                                            }} className="block">
-                                                {isAr ? item.nameAr : item.nameEn}
-                                            </p>
-                                            <p style={{ fontSize: '14px', fontWeight: '800', color: '#128C7E', margin: 0 }}>
-                                                {isAr ? `${item.price.toFixed(2)} د.ك` : `$${item.price.toFixed(2)}`}
-                                            </p>
-                                        </div>
-                                    </motion.div>
-                                ))}
-                            </AnimatePresence>
+                                    </div>
+                                </div>
+                            ))}
                         </div>
 
-                        {/* 4. Bottom View Cart Bar (Meta Style) */}
+                        {/* ④ شريط السلة — مطابق Meta */}
                         <AnimatePresence>
                             {totalItems > 0 && (
-                                <motion.div
+                                <motion.div 
                                     initial={{ y: 80 }} animate={{ y: 0 }} exit={{ y: 80 }}
                                     style={{
                                         position: 'absolute', bottom: 0, left: 0, right: 0,
-                                        background: '#25D366',
-                                        padding: '16px 20px',
-                                        display: 'flex',
-                                        alignItems: 'center',
-                                        justifyContent: 'space-between',
-                                        cursor: 'pointer',
-                                        zIndex: 80,
-                                        boxShadow: '0 -4px 15px rgba(0,0,0,0.1)'
+                                        background: '#fff', padding: '12px 16px',
+                                        borderTop: '1px solid #f0f2f5', zIndex: 85
                                     }}
-                                    onClick={handleSubmit}
                                 >
-                                    <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
-                                        <div style={{
-                                            width: '24px', height: '24px',
-                                            background: 'rgba(0,0,0,0.15)',
-                                            borderRadius: '50%',
+                                    <button
+                                        onClick={handleSubmit}
+                                        style={{
+                                            width: '100%', padding: '14px',
+                                            background: '#25D366',
+                                            border: 'none', borderRadius: '12px',
+                                            cursor: 'pointer',
                                             display: 'flex', alignItems: 'center',
-                                            justifyContent: 'center',
-                                            color: '#fff', fontSize: '13px', fontWeight: '900'
+                                            justifyContent: 'space-between', fontFamily: 'Cairo'
+                                        }}
+                                    >
+                                        {/* عداد المنتجات */}
+                                        <div style={{
+                                            width: '26px', height: '26px',
+                                            background: 'rgba(0,0,0,0.15)',
+                                            borderRadius: '50%', display: 'flex',
+                                            alignItems: 'center', justifyContent: 'center',
+                                            color: '#fff',
+                                            fontSize: '12px', fontWeight: '700'
                                         }}>
                                             {totalItems}
                                         </div>
-                                        <span style={{ color: '#fff', fontSize: '16px', fontWeight: '800', fontFamily: 'Cairo' }}>
-                                            {isAr ? 'عرض سلة المشتريات' : 'View Shopping Cart'}
+
+                                        <span style={{
+                                            color: '#fff',
+                                            fontSize: '15px', fontWeight: '700'
+                                        }}>
+                                            {isAr ? 'عرض السلة' : 'View Cart'}
                                         </span>
-                                    </div>
-                                    <div style={{ color: 'rgba(255,255,255,0.95)', fontSize: '15px', fontWeight: '900' }}>
-                                        {isAr ? `${totalPrice.toFixed(2)} د.ك` : `$${totalPrice.toFixed(2)}`}
-                                    </div>
+
+                                        <span style={{
+                                            color: 'rgba(255,255,255,0.9)',
+                                            fontSize: '14px', fontWeight: '600'
+                                        }}>
+                                            {isAr
+                                                ? `${totalPrice.toFixed(2)} د.ك`
+                                                : `$${totalPrice.toFixed(2)}`}
+                                        </span>
+                                    </button>
                                 </motion.div>
                             )}
                         </AnimatePresence>
+
                     </motion.div>
                 </>
             )}
