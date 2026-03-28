@@ -46,7 +46,12 @@ function BrandMarquee() {
                             <img 
                                 src={brand.logo} 
                                 alt={brand.name} 
-                                style={{ height: '24px', opacity: 0.5, filter: 'grayscale(1) brightness(2)' }} 
+                                style={{ 
+                                    height: '45px', 
+                                    width: 'auto',
+                                    opacity: 0.8, 
+                                    filter: 'grayscale(1) brightness(2.5)' 
+                                }} 
                             />
                         ) : (
                             <span style={{
