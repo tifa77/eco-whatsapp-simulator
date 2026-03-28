@@ -83,7 +83,6 @@ export default function CatalogFlowSheet({ isOpen, onClose, onSubmit, onReturnTo
     const isAr = lang === 'ar';
     const [cart, setCart] = useState({});
     const [activeCategory, setActiveCategory] = useState('electronics');
-    const [cartAnim, setCartAnim] = useState(''); // for animation trigger
 
     useEffect(() => {
         if (isOpen) setActiveCategory('electronics');
@@ -91,15 +90,7 @@ export default function CatalogFlowSheet({ isOpen, onClose, onSubmit, onReturnTo
 
     const handleAdd = (id) => {
         setCart(prev => ({ ...prev, [id]: (prev[id] || 0) + 1 }));
-        setCartAnim('bounce');
-        setTimeout(() => setCartAnim(''), 300);
     };
-
-    const handleSub = (id) => setCart(prev => {
-        const c = prev[id] || 0;
-        if (c <= 1) { const n = { ...prev }; delete n[id]; return n; }
-        return { ...prev, [id]: c - 1 };
-    });
 
     const totalItems = Object.values(cart).reduce((a, b) => a + b, 0);
     const totalPrice = useMemo(() =>
@@ -129,162 +120,205 @@ export default function CatalogFlowSheet({ isOpen, onClose, onSubmit, onReturnTo
                         onClick={onClose}
                         className="absolute inset-0 bg-black/60 backdrop-blur-sm z-[60]" />
 
-                    {/* Bottom Sheet */}
+                    {/* Meta-style Catalog Sheet */}
                     <motion.div
                         initial={{ y: '100%' }} animate={{ y: 0 }} exit={{ y: '100%' }}
-                        transition={{ type: 'spring', damping: 28, stiffness: 240 }}
-                        className="absolute bottom-0 left-0 right-0 rounded-t-[24px] border-t border-white/[0.08] z-[70] flex flex-col"
-                        style={{ height: '88%', background: '#FFFFFF' }}
+                        transition={{ type: 'spring', damping: 30, stiffness: 300, mass: 0.8 }}
+                        className="absolute bottom-0 left-0 right-0 rounded-t-[20px] z-[70] flex flex-col overflow-hidden"
+                        style={{ height: '90%', background: '#f0f2f5' }}
                         dir={isAr ? 'rtl' : 'ltr'}
                     >
-                        {/* ─ Header ─ */}
-                        <div className="shrink-0 rounded-t-[24px] bg-white border-b border-gray-100">
-                            {/* Drag handle */}
-                            <div className="flex justify-center pt-2 pb-1">
-                                <div className="w-9 h-1 bg-gray-300 rounded-full" />
+                        {/* 1. Header (Meta Style) */}
+                        <div style={{
+                            background: '#fff',
+                            padding: '12px 16px',
+                            borderBottom: '1px solid #f0f2f5',
+                            display: 'flex',
+                            alignItems: 'center',
+                            gap: '12px'
+                        }} className="shrink-0">
+                            <div className="w-10 h-10 rounded-full bg-[#25D366] flex items-center justify-center text-white font-black text-xs overflow-hidden shrink-0 shadow-sm border border-black/5">
+                                <img src="/Logo.png" alt="" className="w-full h-full object-cover" 
+                                     onError={(e) => { e.target.style.display='none'; }}/>
+                                <span className="absolute">M</span>
                             </div>
-                            {/* Title bar */}
-                            <div className="flex justify-between items-center px-4 pb-2">
-                                <div className="flex items-center gap-2">
-                                    <ShoppingCart size={16} className="text-[#128C7E]" />
-                                    <h2 className="text-gray-900 font-bold text-[15px]">
-                                        {isAr ? 'الكاتلوج' : 'Catalog'}
-                                    </h2>
-                                </div>
-                                <div className="flex items-center gap-2">
-                                    <button
-                                        onClick={() => {
-                                            onClose();
-                                            if (onReturnToMain) onReturnToMain();
-                                        }}
-                                        style={{
-                                            background: '#f8fafc',
-                                            border: '1px solid #e2e8f0',
-                                            borderRadius: '8px',
-                                            color: '#64748b',
-                                            padding: '4px 8px',
-                                            fontSize: '11px',
-                                            fontFamily: 'Cairo',
-                                            cursor: 'pointer',
-                                            display: 'flex',
-                                            alignItems: 'center',
-                                            gap: '4px'
-                                        }}
-                                    >
-                                        {isAr ? '🏠 الرئيسية' : '🏠 Main'}
-                                    </button>
-                                    <button onClick={onClose} className="w-7 h-7 rounded-full bg-gray-100 flex items-center justify-center text-gray-500 hover:bg-gray-200 transition-colors">
-                                        <X size={15} />
-                                    </button>
-                                </div>
+                            <div className="flex-1 min-w-0">
+                                <p style={{ fontSize: '15px', fontWeight: '800', color: '#111', margin: 0, fontFamily: 'Cairo' }} className="truncate">
+                                    {isAr ? 'متجرنا الإلكتروني' : 'Our Digital Store'}
+                                </p>
+                                <p style={{ fontSize: '12px', color: '#8696a0', margin: 0, fontFamily: 'Cairo', fontWeight: 'bold' }}>
+                                    {isAr ? 'كاتلوج المنتجات' : 'Product Catalog'}
+                                </p>
                             </div>
-
-                            {/* Categories pills — sticky */}
-                            <div className="flex gap-1.5 overflow-x-auto px-4 pb-2.5" style={{ scrollbarWidth: 'none' }}>
-                                {CATEGORIES.map(cat => (
-                                    <button key={cat.id} onClick={() => setActiveCategory(cat.id)}
-                                        className={`shrink-0 px-3 py-1.5 rounded-full text-[12px] font-bold transition-all border
-                                            ${activeCategory === cat.id
-                                                ? 'bg-[#128C7E] text-white border-[#128C7E]'
-                                                : 'bg-white text-gray-600 border-gray-200 hover:border-gray-300'}`}>
-                                        {isAr ? cat.nameAr : cat.nameEn}
-                                    </button>
-                                ))}
+                            <div className="flex items-center gap-2">
+                                <button
+                                    onClick={() => { onClose(); if (onReturnToMain) onReturnToMain(); }}
+                                    style={{
+                                        background: '#f8fafc', border: '1px solid #e2e8f0', borderRadius: '8px',
+                                        color: '#64748b', padding: '6px 10px', fontSize: '11px', fontWeight: '800',
+                                        fontFamily: 'Cairo', cursor: 'pointer', display: 'flex', alignItems: 'center', gap: '4px'
+                                    }}
+                                >
+                                    🏠 {isAr ? 'الرئيسية' : 'Main'}
+                                </button>
+                                <button onClick={onClose} style={{ background: '#f1f1f1', border: 'none', cursor: 'pointer', padding: '6px', borderRadius: '50%', color: '#666' }}>
+                                    <X size={18} />
+                                </button>
                             </div>
                         </div>
 
-                        {/* ─ Products List (Meta-style cards) ─ */}
-                        <div className="flex-1 overflow-y-auto bg-gray-50 pb-[100px]" style={{ scrollbarWidth: 'none' }}>
+                        {/* 2. Horizontal Categories list */}
+                        <div style={{
+                            display: 'flex', gap: '8px', overflowX: 'auto',
+                            padding: '12px 16px', background: '#fff',
+                            borderBottom: '1px solid #f0f2f5',
+                            scrollbarWidth: 'none'
+                        }} className="shrink-0 no-scrollbar">
+                            {CATEGORIES.map(cat => (
+                                <button
+                                    key={cat.id}
+                                    onClick={() => setActiveCategory(cat.id)}
+                                    style={{
+                                        flexShrink: 0,
+                                        padding: '7px 16px',
+                                        borderRadius: '24px',
+                                        border: activeCategory === cat.id ? '2px solid #25D366' : '1.5px solid #eef0f2',
+                                        background: activeCategory === cat.id ? '#e8fef0' : '#fff',
+                                        color: activeCategory === cat.id ? '#128C7E' : '#555',
+                                        fontSize: '13px',
+                                        fontWeight: '800',
+                                        fontFamily: 'Cairo',
+                                        whiteSpace: 'nowrap',
+                                        cursor: 'pointer',
+                                        transition: 'all 0.2s'
+                                    }}
+                                >
+                                    {isAr ? cat.nameAr : cat.nameEn}
+                                </button>
+                            ))}
+                        </div>
+
+                        {/* 3. Products Grid (Meta layout: 2 columns) */}
+                        <div style={{
+                            display: 'grid',
+                            gridTemplateColumns: 'repeat(2, 1fr)',
+                            gap: '1px',
+                            background: '#e9edef',
+                            flex: 1,
+                            overflowY: 'auto',
+                            paddingBottom: totalItems > 0 ? '60px' : '0'
+                        }} className="no-scrollbar">
                             <AnimatePresence mode="wait">
-                                <motion.div key={activeCategory}
-                                    initial={{ opacity: 0, y: 8 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: -8 }}
-                                    className="flex flex-col">
-                                    {filtered.map((item, idx) => (
-                                        <div key={item.id} className={`bg-white ${idx > 0 ? 'border-t border-gray-100' : ''}`}>
-                                            {/* Product Image — full width, 180px tall */}
-                                            <div className="w-full h-[180px] overflow-hidden bg-gray-100">
-                                                <img
-                                                    src={item.img}
-                                                    alt={isAr ? item.nameAr : item.nameEn}
-                                                    className="w-full h-full object-cover"
-                                                    loading="lazy"
-                                                />
-                                            </div>
-
-                                            {/* Product Info */}
-                                            <div className="px-4 py-3">
-                                                <h3 className="text-gray-900 font-bold text-[15px] mb-0.5">
-                                                    {isAr ? item.nameAr : item.nameEn}
-                                                </h3>
-                                                <p className="text-gray-500 text-[12px] leading-snug mb-2">
-                                                    {isAr ? item.descAr : item.descEn}
-                                                </p>
-
-                                                <div className="flex items-center justify-between">
-                                                    {/* Price */}
-                                                    <span className="text-[#128C7E] font-black text-[16px]">
-                                                        {isAr ? `${item.price.toFixed(2)} د.ك` : `$${item.price.toFixed(2)}`}
-                                                    </span>
-
-                                                    {/* Add / Qty */}
-                                                    {!cart[item.id] ? (
-                                                        <button onClick={() => handleAdd(item.id)}
-                                                            className="bg-[#25d366] hover:bg-[#1fa855] text-white text-[12px] font-bold px-4 py-2 rounded-full transition-all flex items-center gap-1.5 shadow-sm">
-                                                            <Plus size={14} />
-                                                            {isAr ? 'أضف للسلة' : 'Add to Cart'}
-                                                        </button>
-                                                    ) : (
-                                                        <div className="flex items-center gap-3 bg-[#E8F5E9] rounded-full px-1 py-0.5 border border-[#25d366]/30">
-                                                            <button onClick={() => handleSub(item.id)}
-                                                                className="w-7 h-7 flex items-center justify-center text-[#128C7E] hover:bg-[#C8E6C9] rounded-full transition-colors">
-                                                                <Minus size={14} />
-                                                            </button>
-                                                            <span className="text-gray-900 text-sm font-black w-4 text-center">{cart[item.id]}</span>
-                                                            <button onClick={() => handleAdd(item.id)}
-                                                                className="w-7 h-7 flex items-center justify-center text-[#128C7E] hover:bg-[#C8E6C9] rounded-full transition-colors">
-                                                                <Plus size={14} />
-                                                            </button>
-                                                        </div>
-                                                    )}
+                                {filtered.map(item => (
+                                    <motion.div
+                                        key={item.id}
+                                        initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}
+                                        style={{ background: '#fff', display: 'flex', flexDirection: 'column', cursor: 'pointer', position: 'relative' }}
+                                        onClick={() => handleAdd(item.id)}
+                                    >
+                                        {/* 1:1 Aspect Ratio Image Wrapper */}
+                                        <div style={{ width: '100%', paddingTop: '100%', position: 'relative', overflow: 'hidden', background: '#f9f9f9' }}>
+                                            <img
+                                                src={item.img}
+                                                alt=""
+                                                style={{ position: 'absolute', inset: 0, width: '100%', height: '100%', objectFit: 'cover' }}
+                                            />
+                                            {/* Badge */}
+                                            {item.price > 80 && (
+                                                <span style={{
+                                                    position: 'absolute', top: '8px',
+                                                    [isAr ? 'right' : 'left']: '8px',
+                                                    background: '#25D366', color: '#fff',
+                                                    fontSize: '9px', fontWeight: '900',
+                                                    padding: '2px 8px', borderRadius: '12px',
+                                                    fontFamily: 'Cairo', textTransform: 'uppercase'
+                                                }}>
+                                                    {isAr ? 'الأكثر مبيعاً' : 'Best Seller'}
+                                                </span>
+                                            )}
+                                            {/* Count Overlay if in cart */}
+                                            {cart[item.id] > 0 && (
+                                                <div style={{
+                                                    position: 'absolute', inset: 0,
+                                                    background: 'rgba(37,211,102,0.12)',
+                                                    display: 'flex', alignItems: 'center',
+                                                    justifyContent: 'center',
+                                                    backdropFilter: 'blur(1px)'
+                                                }}>
+                                                    <div style={{
+                                                        width: '36px', height: '36px',
+                                                        borderRadius: '50%',
+                                                        background: '#25D366',
+                                                        display: 'flex', alignItems: 'center',
+                                                        justifyContent: 'center',
+                                                        fontSize: '20px', color: '#fff', fontWeight: '900',
+                                                        boxShadow: '0 4px 12px rgba(0,0,0,0.1)'
+                                                    }}>
+                                                        {cart[item.id]}
+                                                    </div>
                                                 </div>
-                                            </div>
+                                            )}
                                         </div>
-                                    ))}
-                                </motion.div>
+
+                                        {/* Product Details */}
+                                        <div style={{ padding: '10px 12px' }}>
+                                            <p style={{
+                                                fontSize: '14px', fontWeight: '700',
+                                                color: '#111', margin: '0 0 3px',
+                                                fontFamily: 'Cairo',
+                                                overflow: 'hidden', textOverflow: 'ellipsis',
+                                                whiteSpace: 'nowrap'
+                                            }} className="block">
+                                                {isAr ? item.nameAr : item.nameEn}
+                                            </p>
+                                            <p style={{ fontSize: '14px', fontWeight: '800', color: '#128C7E', margin: 0 }}>
+                                                {isAr ? `${item.price.toFixed(2)} د.ك` : `$${item.price.toFixed(2)}`}
+                                            </p>
+                                        </div>
+                                    </motion.div>
+                                ))}
                             </AnimatePresence>
                         </div>
 
-                        {/* ─ Sticky Cart Bar ─ */}
-                        <div className="absolute bottom-0 left-0 right-0 bg-white border-t border-gray-200 px-4 py-3 z-10">
-                            <motion.button
-                                onClick={handleSubmit}
-                                disabled={totalItems === 0}
-                                whileTap={totalItems > 0 ? { scale: 0.98 } : {}}
-                                animate={cartAnim === 'bounce' ? { scale: [1, 1.03, 1] } : {}}
-                                className={`w-full py-3.5 rounded-xl flex items-center justify-between px-5 transition-all font-bold text-[14px]
-                                    ${totalItems > 0
-                                        ? 'bg-[#25d366] text-white shadow-md'
-                                        : 'bg-gray-100 text-gray-400 cursor-not-allowed'}`}
-                            >
-                                <div className="flex items-center gap-2">
-                                    <div className="relative">
-                                        <ShoppingBag size={18} />
-                                        {totalItems > 0 && (
-                                            <motion.div key={totalItems} initial={{ scale: 0 }} animate={{ scale: 1 }}
-                                                className="absolute -top-1.5 -right-1.5 bg-white text-[#128C7E] w-4 h-4 rounded-full flex items-center justify-center text-[9px] font-black shadow-sm">
-                                                {totalItems}
-                                            </motion.div>
-                                        )}
+                        {/* 4. Bottom View Cart Bar (Meta Style) */}
+                        <AnimatePresence>
+                            {totalItems > 0 && (
+                                <motion.div
+                                    initial={{ y: 80 }} animate={{ y: 0 }} exit={{ y: 80 }}
+                                    style={{
+                                        position: 'absolute', bottom: 0, left: 0, right: 0,
+                                        background: '#25D366',
+                                        padding: '16px 20px',
+                                        display: 'flex',
+                                        alignItems: 'center',
+                                        justifyContent: 'space-between',
+                                        cursor: 'pointer',
+                                        zIndex: 80,
+                                        boxShadow: '0 -4px 15px rgba(0,0,0,0.1)'
+                                    }}
+                                    onClick={handleSubmit}
+                                >
+                                    <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
+                                        <div style={{
+                                            width: '24px', height: '24px',
+                                            background: 'rgba(0,0,0,0.15)',
+                                            borderRadius: '50%',
+                                            display: 'flex', alignItems: 'center',
+                                            justifyContent: 'center',
+                                            color: '#fff', fontSize: '13px', fontWeight: '900'
+                                        }}>
+                                            {totalItems}
+                                        </div>
+                                        <span style={{ color: '#fff', fontSize: '16px', fontWeight: '800', fontFamily: 'Cairo' }}>
+                                            {isAr ? 'عرض سلة المشتريات' : 'View Shopping Cart'}
+                                        </span>
                                     </div>
-                                    <span>{isAr ? 'اعتماد الطلب ✅' : 'Send Order ✅'}</span>
-                                </div>
-                                <span className="font-black">
-                                    {totalItems > 0
-                                        ? (isAr ? `${totalPrice.toFixed(2)} د.ك` : `$${totalPrice.toFixed(2)}`)
-                                        : (isAr ? 'أضف منتجات' : 'Add items')}
-                                </span>
-                            </motion.button>
-                        </div>
+                                    <div style={{ color: 'rgba(255,255,255,0.95)', fontSize: '15px', fontWeight: '900' }}>
+                                        {isAr ? `${totalPrice.toFixed(2)} د.ك` : `$${totalPrice.toFixed(2)}`}
+                                    </div>
+                                </motion.div>
+                            )}
+                        </AnimatePresence>
                     </motion.div>
                 </>
             )}

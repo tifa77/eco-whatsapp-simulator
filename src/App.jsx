@@ -2,6 +2,7 @@ import React, { useState, useRef } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import ChatSimulator from './components/ChatSimulator';
 import { Loader2, ShoppingCart, Zap, Star, Bot, Shield } from 'lucide-react';
+import { BRAND_LOGOS } from './config/brands';
 
 /* ═══════════════════ PARTICLES ═══════════════════════════════════════════════ */
 function Particles() {
@@ -32,26 +33,31 @@ function Particles() {
 
 /* ═══════════════════ BRAND MARQUEE ═══════════════════════════════════════════ */
 function BrandMarquee() {
-    const brands = [
-        'LUXE BEAUTY', 'URBAN BITES', 'CLOUD STORE',
-        'NICHE STYLE', 'FLAVOR HOUSE', 'NOVA FASHION',
-        'SWIFT MARKET', 'GOLDEN TOUCH', 'PEAK STORE', 'VELVET CO'
-    ];
     return (
         <div style={{ overflow: 'hidden', width: '100%', marginTop: '32px' }}>
             <motion.div
                 animate={{ x: ['0%', '-50%'] }}
-                transition={{ repeat: Infinity, duration: 20, ease: 'linear' }}
-                style={{ display: 'flex', gap: '48px', width: 'max-content' }}
+                transition={{ repeat: Infinity, duration: 25, ease: 'linear' }}
+                style={{ display: 'flex', gap: '48px', width: 'max-content', alignItems: 'center' }}
             >
-                {[...brands, ...brands].map((brand, i) => (
-                    <span key={i} style={{
-                        color: 'rgba(255,255,255,0.25)', fontSize: '13px',
-                        fontWeight: '700', letterSpacing: '3px', whiteSpace: 'nowrap',
-                        fontFamily: 'Cairo'
-                    }}>
-                        {brand}
-                    </span>
+                {[...BRAND_LOGOS, ...BRAND_LOGOS].map((brand, i) => (
+                    <div key={i} style={{ display: 'flex', alignItems: 'center', gap: '8px', shrink: 0 }}>
+                        {brand.logo ? (
+                            <img 
+                                src={brand.logo} 
+                                alt={brand.name} 
+                                style={{ height: '24px', opacity: 0.5, filter: 'grayscale(1) brightness(2)' }} 
+                            />
+                        ) : (
+                            <span style={{
+                                color: 'rgba(255,255,255,0.25)', fontSize: '13px',
+                                fontWeight: '700', letterSpacing: '3px', whiteSpace: 'nowrap',
+                                fontFamily: 'Cairo'
+                            }}>
+                                {brand.name}
+                            </span>
+                        )}
+                    </div>
                 ))}
             </motion.div>
         </div>
