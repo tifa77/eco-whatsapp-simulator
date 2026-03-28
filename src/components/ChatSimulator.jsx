@@ -735,6 +735,7 @@ const ChatSimulatorInner = ({ config, onBack }) => {
                 onReturnToMain={returnToMainMenu}
                 lang={lang}
                 niche={niche}
+                projectName={projectName}
             />
         </div>
     );
