@@ -42,10 +42,10 @@ function BrandMarquee() {
             WebkitMaskImage: 'linear-gradient(to right, transparent 0%, black 10%, black 90%, transparent 100%)'
         }}>
             <motion.div
-                animate={{ x: ['0px', '-1600px'] }}
+                animate={{ x: ['0px', '-4000px'] }}
                 transition={{
                     repeat: Infinity,
-                    duration: 20,
+                    duration: 35,
                     ease: 'linear',
                     repeatType: 'loop'
                 }}
@@ -62,50 +62,76 @@ function BrandMarquee() {
                         display: 'flex',
                         alignItems: 'center',
                         justifyContent: 'center',
-                        minWidth: '160px',
-                        height: '60px',
-                        padding: '0 32px',
+                        minWidth: '400px',
+                        height: '180px',
+                        padding: '0 40px',
                         flexShrink: 0
                     }}>
                         {brand.logo ? (
-                            <>
+                            <div style={{
+                                background: '#fff',
+                                width: '100%',
+                                height: '100%',
+                                borderRadius: '24px',
+                                display: 'flex',
+                                alignItems: 'center',
+                                justifyContent: 'center',
+                                boxShadow: '0 8px 30px rgba(0,0,0,0.5)',
+                                padding: '24px',
+                                border: '1px solid rgba(255,255,255,0.1)'
+                            }}>
                                 <img
                                     src={brand.logo}
                                     alt={brand.name}
                                     onError={(e) => {
                                         e.target.style.display = 'none';
-                                        e.target.nextSibling.style.display = 'flex';
+                                        e.target.nextSibling.style.display = 'block';
                                     }}
                                     style={{
-                                        height: '40px',
+                                        height: '120px',
                                         width: 'auto',
-                                        maxWidth: '120px',
+                                        maxWidth: '320px',
                                         objectFit: 'contain',
-                                        filter: 'grayscale(1) brightness(1.8) contrast(1.2)',
-                                        opacity: 0.7
+                                        // Colored (no grayscale filter)
+                                        filter: 'none',
+                                        opacity: 1
                                     }}
                                 />
                                 <span style={{
                                     display: 'none',
-                                    color: 'rgba(255,255,255,0.35)',
-                                    fontSize: '12px',
-                                    fontWeight: '700',
+                                    color: '#0a0a0a',
+                                    fontSize: '24px',
+                                    fontWeight: '800',
                                     letterSpacing: '2px',
-                                    whiteSpace: 'nowrap'
+                                    whiteSpace: 'nowrap',
+                                    fontFamily: 'Cairo'
                                 }}>
                                     {brand.name}
                                 </span>
-                            </>
+                            </div>
                         ) : (
-                            <span style={{
-                                color: 'rgba(255,255,255,0.35)',
-                                fontSize: '12px',
-                                fontWeight: '700',
-                                letterSpacing: '2px',
-                                whiteSpace: 'nowrap'
+                            <div style={{
+                                background: '#fff',
+                                width: '100%',
+                                height: '100%',
+                                borderRadius: '24px',
+                                display: 'flex',
+                                alignItems: 'center',
+                                justifyContent: 'center',
+                                boxShadow: '0 8px 30px rgba(0,0,0,0.5)',
+                                padding: '24px'
                             }}>
-                                {brand.name}
-                            </span>
+                                <span style={{
+                                    color: '#0a0a0a',
+                                    fontSize: '24px',
+                                    fontWeight: '800',
+                                    letterSpacing: '2px',
+                                    whiteSpace: 'nowrap',
+                                    fontFamily: 'Cairo'
+                                }}>
+                                    {brand.name}
+                                </span>
+                            </div>
                         )}
                     </div>
                 ))}
