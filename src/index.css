@@ -32,3 +32,19 @@
   75%  { transform: perspective(1200px) rotateY(-13deg) rotateX(5deg) translateY(-6px); }
   100% { transform: perspective(1200px) rotateY(-12deg) rotateX(4deg) translateY(0px); }
 }
+
+@keyframes marquee {
+  0%   { transform: translateX(0); }
+  100% { transform: translateX(-50%); }
+}
+
+.brands-track {
+  display: flex;
+  animation: marquee 40s linear infinite;
+  width: max-content;
+  will-change: transform;
+}
+
+.brands-track:hover {
+  animation-play-state: paused;
+}

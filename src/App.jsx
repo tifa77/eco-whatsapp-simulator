@@ -32,83 +32,102 @@ function Particles() {
 }
 
 /* ═══════════════════ BRAND MARQUEE ═══════════════════════════════════════════ */
+/* ═══════════════════ BRAND MARQUEE ═══════════════════════════════════════════ */
 function BrandMarquee() {
     return (
         <div style={{
             overflow: 'hidden',
             width: '100%',
-            marginTop: '24px',
-            maskImage: 'linear-gradient(to right, transparent 0%, black 10%, black 90%, transparent 100%)',
-            WebkitMaskImage: 'linear-gradient(to right, transparent 0%, black 10%, black 90%, transparent 100%)'
+            padding: '24px 0',
+            maskImage: 'linear-gradient(to right, transparent 0%, black 8%, black 92%, transparent 100%)',
+            WebkitMaskImage: 'linear-gradient(to right, transparent 0%, black 8%, black 92%, transparent 100%)'
         }}>
-            <motion.div
-                animate={{ x: ['0px', '-2880px'] }}
-                transition={{
-                    repeat: Infinity,
-                    duration: 30,
-                    ease: 'linear',
-                    repeatType: 'loop'
-                }}
-                style={{
-                    display: 'flex',
-                    alignItems: 'center',
-                    width: 'max-content',
-                    gap: '0px',
-                    willChange: 'transform'
-                }}
-            >
-                {[...BRAND_LOGOS, ...BRAND_LOGOS, ...BRAND_LOGOS].map((brand, i) => (
-                    <div key={i} style={{
+            <div className="brands-track">
+                {/* النسخة الأولى */}
+                {BRAND_LOGOS.map((brand, i) => (
+                    <div key={`a-${i}`} style={{
                         display: 'flex',
                         alignItems: 'center',
                         justifyContent: 'center',
-                        minWidth: '180px',
-                        height: '80px',
-                        padding: '0 32px',
+                        minWidth: '200px',
+                        height: '120px',
+                        padding: '0 40px',
                         flexShrink: 0
                     }}>
-                        {brand.logo ? (
-                            <>
-                                <img
-                                    src={brand.logo}
-                                    alt={brand.name}
-                                    onError={(e) => {
-                                        e.target.style.display = 'none';
-                                        e.target.nextSibling.style.display = 'block';
-                                    }}
-                                    style={{
-                                        height: '64px',
-                                        width: 'auto',
-                                        maxWidth: '160px',
-                                        objectFit: 'contain',
-                                        filter: 'grayscale(1) brightness(2) contrast(1.1)',
-                                        opacity: 0.85,
-                                        display: 'block'
-                                    }}
-                                />
-                                <span style={{
-                                    display: 'none',
-                                    color: 'rgba(255,255,255,0.3)',
-                                    fontSize: '12px',
-                                    fontWeight: '700',
-                                    letterSpacing: '2px'
-                                }}>
-                                    {brand.name}
-                                </span>
-                            </>
-                        ) : (
-                            <span style={{
-                                color: 'rgba(255,255,255,0.3)',
-                                fontSize: '12px',
-                                fontWeight: '700',
-                                letterSpacing: '2px'
-                            }}>
-                                {brand.name}
-                            </span>
-                        )}
+                        <img
+                            src={brand.logo}
+                            alt={brand.name}
+                            onError={(e) => {
+                                e.target.style.display = 'none';
+                                e.target.nextSibling.style.display = 'flex';
+                            }}
+                            style={{
+                                height: '100px',
+                                width: 'auto',
+                                maxWidth: '180px',
+                                objectFit: 'contain',
+                                filter: 'none',
+                                opacity: 1,
+                                display: 'block',
+                                filter: 'drop-shadow(0 2px 8px rgba(255,255,255,0.15))'
+                            }}
+                        />
+                        <span style={{
+                            display: 'none',
+                            color: 'rgba(255,255,255,0.5)',
+                            fontSize: '14px',
+                            fontWeight: '700',
+                            letterSpacing: '2px',
+                            whiteSpace: 'nowrap',
+                            alignItems: 'center',
+                            justifyContent: 'center'
+                        }}>
+                            {brand.name}
+                        </span>
                     </div>
                 ))}
-            </motion.div>
+
+                {/* النسخة الثانية — مطابقة تماماً لضمان الاستمرارية */}
+                {BRAND_LOGOS.map((brand, i) => (
+                    <div key={`b-${i}`} style={{
+                        display: 'flex',
+                        alignItems: 'center',
+                        justifyContent: 'center',
+                        minWidth: '200px',
+                        height: '120px',
+                        padding: '0 40px',
+                        flexShrink: 0
+                    }}>
+                        <img
+                            src={brand.logo}
+                            alt={brand.name}
+                            onError={(e) => {
+                                e.target.style.display = 'none';
+                                e.target.nextSibling.style.display = 'flex';
+                            }}
+                            style={{
+                                height: '100px',
+                                width: 'auto',
+                                maxWidth: '180px',
+                                objectFit: 'contain',
+                                filter: 'drop-shadow(0 2px 8px rgba(255,255,255,0.15))',
+                                opacity: 1,
+                                display: 'block'
+                            }}
+                        />
+                        <span style={{
+                            display: 'none',
+                            color: 'rgba(255,255,255,0.5)',
+                            fontSize: '14px',
+                            fontWeight: '700',
+                            letterSpacing: '2px',
+                            whiteSpace: 'nowrap'
+                        }}>
+                            {brand.name}
+                        </span>
+                    </div>
+                ))}
+            </div>
         </div>
     );
 }
