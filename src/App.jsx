@@ -47,10 +47,10 @@ function BrandMarquee() {
                                 src={brand.logo} 
                                 alt={brand.name} 
                                 style={{ 
-                                    height: '45px', 
+                                    height: '120px', 
                                     width: 'auto',
-                                    opacity: 0.8, 
-                                    filter: 'grayscale(1) brightness(2.5)' 
+                                    opacity: 0.9, 
+                                    filter: 'grayscale(1) brightness(2.8)' 
                                 }} 
                             />
                         ) : (
