@@ -50,7 +50,6 @@ const BrandStrip = () => {
             <img
               src={brand.logo}
               alt={brand.name}
-              loading="lazy"
               onError={(e) => {
                 // عند فشل تحميل الصورة → أخفِ الصورة وأظهر الاسم
                 e.currentTarget.style.display = 'none';
