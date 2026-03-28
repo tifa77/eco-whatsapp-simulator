@@ -272,12 +272,13 @@ export default function CatalogFlowSheet({ isOpen, onClose, onSubmit, lang, nich
                                                     display: 'flex', alignItems: 'center',
                                                     justifyContent: 'space-between',
                                                     border: '1px solid #25D366',
-                                                    borderRadius: '8px', overflow: 'hidden'
+                                                    borderRadius: '8px', overflow: 'hidden',
+                                                    height: '32px'
                                                 }}>
                                                     <button onClick={() => handleSub(item.id)}
-                                                        style={{ flex: 1, padding: '7px', background: '#fff',
+                                                        style={{ width: '32px', height: '32px', background: '#fff',
                                                             border: 'none', cursor: 'pointer',
-                                                            color: '#25D366', fontSize: '16px', fontWeight: '700' }}>
+                                                            color: '#25D366', fontSize: '18px', fontWeight: '700' }}>
                                                         −
                                                     </button>
                                                     <span style={{ padding: '0 8px', fontSize: '13px',
@@ -285,9 +286,9 @@ export default function CatalogFlowSheet({ isOpen, onClose, onSubmit, lang, nich
                                                         {cart[item.id]}
                                                     </span>
                                                     <button onClick={() => handleAdd(item.id)}
-                                                        style={{ flex: 1, padding: '7px', background: '#25D366',
+                                                        style={{ width: '32px', height: '32px', background: '#25D366',
                                                             border: 'none', cursor: 'pointer',
-                                                            color: '#fff', fontSize: '16px', fontWeight: '700' }}>
+                                                            color: '#fff', fontSize: '18px', fontWeight: '700' }}>
                                                         +
                                                     </button>
                                                 </div>
