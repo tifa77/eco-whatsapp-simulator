@@ -33,30 +33,39 @@ function Particles() {
 
 /* ═══════════════════ BRAND MARQUEE ═══════════════════════════════════════════ */
 function BrandMarquee() {
+    // Increase duplication to 4 times to ensure it covers even wider screens without gaps
+    const marqueeItems = [...BRAND_LOGOS, ...BRAND_LOGOS, ...BRAND_LOGOS, ...BRAND_LOGOS];
+    
     return (
-        <div style={{ overflow: 'hidden', width: '100%', marginTop: '32px' }}>
+        <div className="w-full relative overflow-hidden py-8 mt-4 select-none">
+            {/* Soft fade edges for premium look */}
+            <div className="absolute inset-y-0 left-0 w-32 bg-gradient-to-r from-[#0a0a0a] to-transparent z-10 pointer-events-none" />
+            <div className="absolute inset-y-0 right-0 w-32 bg-gradient-to-l from-[#0a0a0a] to-transparent z-10 pointer-events-none" />
+            
             <motion.div
                 animate={{ x: ['0%', '-50%'] }}
-                transition={{ repeat: Infinity, duration: 25, ease: 'linear' }}
-                style={{ display: 'flex', gap: '48px', width: 'max-content', alignItems: 'center' }}
+                transition={{ repeat: Infinity, duration: 35, ease: 'linear' }}
+                style={{ display: 'flex', gap: '80px', width: 'max-content', alignItems: 'center' }}
+                className="will-change-transform"
             >
-                {[...BRAND_LOGOS, ...BRAND_LOGOS].map((brand, i) => (
-                    <div key={i} style={{ display: 'flex', alignItems: 'center', gap: '8px', shrink: 0 }}>
+                {marqueeItems.map((brand, i) => (
+                    <div key={i} className="flex items-center justify-center shrink-0">
                         {brand.logo ? (
                             <img 
                                 src={brand.logo} 
                                 alt={brand.name} 
                                 style={{ 
-                                    height: '240px', 
+                                    height: '85px', 
                                     width: 'auto',
-                                    opacity: 0.9, 
-                                    filter: 'grayscale(1) brightness(2.8)' 
+                                    opacity: 0.85, 
+                                    filter: 'brightness(1.5)' 
                                 }} 
+                                className="object-contain"
                             />
                         ) : (
                             <span style={{
-                                color: 'rgba(255,255,255,0.25)', fontSize: '13px',
-                                fontWeight: '700', letterSpacing: '3px', whiteSpace: 'nowrap',
+                                color: 'rgba(255,255,255,0.4)', fontSize: '15px',
+                                fontWeight: '700', letterSpacing: '4px', whiteSpace: 'nowrap',
                                 fontFamily: 'Cairo'
                             }}>
                                 {brand.name}
