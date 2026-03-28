@@ -33,46 +33,73 @@ function Particles() {
 
 /* ═══════════════════ BRAND MARQUEE ═══════════════════════════════════════════ */
 function BrandMarquee() {
-    const brands = [...BRAND_LOGOS, ...BRAND_LOGOS, ...BRAND_LOGOS, ...BRAND_LOGOS];
     return (
-        <div style={{ overflow: 'hidden', width: '100%', marginTop: '24px' }}>
+        <div style={{
+            overflow: 'hidden',
+            width: '100%',
+            marginTop: '24px',
+            maskImage: 'linear-gradient(to right, transparent 0%, black 10%, black 90%, transparent 100%)',
+            WebkitMaskImage: 'linear-gradient(to right, transparent 0%, black 10%, black 90%, transparent 100%)'
+        }}>
             <motion.div
-                animate={{ x: ['0%', '-50%'] }}
-                transition={{ repeat: Infinity, duration: 25, ease: 'linear' }}
+                animate={{ x: ['0px', '-1600px'] }}
+                transition={{
+                    repeat: Infinity,
+                    duration: 20,
+                    ease: 'linear',
+                    repeatType: 'loop'
+                }}
                 style={{
                     display: 'flex',
                     alignItems: 'center',
                     width: 'max-content',
-                    gap: '0px'
+                    gap: '0px',
+                    willChange: 'transform'
                 }}
             >
-                {brands.map((brand, i) => (
+                {[...BRAND_LOGOS, ...BRAND_LOGOS, ...BRAND_LOGOS].map((brand, i) => (
                     <div key={i} style={{
                         display: 'flex',
                         alignItems: 'center',
                         justifyContent: 'center',
-                        minWidth: '140px',
+                        minWidth: '160px',
                         height: '60px',
-                        padding: '0 24px',
+                        padding: '0 32px',
                         flexShrink: 0
                     }}>
                         {brand.logo ? (
-                            <img
-                                src={brand.logo}
-                                alt={brand.name}
-                                style={{
-                                    height: '48px',
-                                    width: 'auto',
-                                    maxWidth: '130px',
-                                    objectFit: 'contain',
-                                    filter: 'grayscale(1) brightness(1.8) contrast(1.2)',
-                                    opacity: 0.85
-                                }}
-                            />
+                            <>
+                                <img
+                                    src={brand.logo}
+                                    alt={brand.name}
+                                    onError={(e) => {
+                                        e.target.style.display = 'none';
+                                        e.target.nextSibling.style.display = 'flex';
+                                    }}
+                                    style={{
+                                        height: '40px',
+                                        width: 'auto',
+                                        maxWidth: '120px',
+                                        objectFit: 'contain',
+                                        filter: 'grayscale(1) brightness(1.8) contrast(1.2)',
+                                        opacity: 0.7
+                                    }}
+                                />
+                                <span style={{
+                                    display: 'none',
+                                    color: 'rgba(255,255,255,0.35)',
+                                    fontSize: '12px',
+                                    fontWeight: '700',
+                                    letterSpacing: '2px',
+                                    whiteSpace: 'nowrap'
+                                }}>
+                                    {brand.name}
+                                </span>
+                            </>
                         ) : (
                             <span style={{
-                                color: 'rgba(255,255,255,0.4)',
-                                fontSize: '13px',
+                                color: 'rgba(255,255,255,0.35)',
+                                fontSize: '12px',
                                 fontWeight: '700',
                                 letterSpacing: '2px',
                                 whiteSpace: 'nowrap'
@@ -369,6 +396,7 @@ function App() {
     const [projectName, setProjectName] = useState('');
     const [isZooming, setIsZooming] = useState(false);
     const [nameActive, setNameActive] = useState(false);
+    const [phoneKey, setPhoneKey] = useState(0);
     const isAr = lang === 'ar';
 
     const startSimulator = () => {
@@ -574,8 +602,13 @@ function App() {
                             </div>
                             <div className="absolute inset-0 overflow-hidden rounded-[49px]">
                                 <ChatSimulator
+                                    key={phoneKey}
                                     config={{ projectName, niche: 'products', platform: 'whatsapp', lang, goals: ['lost_sales'] }}
-                                    onBack={() => setView('landing')}
+                                    onBack={() => {
+                                        setView('landing');
+                                        setIsZooming(false);
+                                        setPhoneKey(prev => prev + 1);
+                                    }}
                                 />
                             </div>
                             <div className="absolute bottom-[6px] left-1/2 -translate-x-1/2 w-[100px] h-[4px] bg-white/20 rounded-full z-[60]" />
