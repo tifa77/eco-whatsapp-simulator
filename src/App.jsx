@@ -31,21 +31,28 @@ function Particles() {
     );
 }
 
-/* ═══════════════════ BRAND MARQUEE ═══════════════════════════════════════════ */
-/* ═══════════════════ BRAND STRIP ═══════════════════════════════════════════ */
-const BrandStrip = () => {
+const TrustedBySection = ({ lang }) => {
   const all = [...BRAND_LOGOS, ...BRAND_LOGOS, ...BRAND_LOGOS, ...BRAND_LOGOS];
+  const isAr = lang === 'ar';
 
   return (
-    <div className="marquee-container">
-      <div className="marquee-track">
-        {all.map((b, i) => (
-          <div key={i} className="marquee-item">
-            <img src={b.logo} alt={b.name}
-              onError={(e) => { e.currentTarget.style.display = 'none'; }}
-            />
-          </div>
-        ))}
+    <div className="trusted-section">
+      {/* ── Dark Navy Header ── */}
+      <div className="trusted-header">
+        <h3>{isAr ? 'موثوق من قبل الشركات الرائدة' : 'Trusted by Leading Companies'}</h3>
+      </div>
+
+      {/* ── White Logo Showcase with Auto-Scroll ── */}
+      <div className="marquee-container">
+        <div className="marquee-track">
+          {all.map((b, i) => (
+            <div key={i} className="marquee-item">
+              <img src={b.logo} alt={b.name}
+                onError={(e) => { e.currentTarget.style.display = 'none'; }}
+              />
+            </div>
+          ))}
+        </div>
       </div>
     </div>
   );
@@ -485,7 +492,7 @@ function App() {
                                 <span className="text-white/40 text-[12px] font-bold mx-1">{t.counter}</span>
                             </div>
                             <Testimonials lang={lang} />
-                            <BrandStrip />
+                            <TrustedBySection lang={lang} />
                         </div>
                     </motion.div>
                 )}
