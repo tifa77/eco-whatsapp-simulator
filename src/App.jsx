@@ -34,30 +34,16 @@ function Particles() {
 /* ═══════════════════ BRAND MARQUEE ═══════════════════════════════════════════ */
 /* ═══════════════════ BRAND STRIP ═══════════════════════════════════════════ */
 const BrandStrip = () => {
-  // كرر المصفوفة 4 مرات لضمان امتلاء الشاشة وعدم الانقطاع
-  const repeated = [
-    ...BRAND_LOGOS,
-    ...BRAND_LOGOS,
-    ...BRAND_LOGOS,
-    ...BRAND_LOGOS
-  ];
+  const all = [...BRAND_LOGOS, ...BRAND_LOGOS, ...BRAND_LOGOS, ...BRAND_LOGOS];
 
   return (
-    <div className="brand-marquee-wrapper">
-      <div className="brand-marquee-track">
-        {repeated.map((brand, index) => (
-          <div key={index} className="brand-item">
-            <img
-              src={brand.logo}
-              alt={brand.name}
-              onError={(e) => {
-                // عند فشل تحميل الصورة → أخفِ الصورة وأظهر الاسم
-                e.currentTarget.style.display = 'none';
-                const fallback = e.currentTarget.nextElementSibling;
-                if (fallback) fallback.style.display = 'block';
-              }}
+    <div className="marquee-container">
+      <div className="marquee-track">
+        {all.map((b, i) => (
+          <div key={i} className="marquee-item">
+            <img src={b.logo} alt={b.name}
+              onError={(e) => { e.currentTarget.style.display = 'none'; }}
             />
-            <span className="brand-fallback">{brand.name}</span>
           </div>
         ))}
       </div>

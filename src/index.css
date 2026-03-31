@@ -33,67 +33,41 @@
   100% { transform: perspective(1200px) rotateY(-12deg) rotateX(4deg) translateY(0px); }
 }
 
-@keyframes brandScroll {
+@keyframes marquee {
   0%   { transform: translateX(0); }
   100% { transform: translateX(-50%); }
 }
-
-.brand-marquee-wrapper {
-  overflow: hidden;
+.marquee-container {
   width: 100%;
+  overflow: hidden;
+  background: transparent;
   padding: 24px 0;
-  /* Fixed iOS Safari rendering crash by forcing hardware acceleration layers manually */
-  transform: translateZ(0);
-  will-change: transform;
 }
-
-.brand-marquee-track {
+.marquee-track {
   display: flex;
   align-items: center;
   width: max-content;
-  animation: brandScroll 35s linear infinite;
+  animation: marquee 30s linear infinite;
   will-change: transform;
 }
-
-.brand-marquee-track:hover {
+.marquee-track:hover {
   animation-play-state: paused;
 }
-
-.brand-item {
+.marquee-item {
+  flex-shrink: 0;
+  width: 200px;
+  height: 120px;
   display: flex;
   align-items: center;
   justify-content: center;
-  flex-shrink: 0;
-  width: 220px;
-  height: 140px;
-  padding: 16px 32px;
-  transition: transform 0.3s ease;
+  padding: 0 32px;
 }
-
-.brand-item:hover {
-  transform: scale(1.1);
-}
-
-.brand-item img {
-  height: 110px;
+.marquee-item img {
+  height: 90px;
   width: auto;
-  max-width: 190px;
+  max-width: 170px;
   object-fit: contain;
-  opacity: 1;
-  filter: drop-shadow(0 2px 12px rgba(255,255,255,0.2));
-  transition: filter 0.3s ease, opacity 0.3s ease;
+  display: block;
+  filter: drop-shadow(0 2px 8px rgba(255,255,255,0.1));
 }
-
-.brand-item:hover img {
-  filter: drop-shadow(0 4px 20px rgba(255,255,255,0.4)) brightness(1.15);
-}
-
-.brand-fallback {
-  display: none;
-  color: rgba(255,255,255,0.45);
-  font-size: 13px;
-  font-weight: 700;
-  letter-spacing: 2px;
-  white-space: nowrap;
-  text-align: center;
-}
+
