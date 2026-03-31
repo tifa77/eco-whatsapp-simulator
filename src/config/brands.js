@@ -9,4 +9,5 @@ export const BRAND_LOGOS = [
   { name: 'Brand 8', logo: '/brand/logo_8.png' },
   { name: 'Brand 9', logo: '/brand/logo_9.png' },
   { name: 'Brand 10', logo: '/brand/logo_10.png' },
+  { name: 'Brand 11', logo: '/brand/logo_11.png' },
 ];
