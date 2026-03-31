@@ -32,6 +32,7 @@ function Particles() {
 }
 
 const TrustedBySection = ({ lang }) => {
+  // 4x repetitions ensures seamless loop on all screen widths
   const all = [...BRAND_LOGOS, ...BRAND_LOGOS, ...BRAND_LOGOS, ...BRAND_LOGOS];
   const isAr = lang === 'ar';
 
@@ -47,8 +48,14 @@ const TrustedBySection = ({ lang }) => {
         <div className="marquee-track">
           {all.map((b, i) => (
             <div key={i} className="marquee-item">
-              <img src={b.logo} alt={b.name}
-                onError={(e) => { e.currentTarget.style.display = 'none'; }}
+              <img
+                src={b.logo}
+                alt={b.name}
+                onError={(e) => {
+                  // Hide the entire wrapper so no blank gap is left
+                  const wrapper = e.currentTarget.closest('.marquee-item');
+                  if (wrapper) wrapper.style.display = 'none';
+                }}
               />
             </div>
           ))}

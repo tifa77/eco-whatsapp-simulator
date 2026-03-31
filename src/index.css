@@ -73,8 +73,8 @@
   display: flex;
   align-items: center;
   width: max-content;
-  gap: 8px;
-  animation: marquee 35s linear infinite;
+  /* NO gap here — gap breaks the -50% seamless loop calculation */
+  animation: marquee 40s linear infinite;
   will-change: transform;
 }
 
@@ -84,12 +84,12 @@
 
 .marquee-item {
   flex-shrink: 0;
-  width: 160px;
-  height: 80px;
+  width: 260px;
+  height: 180px;
   display: flex;
   align-items: center;
   justify-content: center;
-  padding: 8px 16px;
+  padding: 16px 24px;
   transition: transform 0.3s ease;
 }
 
@@ -98,12 +98,12 @@
 }
 
 .marquee-item img {
-  height: 60px;
+  height: 148px;
   width: auto;
-  max-width: 130px;
+  max-width: 220px;
   object-fit: contain;
   display: block;
-  filter: grayscale(100%) opacity(0.55);
+  filter: grayscale(80%) opacity(0.75);
   transition: filter 0.4s ease, transform 0.3s ease;
 }
 
