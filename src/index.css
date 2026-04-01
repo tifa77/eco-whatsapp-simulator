@@ -47,28 +47,16 @@
   border: 1px solid rgba(255,255,255,0.08);
 }
 
-.trusted-header {
-  background: linear-gradient(135deg, #0d1a3a 0%, #0A1128 100%);
-  padding: 14px 24px;
-  text-align: center;
-  border-bottom: 1px solid rgba(255,255,255,0.08);
-}
-
+.trusted-header,
 .trusted-header h3 {
-  margin: 0;
-  font-size: 14px;
-  font-weight: 700;
-  color: rgba(255,255,255,0.9);
-  letter-spacing: 0.5px;
-  font-family: 'Cairo', sans-serif;
+  display: none;
 }
 
-/* Light gray strip — neutral background that works for all logo types */
 .marquee-container {
   width: 100%;
   overflow: hidden;
-  background: #f0f2f5;
-  padding: 20px 0;
+  background: transparent;
+  padding: 24px 0;
 }
 
 .marquee-track {
