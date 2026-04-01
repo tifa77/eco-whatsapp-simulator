@@ -32,31 +32,36 @@ function Particles() {
 }
 
 const TrustedBySection = ({ lang }) => {
-  // 4x repetitions ensures seamless loop on all screen widths
+  // Duplicate 4× for a seamless infinite loop
   const all = [...BRAND_LOGOS, ...BRAND_LOGOS, ...BRAND_LOGOS, ...BRAND_LOGOS];
   const isAr = lang === 'ar';
 
   return (
     <div className="trusted-section">
-      {/* ── Dark Navy Header ── */}
+      {/* Dark Navy Header */}
       <div className="trusted-header">
         <h3>{isAr ? 'موثوق من قبل الشركات الرائدة' : 'Trusted by Leading Companies'}</h3>
       </div>
 
-      {/* ── White Logo Showcase with Auto-Scroll ── */}
+      {/* Logo Strip — light gray bg, white card per logo */}
       <div className="marquee-container">
         <div className="marquee-track">
           {all.map((b, i) => (
             <div key={i} className="marquee-item">
-              <img
-                src={b.logo}
-                alt={b.name}
-                onError={(e) => {
-                  // Hide the entire wrapper so no blank gap is left
-                  const wrapper = e.currentTarget.closest('.marquee-item');
-                  if (wrapper) wrapper.style.display = 'none';
-                }}
-              />
+              {/* White card — shows every logo regardless of background type */}
+              <div className="logo-card">
+                <img
+                  src={b.logo}
+                  alt={b.name}
+                  onError={(e) => {
+                    // Replace broken image with a colored placeholder text
+                    e.currentTarget.style.display = 'none';
+                    const ph = e.currentTarget.nextElementSibling;
+                    if (ph) ph.style.display = 'flex';
+                  }}
+                />
+                <span className="logo-fallback">{b.name}</span>
+              </div>
             </div>
           ))}
         </div>
