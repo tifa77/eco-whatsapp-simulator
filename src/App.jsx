@@ -32,41 +32,47 @@ function Particles() {
 }
 
 const TrustedBySection = ({ lang }) => {
-  // Duplicate 4× for a seamless infinite loop
-  const all = [...BRAND_LOGOS, ...BRAND_LOGOS, ...BRAND_LOGOS, ...BRAND_LOGOS];
   const isAr = lang === 'ar';
+  // Duplicate for seamless infinite loop (same technique as Testimonials)
+  const all = [...BRAND_LOGOS, ...BRAND_LOGOS];
 
   return (
-    <div className="trusted-section">
-      {/* Clean text header, no backgrounds */}
-      <div style={{ textAlign: 'center', marginBottom: '16px' }}>
-        <h3 style={{ fontSize: '14px', fontWeight: 'bold', color: 'rgba(255,255,255,0.7)' }}>
-          {isAr ? 'موثوق من قبل الشركات الرائدة' : 'Trusted by Leading Companies'}
-        </h3>
-      </div>
+    <div className="w-full py-6">
+      {/* Header text */}
+      <p className="text-center text-white/50 text-xs font-semibold tracking-wide mb-4">
+        {isAr ? 'موثوق من قبل الشركات الرائدة' : 'TRUSTED BY LEADING COMPANIES'}
+      </p>
 
-      {/* Logo Strip — light gray bg, white card per logo */}
-      <div className="marquee-container" dir="ltr">
-        <div className="marquee-track">
+      {/* Scrolling strip — exact same pattern as Testimonials */}
+      <div className="w-full flex overflow-hidden py-2 mask-edges" dir="ltr">
+        <motion.div
+          className="flex gap-6 items-center"
+          animate={{ x: ['0%', '-50%'] }}
+          transition={{ duration: 30, ease: 'linear', repeat: Infinity }}
+        >
           {all.map((b, i) => (
-            <div key={i} className="marquee-item">
-              {/* White card — shows every logo regardless of background type */}
-              <div className="logo-card">
-                <img
-                  src={b.logo}
-                  alt={b.name}
-                  onError={(e) => {
-                    // Replace broken image with a colored placeholder text
-                    e.currentTarget.style.display = 'none';
-                    const ph = e.currentTarget.nextElementSibling;
-                    if (ph) ph.style.display = 'flex';
-                  }}
-                />
-                <span className="logo-fallback">{b.name}</span>
-              </div>
-            </div>
+            <motion.div
+              key={i}
+              whileHover={{ y: -4, scale: 1.05 }}
+              className="shrink-0 w-[160px] h-[100px] rounded-2xl bg-white flex items-center justify-center p-3"
+              style={{ boxShadow: '0 4px 20px rgba(0,0,0,0.15)' }}
+            >
+              <img
+                src={b.logo}
+                alt={b.name}
+                className="max-h-[70px] max-w-[130px] object-contain"
+                onError={(e) => {
+                  e.currentTarget.style.display = 'none';
+                  const ph = e.currentTarget.nextElementSibling;
+                  if (ph) ph.style.display = 'flex';
+                }}
+              />
+              <span className="hidden items-center justify-center text-[10px] font-bold text-slate-500 text-center leading-tight">
+                {b.name}
+              </span>
+            </motion.div>
           ))}
-        </div>
+        </motion.div>
       </div>
     </div>
   );
