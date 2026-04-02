@@ -54,13 +54,13 @@ const TrustedBySection = ({ lang }) => {
             <motion.div
               key={i}
               whileHover={{ y: -4, scale: 1.05 }}
-              className="shrink-0 w-[160px] h-[100px] rounded-2xl bg-white flex items-center justify-center p-3"
+              className="shrink-0 w-[160px] h-[100px] rounded-2xl bg-white flex items-center justify-center p-1"
               style={{ boxShadow: '0 4px 20px rgba(0,0,0,0.15)' }}
             >
               <img
                 src={b.logo}
                 alt={b.name}
-                className="max-h-[70px] max-w-[130px] object-contain"
+                className="max-h-[88px] max-w-[148px] object-contain"
                 onError={(e) => {
                   e.currentTarget.style.display = 'none';
                   const ph = e.currentTarget.nextElementSibling;
