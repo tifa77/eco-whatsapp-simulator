@@ -38,13 +38,15 @@ const TrustedBySection = ({ lang }) => {
 
   return (
     <div className="trusted-section">
-      {/* Dark Navy Header */}
-      <div className="trusted-header">
-        <h3>{isAr ? 'موثوق من قبل الشركات الرائدة' : 'Trusted by Leading Companies'}</h3>
+      {/* Clean text header, no backgrounds */}
+      <div style={{ textAlign: 'center', marginBottom: '16px' }}>
+        <h3 style={{ fontSize: '14px', fontWeight: 'bold', color: 'rgba(255,255,255,0.7)' }}>
+          {isAr ? 'موثوق من قبل الشركات الرائدة' : 'Trusted by Leading Companies'}
+        </h3>
       </div>
 
       {/* Logo Strip — light gray bg, white card per logo */}
-      <div className="marquee-container">
+      <div className="marquee-container" dir="ltr">
         <div className="marquee-track">
           {all.map((b, i) => (
             <div key={i} className="marquee-item">
