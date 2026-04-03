@@ -381,7 +381,7 @@ function App() {
         loading: 'جارٍ بناء متجرك...',
         counter: 'أكثر من 500+ متجر يستخدم النظام للبيع عبر واتساب',
         trust: '⭐ موثوق من +500 نشاط تجاري',
-        ai: '🤖 مدعوم بالذكاء الاصطناعي للرد والإقناع',
+        ai: '🤖 مدعوم بالذكاء الاصطناعي',
     } : {
         headline: 'Turn WhatsApp into an Effective Sales Machine',
         sub: 'Triple your sales',
