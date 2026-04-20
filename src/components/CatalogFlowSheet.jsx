@@ -2,6 +2,7 @@ import React, { useState, useMemo, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 
 const CATEGORIES = [
+    { id: 'food', nameAr: 'مطعم 🍽️', nameEn: 'Restaurant 🍽️' },
     { id: 'electronics', nameAr: 'إلكترونيات 💻', nameEn: 'Electronics 💻' },
     { id: 'fashion', nameAr: 'أزياء 👗', nameEn: 'Fashion 👗' },
     { id: 'accessories', nameAr: 'إكسسوارات ⌚', nameEn: 'Accessories ⌚' },
@@ -12,50 +13,62 @@ const PRODUCTS = [
     {
         id: 'p1', category: 'electronics',
         nameAr: 'سماعات أبل AirPods Pro', nameEn: 'Apple AirPods Pro',
-        price: 59.99,
-        img: 'https://images.unsplash.com/photo-1588423771073-b8903fbb85b5?w=600&q=80',
+        price: 19.99,
+        img: 'https://images.unsplash.com/photo-1600294037681-c80b4cb5b434?w=600&q=80',
     },
     {
         id: 'p2', category: 'electronics',
         nameAr: 'ساعة سامسونج الذكية', nameEn: 'Samsung Smart Watch',
-        price: 89.99,
-        img: 'https://images.unsplash.com/photo-1523275335684-37898b6baf30?w=600&q=80',
+        price: 24.99,
+        img: 'https://images.unsplash.com/photo-1546868871-7041f2a55e12?w=600&q=80',
     },
     {
         id: 'p3', category: 'fashion',
         nameAr: 'جاكيت شتوي فاخر', nameEn: 'Luxury Winter Jacket',
-        price: 44.99,
+        price: 14.99,
         img: 'https://images.unsplash.com/photo-1551028719-00167b16eac5?w=600&q=80',
     },
     {
         id: 'p4', category: 'fashion',
         nameAr: 'حذاء رياضي نايكي', nameEn: 'Nike Sport Shoes',
-        price: 34.99,
+        price: 12.99,
         img: 'https://images.unsplash.com/photo-1542291026-7eec264c27ff?w=600&q=80',
     },
     {
         id: 'p5', category: 'accessories',
         nameAr: 'ساعة جلد كلاسيكية', nameEn: 'Classic Leather Watch',
-        price: 75.00,
+        price: 17.99,
         img: 'https://images.unsplash.com/photo-1524592094714-0f0654e20314?w=600&q=80',
     },
     {
         id: 'p6', category: 'accessories',
         nameAr: 'حقيبة يد نسائية فاخرة', nameEn: 'Luxury Handbag',
-        price: 69.99,
-        img: 'https://images.unsplash.com/photo-1584917865442-de89df76afd3?w=600&q=80',
+        price: 21.99,
+        img: 'https://images.unsplash.com/photo-1548036328-c9fa89d128fa?w=600&q=80',
     },
     {
         id: 'p7', category: 'beauty',
         nameAr: 'عطر رجالي مميز', nameEn: 'Signature Perfume',
-        price: 49.99,
-        img: 'https://images.unsplash.com/photo-1541643600914-78b084683702?w=600&q=80',
+        price: 13.99,
+        img: 'https://images.unsplash.com/photo-1594035910387-fea47794261f?w=600&q=80',
     },
     {
         id: 'p8', category: 'beauty',
         nameAr: 'مجموعة العناية بالبشرة', nameEn: 'Skincare Set',
-        price: 39.99,
-        img: 'https://images.unsplash.com/photo-1620916566398-39f1143ab7be?w=600&q=80',
+        price: 11.99,
+        img: 'https://images.unsplash.com/photo-1556228578-8c89e6adf883?w=600&q=80',
+    },
+    {
+        id: 'p9', category: 'food',
+        nameAr: 'برغر لحم مشوي', nameEn: 'Grilled Beef Burger',
+        price: 8.99,
+        img: 'https://images.unsplash.com/photo-1568901346375-23c9450c58cd?w=600&q=80',
+    },
+    {
+        id: 'p10', category: 'food',
+        nameAr: 'بيتزا مارغريتا', nameEn: 'Margherita Pizza',
+        price: 9.99,
+        img: 'https://images.unsplash.com/photo-1574071318508-1cdbab80d002?w=600&q=80',
     },
 ];
 
@@ -246,9 +259,7 @@ export default function CatalogFlowSheet({ isOpen, onClose, onSubmit, lang, nich
                                             margin: 0, fontSize: '13px',
                                             fontWeight: '700', color: '#25D366'
                                         }}>
-                                            {isAr
-                                                ? `${item.price.toFixed(2)} د.ك`
-                                                : `$${item.price.toFixed(2)}`}
+                                            {`$${item.price.toFixed(2)}`}
                                         </p>
 
                                         {/* زر إضافة/إزالة — مطابق Meta */}
@@ -344,9 +355,7 @@ export default function CatalogFlowSheet({ isOpen, onClose, onSubmit, lang, nich
                                             color: 'rgba(255,255,255,0.9)',
                                             fontSize: '14px', fontWeight: '600'
                                         }}>
-                                            {isAr
-                                                ? `${totalPrice.toFixed(2)} د.ك`
-                                                : `$${totalPrice.toFixed(2)}`}
+                                            {`$${totalPrice.toFixed(2)}`}
                                         </span>
                                     </button>
                                 </motion.div>

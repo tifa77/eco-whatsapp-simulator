@@ -67,6 +67,61 @@ function StatusBar() {
 function ChatBubble({ msg, isAr }) {
     const isUser = msg.sender === 'user';
     const time = new Date(msg.timestamp).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+
+    // Location bubble
+    if (msg.isLocation) {
+        return (
+            <motion.div
+                initial={{ opacity: 0, y: 8, scale: 0.96 }}
+                animate={{ opacity: 1, y: 0, scale: 1 }}
+                transition={{ duration: 0.25 }}
+                className={`flex ${isUser ? (isAr ? 'justify-start' : 'justify-end') : (isAr ? 'justify-end' : 'justify-start')} mb-1`}
+            >
+                <div
+                    className={`relative overflow-hidden rounded-[18px] shadow-sm ${isUser
+                        ? `bg-[#DCF8C6] ${isAr ? 'rounded-tl-[4px]' : 'rounded-tr-[4px]'}`
+                        : `bg-white ${isAr ? 'rounded-tr-[4px]' : 'rounded-tl-[4px]'}`
+                    }`}
+                    style={{ width: '190px' }}
+                >
+                    {/* Map preview */}
+                    <div style={{ background: 'linear-gradient(135deg, #a8d5a2 0%, #7ec8a0 40%, #5aab8a 100%)', height: '90px', position: 'relative', overflow: 'hidden' }}>
+                        {/* Grid lines */}
+                        <svg width="100%" height="100%" style={{ position: 'absolute', inset: 0, opacity: 0.3 }}>
+                            <line x1="0" y1="45" x2="190" y2="45" stroke="#fff" strokeWidth="0.8" />
+                            <line x1="95" y1="0" x2="95" y2="90" stroke="#fff" strokeWidth="0.8" />
+                            <line x1="0" y1="22" x2="190" y2="22" stroke="#fff" strokeWidth="0.5" />
+                            <line x1="0" y1="68" x2="190" y2="68" stroke="#fff" strokeWidth="0.5" />
+                            <line x1="47" y1="0" x2="47" y2="90" stroke="#fff" strokeWidth="0.5" />
+                            <line x1="143" y1="0" x2="143" y2="90" stroke="#fff" strokeWidth="0.5" />
+                        </svg>
+                        {/* Roads */}
+                        <svg width="100%" height="100%" style={{ position: 'absolute', inset: 0, opacity: 0.5 }}>
+                            <line x1="30" y1="0" x2="60" y2="90" stroke="#fff" strokeWidth="2.5" />
+                            <line x1="120" y1="0" x2="150" y2="90" stroke="#fff" strokeWidth="2" />
+                            <line x1="0" y1="55" x2="190" y2="35" stroke="#fff" strokeWidth="2.5" />
+                        </svg>
+                        {/* Pin */}
+                        <div style={{ position: 'absolute', left: '50%', top: '50%', transform: 'translate(-50%, -100%)', filter: 'drop-shadow(0 2px 3px rgba(0,0,0,0.3))' }}>
+                            <svg width="22" height="28" viewBox="0 0 22 28">
+                                <path d="M11 0C6.48 0 2 4.48 2 10c0 7 9 18 9 18s9-11 9-18C20 4.48 15.52 0 11 0z" fill="#E53935" />
+                                <circle cx="11" cy="10" r="4" fill="#fff" />
+                            </svg>
+                        </div>
+                    </div>
+                    {/* Label */}
+                    <div className="px-3 py-1.5">
+                        <p className="text-[12px] font-semibold text-gray-800" dir={isAr ? 'rtl' : 'ltr'}>{isAr ? '📍 الموقع الحالي' : '📍 Current Location'}</p>
+                        <div className={`flex items-center gap-1 mt-0.5 ${isUser ? 'justify-end' : 'justify-start'}`}>
+                            <span className="text-[10px] text-gray-500">{time}</span>
+                            {isUser && <CheckCheck size={12} className="text-[#53bdeb]" />}
+                        </div>
+                    </div>
+                </div>
+            </motion.div>
+        );
+    }
+
     return (
         <motion.div
             initial={{ opacity: 0, y: 8, scale: 0.96 }}
@@ -123,7 +178,7 @@ function CTAScreen({ lang, onRetry, projectName }) {
         const msg = isAr
             ? `مرحباً، أريد متجر واتساب لمشروعي${pn ? ': ' + pn : ''} 🚀`
             : `Hello, I want a WhatsApp store${pn ? ' for: ' + pn : ''} 🚀`;
-        window.open(`https://wa.me/96566305551?text=${encodeURIComponent(msg)}`, '_blank');
+        window.open(`https://wa.me/96892321683?text=${encodeURIComponent(msg)}`, '_blank');
     };
 
     if (step === 'no') {
@@ -268,8 +323,8 @@ const ChatSimulatorInner = ({ config, onBack }) => {
                 setTimeout(() => {
                     setIsTyping(false);
                     setActiveButtons(isAr
-                        ? ['🛒 تصفح المنتجات', '🔥 العروض', '📦 تتبع الطلب', '💬 خدمة العملاء']
-                        : ['🛒 Browse Products', '🔥 Offers', '📦 Track Order', '💬 Customer Service']);
+                        ? ['🛒 تصفح المنتجات', '🔥 العروض', '💬 خدمة العملاء']
+                        : ['🛒 Browse Products', '🔥 Offers', '💬 Customer Service']);
                     setFlowStep('catalog');
                 }, 800);
             }, 1500);
@@ -329,17 +384,42 @@ const ChatSimulatorInner = ({ config, onBack }) => {
             return;
         }
 
-        // Contact
+        // Contact / Customer Service
         if (btn.includes('خدمة') || btn.includes('Customer') || btn.includes('تواصل') || btn.includes('Contact')) {
             setIsTyping(true);
             setNarratorText(isAr ? 'تحويل للخدمة 💬' : 'Connecting to service 💬');
             setTimeout(() => {
                 const msg = isAr
-                    ? '💬 فريقنا للخدمة جاهز لمساعدتك!\n\n📞 هاتف: 96566305551+\n⏰ أوقات العمل: 9 ص - 10 م\n\nأو يمكنك تصفح منتجاتنا مباشرة 👇'
-                    : '💬 Our service team is ready to help!\n\n📞 Phone: +96566305551\n⏰ Hours: 9 AM - 10 PM\n\nOr browse our products directly 👇';
+                    ? '💬 أهلاً! فريق خدمة العملاء في خدمتك\n⏰ أوقات العمل: 9 ص - 10 م\n\nكيف يمكننا مساعدتك؟'
+                    : '💬 Hello! Our customer service team is here for you\n⏰ Hours: 9 AM - 10 PM\n\nHow can we help you?';
                 setMessages(prev => [...prev, { id: Date.now(), text: msg, sender: 'bot', timestamp: new Date() }]);
                 setIsTyping(false);
-                setActiveButtons([isAr ? '🛒 تصفح المنتجات' : '🛒 Browse Products']);
+                setActiveButtons(isAr
+                    ? ['📋 استفسار', '📝 شكوى']
+                    : ['📋 Inquiry', '📝 Complaint']);
+                setFlowStep('cs_type');
+            }, 1000);
+            return;
+        }
+
+        // CS: استفسار أو شكوى
+        if (flowStep === 'cs_type') {
+            const isInquiry = btn.includes('استفسار') || btn.includes('Inquiry');
+            setIsTyping(true);
+            setNarratorText(isAr ? 'جاري فتح نموذج الرسالة ✏️' : 'Opening message form ✏️');
+            setTimeout(() => {
+                const msg = isAr
+                    ? (isInquiry
+                        ? '📋 تفضل، اكتب استفسارك بالتفصيل وسنقوم بالرد عليك في أقرب وقت 👇'
+                        : '📝 تفضل، اكتب شكواك بالتفصيل وسنتعامل معها بأولوية قصوى 👇')
+                    : (isInquiry
+                        ? '📋 Please write your inquiry in detail and we will respond as soon as possible 👇'
+                        : '📝 Please write your complaint in detail and we will handle it with top priority 👇');
+                setMessages(prev => [...prev, { id: Date.now(), text: msg, sender: 'bot', timestamp: new Date() }]);
+                setIsTyping(false);
+                setActiveButtons([]);
+                setFlowStep(isInquiry ? 'cs_writing_inquiry' : 'cs_writing_complaint');
+                setNarratorText(isAr ? 'العميل يكتب رسالته ✏️' : 'Customer writing message ✏️');
             }, 1000);
             return;
         }
@@ -355,19 +435,32 @@ const ChatSimulatorInner = ({ config, onBack }) => {
             const isDelivery = btn.includes('توصيل') || btn.includes('Deliver');
             setIsTyping(true);
             setNarratorText(isAr ? 'يعالج النظام خيار الاستلام 📦' : 'Processing delivery option 📦');
-            
-            setTimeout(() => {
-                const msg = isDelivery
-                    ? (isAr ? "اختر طريقة الدفع 💳" : "Choose payment method 💳")
-                    : (isAr ? "سيكون طلبك جاهز خلال 20 دقيقة ✅\nاختر طريقة الدفع 💳" : "Your order will be ready in 20 mins ✅\nChoose payment method 💳");
-                
-                setMessages(prev => [...prev, { id: Date.now(), text: msg, sender: 'bot', timestamp: new Date() }]);
-                setActiveButtons(isAr ? ['💵 كاش عند الاستلام', '💳 دفع بالبطاقة'] : ['💵 Cash on Delivery', '💳 Pay by Card']);
-                setIsTyping(false);
-                setFlowStep('ask_payment');
-            }, 1000);
+
+            if (isDelivery) {
+                setTimeout(() => {
+                    const msg = isAr
+                        ? 'ممتاز! 📍 أرسل لنا موقعك الحالي لنتمكن من توصيل طلبك إليك'
+                        : 'Great! 📍 Please share your current location so we can deliver your order';
+                    setMessages(prev => [...prev, { id: Date.now(), text: msg, sender: 'bot', timestamp: new Date() }]);
+                    setActiveButtons(isAr ? ['📍 إرسال اللوكيشن'] : ['📍 Share Location']);
+                    setIsTyping(false);
+                    setFlowStep('ask_location_share');
+                    setNarratorText(isAr ? 'النظام يطلب مشاركة الموقع 📍' : 'System requesting location share 📍');
+                }, 1000);
+            } else {
+                setTimeout(() => {
+                    const msg = isAr
+                        ? 'سيكون طلبك جاهز خلال 20 دقيقة ✅\nاختر طريقة الدفع 💳'
+                        : 'Your order will be ready in 20 mins ✅\nChoose payment method 💳';
+                    setMessages(prev => [...prev, { id: Date.now(), text: msg, sender: 'bot', timestamp: new Date() }]);
+                    setActiveButtons(isAr ? ['💵 كاش عند الاستلام', '💳 دفع بالبطاقة'] : ['💵 Cash on Delivery', '💳 Pay by Card']);
+                    setIsTyping(false);
+                    setFlowStep('ask_payment');
+                }, 1000);
+            }
             return;
         }
+
 
         // Payment choice
         if (flowStep === 'ask_payment') {
@@ -439,7 +532,7 @@ const ChatSimulatorInner = ({ config, onBack }) => {
         setOrderSummary(summary);
         setOrderTotal(total);
 
-        const formattedTotal = isAr ? `${total.toFixed(2)} د.ك` : `$${total.toFixed(2)}`;
+        const formattedTotal = `$${total.toFixed(2)}`;
         const userMsg = isAr ? `أريد طلب:\n${summary}` : `I want to order:\n${summary}`;
         addUserMsg(userMsg);
         setIsTyping(true);
@@ -470,6 +563,28 @@ const ChatSimulatorInner = ({ config, onBack }) => {
         setInputText('');
         addUserMsg(text);
         setIsTyping(true);
+
+        // Customer service writing flow
+        if (flowStep === 'cs_writing_inquiry' || flowStep === 'cs_writing_complaint') {
+            const isInquiry = flowStep === 'cs_writing_inquiry';
+            setNarratorText(isAr ? 'تم إرسال الرسالة لخدمة العملاء ✅' : 'Message sent to customer service ✅');
+            setTimeout(() => {
+                const msg = isAr
+                    ? (isInquiry
+                        ? '✅ تم استلام استفسارك بنجاح\n\nسيقوم أحد ممثلي خدمة العملاء بالتواصل معك في أقرب وقت ممكن 🙏'
+                        : '✅ تم استلام شكواك بنجاح\n\nسيتم التعامل معها بأولوية قصوى والتواصل معك في أقرب وقت ممكن 🙏')
+                    : (isInquiry
+                        ? '✅ Your inquiry has been received successfully\n\nA customer service representative will contact you as soon as possible 🙏'
+                        : '✅ Your complaint has been received successfully\n\nIt will be handled with top priority and we will contact you as soon as possible 🙏');
+                setMessages(prev => [...prev, { id: Date.now(), text: msg, sender: 'bot', timestamp: new Date() }]);
+                setIsTyping(false);
+                setFlowStep('ended');
+                setNarratorText(isAr ? 'تم استلام الرسالة بنجاح ✅' : 'Message received successfully ✅');
+                setTimeout(() => setIsDemoEnded(true), 1500);
+            }, 1400);
+            return;
+        }
+
         // fallback
         setTimeout(() => {
             setMessages(prev => [...prev, {
@@ -491,9 +606,33 @@ const ChatSimulatorInner = ({ config, onBack }) => {
     }, []);
 
     const handleButtonClickWrapper = (btn) => {
-        if (btn.includes('موقع') || btn.includes('Location') || btn.includes('توصيل') || btn.includes('Deliver')) {
+        // Guard: prevent double-clicking the delivery/pickup choice only
+        if ((btn.includes('توصيل') || btn.includes('Deliver') || btn.includes('استلام من الفرع') || btn.includes('Pickup')) && flowStep === 'ask_location_type') {
             if (locationSelected) return;
             setLocationSelected(true);
+        }
+        // When sharing location, add a special location bubble and handle directly (bypasses handleButtonClick to avoid double addUserMsg)
+        if ((btn.includes('اللوكيشن') || btn.includes('Share Location')) && flowStep === 'ask_location_share') {
+            setActiveButtons([]);
+            setMessages(prev => [...prev, {
+                id: Date.now() + Math.random(),
+                text: isAr ? '📍 الموقع الحالي' : '📍 Current Location',
+                sender: 'user',
+                isLocation: true,
+                timestamp: new Date()
+            }]);
+            setIsTyping(true);
+            setNarratorText(isAr ? 'تم إرسال الموقع ✅' : 'Location shared ✅');
+            setTimeout(() => {
+                const msg = isAr
+                    ? 'تم استلام موقعك بنجاح ✅\nسيصلك المندوب قريباً 🚚\nاختر طريقة الدفع 💳'
+                    : 'Location received successfully ✅\nOur courier will reach you soon 🚚\nChoose payment method 💳';
+                setMessages(prev => [...prev, { id: Date.now(), text: msg, sender: 'bot', timestamp: new Date() }]);
+                setActiveButtons(isAr ? ['💵 كاش عند الاستلام', '💳 دفع بالبطاقة'] : ['💵 Cash on Delivery', '💳 Pay by Card']);
+                setIsTyping(false);
+                setFlowStep('ask_payment');
+            }, 1200);
+            return;
         }
         handleButtonClick(btn);
     };
@@ -507,6 +646,7 @@ const ChatSimulatorInner = ({ config, onBack }) => {
         setCustomerName('');
         setOrderTotal(0);
         setOrderSummary('');
+        setLocationSelected(false);
         setNarratorText(isAr ? 'يبدأ العميل من جديد 👋' : 'Customer starting over 👋');
         initialized.current = false;
         // Trigger re-init
@@ -549,8 +689,8 @@ const ChatSimulatorInner = ({ config, onBack }) => {
                 { id: Date.now(), text: greetMsg, sender: 'bot', timestamp: new Date() }
             ]);
             setActiveButtons(isAr
-                ? ['🛒 تصفح المنتجات', '🔥 العروض', '📦 تتبع الطلب', '💬 خدمة العملاء']
-                : ['🛒 Browse Products', '🔥 Offers', '📦 Track Order', '💬 Customer Service']
+                ? ['🛒 تصفح المنتجات', '🔥 العروض', '💬 خدمة العملاء']
+                : ['🛒 Browse Products', '🔥 Offers', '💬 Customer Service']
             );
         }, 300);
     };
@@ -702,14 +842,21 @@ const ChatSimulatorInner = ({ config, onBack }) => {
                 style={{ background: '#F0F0F0', borderTop: '1px solid rgba(0,0,0,0.08)', zIndex: 40 }}
             >
                 <button className="text-[#54656F] p-1.5"><Smile size={22} /></button>
-                <form onSubmit={handleSendText} className="flex-1 flex items-center bg-white rounded-full px-4 gap-2 shadow-sm border border-black/5">
+                <form onSubmit={handleSendText} className="flex-1 flex items-center bg-white rounded-full px-4 gap-2 shadow-sm border border-black/5" style={(flowStep === 'cs_writing_inquiry' || flowStep === 'cs_writing_complaint') ? { borderColor: '#25d366', borderWidth: '1.5px' } : {}}>
                     <input
                         type="text"
                         value={inputText}
                         onChange={e => setInputText(e.target.value)}
-                        placeholder={isAr ? 'اكتب رسالة...' : 'Type a message...'}
+                        placeholder={
+                            flowStep === 'cs_writing_inquiry'
+                                ? (isAr ? 'اكتب استفسارك هنا...' : 'Write your inquiry here...')
+                                : flowStep === 'cs_writing_complaint'
+                                    ? (isAr ? 'اكتب شكواك هنا...' : 'Write your complaint here...')
+                                    : (isAr ? 'اكتب رسالة...' : 'Type a message...')
+                        }
                         className="flex-1 bg-transparent text-gray-800 text-[13px] py-2.5 outline-none placeholder:text-gray-400"
                         dir={isAr ? 'rtl' : 'ltr'}
+                        autoFocus={flowStep === 'cs_writing_inquiry' || flowStep === 'cs_writing_complaint'}
                     />
                     <button type="button" className="text-[#54656F]"><Paperclip size={18} /></button>
                 </form>
