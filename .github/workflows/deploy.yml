@@ -8,6 +8,9 @@ on:
 jobs:
   deploy:
     runs-on: ubuntu-latest
+    permissions:
+      contents: write
+
     
     steps:
       # 1. سحب الكود
@@ -47,5 +50,5 @@ jobs:
           github_token: ${{ secrets.GITHUB_TOKEN }}
           publish_dir: ./dist
           publish_branch: hostinger-deploy
-          force_orphan: true
+          force_orphan: false
           commit_message: "deploy: auto build from ${{ github.sha }}"
