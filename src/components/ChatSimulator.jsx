@@ -259,9 +259,6 @@ function CTAScreen({ lang, onRetry, projectName }) {
                     {isAr ? 'لا شكراً' : 'No thanks'}
                 </button>
             </motion.div>
-            <AnimatePresence>
-                {showCheckout && <CheckoutPopup onClose={() => setShowCheckout(false)} />}
-            </AnimatePresence>
         </>
     );
 }
