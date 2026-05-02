@@ -271,33 +271,37 @@ function PhonePreview({ isAr = true, projectName, setProjectName, handleStart })
         <div style={{
             background: 'linear-gradient(160deg, #0a0a0a 0%, #0d1f0f 100%)',
             height: '100%', display: 'flex', flexDirection: 'column',
-            alignItems: 'center', justifyContent: 'center',
-            padding: '32px 24px', gap: '24px'
+            alignItems: 'center', justifyContent: 'flex-start',
+            padding: '28px 20px 20px', gap: '0'
         }}>
-            {/* اللوجو */}
-            <img src="/Logo.png" style={{ 
-                width: '72px', marginBottom: '8px',
-                filter: 'drop-shadow(0 0 20px rgba(37,211,102,0.5))' 
+            {/* اللوجو في الأعلى */}
+            <img src="/Logo.png" style={{
+                width: '58px', marginBottom: '6px',
+                filter: 'drop-shadow(0 0 16px rgba(37,211,102,0.5))'
             }} />
 
             {/* الاسم */}
-            <p style={{ color: '#25D366', fontSize: '13px', letterSpacing: '3px', fontWeight: '700', fontFamily: 'Cairo' }}>
+            <p style={{ color: '#25D366', fontSize: '11px', letterSpacing: '3px', fontWeight: '700', fontFamily: 'Cairo', marginBottom: '18px' }}>
                 ELEGANT OPTIONS
             </p>
 
             {/* العنوان */}
-            <div style={{ textAlign: 'center' }}>
-                <h2 style={{ color: '#fff', fontSize: '18px', fontWeight: '800', fontFamily: 'Cairo', lineHeight: 1.4 }}>
+            <div style={{ textAlign: 'center', marginBottom: '22px', width: '100%' }}>
+                <h2 style={{ color: '#fff', fontSize: '20px', fontWeight: '900', fontFamily: 'Cairo', lineHeight: 1.35, marginBottom: '8px' }}>
                     {isAr ? 'جرّب نظام البيع الذكي' : 'Try the Smart Sales System'}
                 </h2>
-                <p style={{ color: '#8696a0', fontSize: '12px', marginTop: '6px' }}>
+                <p style={{ color: '#a0b0a8', fontSize: '13px', lineHeight: 1.5, fontFamily: 'Cairo' }}>
                     {isAr ? 'اكتشف كيف يشتري عميلك منتجاتك عبر واتساب' : 'See how your customer buys through WhatsApp'}
                 </p>
             </div>
 
             {/* حقل الاسم */}
-            <div style={{ width: '100%' }}>
-                <label style={{ color: '#8696a0', fontSize: '11px', display: 'block', marginBottom: '8px', textAlign: isAr ? 'right' : 'left' }}>
+            <div style={{ width: '100%', marginBottom: '14px' }}>
+                <label style={{
+                    color: '#c8d8c8', fontSize: '13px', fontWeight: '700',
+                    display: 'block', marginBottom: '10px',
+                    textAlign: isAr ? 'right' : 'left', fontFamily: 'Cairo'
+                }}>
                     {isAr ? 'اسم متجرك أو مشروعك' : 'Your store or project name'}
                 </label>
                 <input
@@ -306,11 +310,16 @@ function PhonePreview({ isAr = true, projectName, setProjectName, handleStart })
                     onChange={(e) => setProjectName(e.target.value)}
                     placeholder={isAr ? 'مثال: متجر الأناقة، مطعم نوار...' : 'e.g. Noor Store, Burger Hub...'}
                     style={{
-                        width: '100%', background: '#1f2c34', border: '1px solid #2a3942',
-                        borderRadius: '12px', padding: '12px 16px', color: '#e9edef',
-                        fontSize: '14px', fontFamily: 'Cairo', outline: 'none',
-                        textAlign: isAr ? 'right' : 'left'
+                        width: '100%', background: '#1a2820',
+                        border: '1.5px solid #2e4a38',
+                        borderRadius: '14px', padding: '15px 18px',
+                        color: '#e9edef', fontSize: '15px',
+                        fontFamily: 'Cairo', outline: 'none',
+                        textAlign: isAr ? 'right' : 'left',
+                        boxSizing: 'border-box'
                     }}
+                    onFocus={e => e.target.style.borderColor = '#25D366'}
+                    onBlur={e => e.target.style.borderColor = '#2e4a38'}
                 />
             </div>
 
@@ -318,7 +327,7 @@ function PhonePreview({ isAr = true, projectName, setProjectName, handleStart })
                 onClick={handleStart}
                 disabled={!(projectName || '').trim()}
                 style={{
-                    width: '100%', padding: '14px',
+                    width: '100%', padding: '15px',
                     background: (projectName || '').trim() ? 'linear-gradient(135deg, #25D366, #128C7E)' : '#2a3942',
                     borderRadius: '14px', border: 'none',
                     color: '#fff', fontSize: '15px', fontWeight: '800',
