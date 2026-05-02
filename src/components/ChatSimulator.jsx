@@ -187,10 +187,10 @@ function CTAScreen({ lang, onRetry, projectName }) {
             >
                 <div className="text-center text-3xl mb-3">⏳</div>
                 <h3 className="text-white font-black text-center text-[15px] mb-2">
-                    لا تفوّت — اشتراك أقل من 100$ في الشهر
+                    لا تدع الانتظار يسرق مبيعاتك
                 </h3>
-                <p className="text-slate-400 text-center text-[11px] mb-4">
-                    الأتمتة هي سر نجاح المتاجر الكبرى — نظامنا يتولى كل شيء
+                <p className="text-slate-400 text-center text-[12px] leading-relaxed mb-4">
+                    أتمت ردودك بالكامل، وألحق وثبّت اشتراكك الآن بـ <span className="text-yellow-400 font-black">97$</span> قبل زيادة سعر الخدمة!
                 </p>
                 <button
                     onClick={goToCheckout}
