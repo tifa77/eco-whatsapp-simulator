@@ -168,95 +168,44 @@ function TypingIndicator({ isAr }) {
     );
 }
 
-// ─── Checkout Popup ────────────────────────────────────────────────────────────
-function CheckoutPopup({ onClose }) {
-    return (
-        <motion.div
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            exit={{ opacity: 0 }}
-            style={{
-                position: 'fixed', inset: 0, zIndex: 9999,
-                background: 'rgba(0,0,0,0.75)',
-                display: 'flex', alignItems: 'center', justifyContent: 'center',
-                padding: '16px'
-            }}
-            onClick={onClose}
-        >
-            <motion.div
-                initial={{ scale: 0.92, opacity: 0, y: 20 }}
-                animate={{ scale: 1, opacity: 1, y: 0 }}
-                exit={{ scale: 0.92, opacity: 0 }}
-                transition={{ type: 'spring', damping: 25, stiffness: 260 }}
-                style={{
-                    width: '100%', maxWidth: '520px',
-                    background: '#fff', borderRadius: '16px',
-                    overflow: 'hidden', position: 'relative',
-                    boxShadow: '0 25px 60px rgba(0,0,0,0.4)'
-                }}
-                onClick={e => e.stopPropagation()}
-            >
-                {/* Close button */}
-                <button
-                    onClick={onClose}
-                    style={{
-                        position: 'absolute', top: '12px', left: '12px', zIndex: 10,
-                        width: '30px', height: '30px', borderRadius: '50%',
-                        background: 'rgba(0,0,0,0.08)', border: 'none',
-                        cursor: 'pointer', fontSize: '16px', color: '#555',
-                        display: 'flex', alignItems: 'center', justifyContent: 'center'
-                    }}
-                >✕</button>
-                <iframe
-                    src="https://brand.elegant-options.com/widget/form/jT9hUxJ4NHAnBynvOQAj"
-                    style={{ display: 'block', width: '100%', height: '580px', border: 'none' }}
-                    title="checkout form - WhatsApp Automation"
-                />
-            </motion.div>
-        </motion.div>
-    );
-}
+const CHECKOUT_URL = 'https://checkout.elegant-options.com/sales-automation-checkout';
 
 // ─── CTA Screen (demo ended) ───────────────────────────────────────────────────
 function CTAScreen({ lang, onRetry, projectName }) {
     const isAr = lang === 'ar';
     const [step, setStep] = useState('main'); // 'main' | 'no'
-    const [showCheckout, setShowCheckout] = useState(false);
+
+    const goToCheckout = () => window.open(CHECKOUT_URL, '_blank');
 
     if (step === 'no') {
         return (
-            <>
-                <motion.div
-                    initial={{ opacity: 0, scale: 0.95 }}
-                    animate={{ opacity: 1, scale: 1 }}
-                    className="bg-gradient-to-b from-[#0d1117] to-[#050509] rounded-2xl mx-3 p-5 border border-yellow-500/30 shadow-[0_0_30px_rgba(234,179,8,0.1)]"
-                    dir={isAr ? 'rtl' : 'ltr'}
+            <motion.div
+                initial={{ opacity: 0, scale: 0.95 }}
+                animate={{ opacity: 1, scale: 1 }}
+                className="bg-gradient-to-b from-[#0d1117] to-[#050509] rounded-2xl mx-3 p-5 border border-yellow-500/30 shadow-[0_0_30px_rgba(234,179,8,0.1)]"
+                dir="rtl"
+            >
+                <div className="text-center text-3xl mb-3">⏳</div>
+                <h3 className="text-white font-black text-center text-[15px] mb-2">
+                    لا تفوّت — اشتراك أقل من 100$ في الشهر
+                </h3>
+                <p className="text-slate-400 text-center text-[11px] mb-4">
+                    الأتمتة هي سر نجاح المتاجر الكبرى — نظامنا يتولى كل شيء
+                </p>
+                <button
+                    onClick={goToCheckout}
+                    className="w-full bg-gradient-to-r from-yellow-500 to-orange-500 text-white font-black py-3 rounded-xl text-sm shadow-[0_0_20px_rgba(234,179,8,0.4)] mb-2"
                 >
-                    <div className="text-center text-3xl mb-3">⏳</div>
-                    <h3 className="text-white font-black text-center text-[15px] mb-2">
-                        {isAr ? 'لا تفوّت — اشتراك أقل من 100$ في الشهر' : "Don't miss out — Under $100/month"}
-                    </h3>
-                    <p className="text-slate-400 text-center text-[11px] mb-4">
-                        {isAr ? 'سيُبنى متجرك كاملاً بأسلوبك وهويتك ✨' : 'Your store fully built your way ✨'}
-                    </p>
-                    <button
-                        onClick={() => setShowCheckout(true)}
-                        className="w-full bg-gradient-to-r from-yellow-500 to-orange-500 text-white font-black py-3 rounded-xl text-sm shadow-[0_0_20px_rgba(234,179,8,0.4)] mb-2"
-                    >
-                        {isAr ? '✨ احصل عليه الآن' : '✨ Get It Now'}
-                    </button>
-                    <button
-                        onClick={onRetry}
-                        className="w-full bg-white/[0.06] text-slate-300 font-bold py-2.5 rounded-xl text-sm flex items-center justify-center gap-2 border border-white/[0.08]"
-                    >
-                        <RefreshCw size={14} />
-                        {isAr ? '🔄 إعادة التجربة' : '🔄 Try Again'}
-                    </button>
-                </motion.div>
-                <AnimatePresence>
-                    {showCheckout && <CheckoutPopup onClose={() => setShowCheckout(false)} />}
-                </AnimatePresence>
-            </>
+                    اشترك وابدأ البيع الآلي فوراً 💳
+                </button>
+                <button
+                    onClick={onRetry}
+                    className="w-full bg-white/[0.06] text-slate-300 font-bold py-2.5 rounded-xl text-sm flex items-center justify-center gap-2 border border-white/[0.08]"
+                >
+                    <RefreshCw size={14} />
+                    🔄 إعادة التجربة
+                </button>
+            </motion.div>
         );
     }
 
@@ -265,36 +214,44 @@ function CTAScreen({ lang, onRetry, projectName }) {
             <motion.div
                 initial={{ opacity: 0, y: 15 }}
                 animate={{ opacity: 1, y: 0 }}
-                className="bg-gradient-to-b from-[#0d1117] to-[#050509] rounded-2xl mx-3 p-5 border border-cyan-500/30 shadow-[0_0_30px_rgba(6,182,212,0.15)]"
-                dir={isAr ? 'rtl' : 'ltr'}
+                className="rounded-2xl mx-3 p-5 border border-[#25d366]/30 shadow-[0_0_30px_rgba(37,211,102,0.12)]"
+                style={{ background: 'linear-gradient(160deg, #0d1117 0%, #0a1f14 60%, #050509 100%)' }}
+                dir="rtl"
             >
                 {/* Stars */}
-                <div className="flex justify-center gap-1 mb-2">
-                    {[1,2,3,4,5].map(i => <Star key={i} size={14} className="text-yellow-400 fill-yellow-400" />)}
+                <div className="flex justify-center gap-1 mb-3">
+                    {[1,2,3,4,5].map(i => <Star key={i} size={13} className="text-yellow-400 fill-yellow-400" />)}
                 </div>
-                <h3 className="text-white font-black text-center text-[15px] mb-1">
-                    {isAr ? '🚀 هل تريد متجر واتساب يبيع بدلاً عنك؟' : '🚀 Want a WhatsApp store that sells for you?'}
+
+                {/* Main heading */}
+                <h3 className="text-white font-black text-center text-[16px] leading-snug mb-2">
+                    حوّل محادثات الواتساب إلى مبيعات مؤكدة وأنت نائم! 📈
                 </h3>
-                <p className="text-slate-400 text-center text-[11px] mb-1">
-                    {isAr ? 'لا مزيد من الردود اليدوية — الأتمتة تتولى كل شيء' : 'No more manual replies — automation handles everything'}
+
+                {/* Sub-heading */}
+                <p className="text-slate-400 text-center text-[11px] leading-relaxed mb-3">
+                    الأتمتة هي سر نجاح المتاجر الكبرى اليوم. نظامنا يتولى كل شيء من عرض الكتالوج إلى الدفع التلقائي، لتركز أنت على نمو أعمالك.
                 </p>
-                <p className="text-cyan-300 text-center text-[11px] mb-3">
-                    {isAr ? '✨ احصل عليه باشتراك أقل من 100 دولار في الشهر' : '✨ Get it for under $100/month'}
+
+                {/* Pre-button motivator */}
+                <p className="text-[#25d366] text-center text-[11px] font-bold mb-3">
+                    ⚡️ استثمارك الذكي للنمو بتكلفة أقل من 100 دولار في الشهر
                 </p>
+
+                {/* Primary CTA */}
                 <button
-                    onClick={() => setShowCheckout(true)}
-                    className="w-full py-3 rounded-xl font-black text-sm text-white mb-2 relative overflow-hidden"
-                    style={{ background: 'linear-gradient(135deg, #25d366, #128C7E)' }}
+                    onClick={goToCheckout}
+                    className="w-full py-3.5 rounded-xl font-black text-[14px] text-white mb-2 relative overflow-hidden"
+                    style={{ background: 'linear-gradient(135deg, #25d366 0%, #128C7E 100%)', boxShadow: '0 0 24px rgba(37,211,102,0.35)' }}
                 >
                     <motion.div
                         animate={{ x: ['-100%', '200%'] }}
                         transition={{ repeat: Infinity, duration: 2.5, ease: 'linear', repeatDelay: 1 }}
                         className="absolute inset-0 bg-gradient-to-r from-transparent via-white/20 to-transparent skew-x-12"
                     />
-                    <span className="relative">
-                        {isAr ? '🔥 احصل عليه — أقل من 100$ شهرياً' : '🔥 Get It Now — Under $100/month'}
-                    </span>
+                    <span className="relative">اشترك وابدأ البيع الآلي فوراً 💳</span>
                 </button>
+
                 <button
                     onClick={() => setStep('no')}
                     className="w-full py-2 rounded-xl text-slate-500 text-xs font-medium"
