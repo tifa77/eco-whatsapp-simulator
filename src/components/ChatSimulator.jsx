@@ -225,17 +225,17 @@ function CTAScreen({ lang, onRetry, projectName }) {
 
                 {/* Main heading */}
                 <h3 className="text-white font-black text-center text-[16px] leading-snug mb-2">
-                    حوّل محادثات الواتساب إلى مبيعات مؤكدة وأنت نائم! 📈
+                    كل رسالة لم تُرد عليها = مبيعة خسرتها 💸
                 </h3>
 
                 {/* Sub-heading */}
                 <p className="text-slate-400 text-center text-[11px] leading-relaxed mb-3">
-                    الأتمتة هي سر نجاح المتاجر الكبرى اليوم. نظامنا يتولى كل شيء من عرض الكتالوج إلى الدفع التلقائي، لتركز أنت على نمو أعمالك.
+                    نظامنا يرد، يعرض، ويُغلق الصفقة — تلقائياً، 24/7، بدون موظف.
                 </p>
 
                 {/* Pre-button motivator */}
                 <p className="text-[#25d366] text-center text-[11px] font-bold mb-3">
-                    ⚡️ استثمارك الذكي للنمو بتكلفة أقل من 100 دولار في الشهر
+                    ⚡️ ابدأ الآن بـ 97$ فقط — قبل ارتفاع السعر
                 </p>
 
                 {/* Primary CTA */}
