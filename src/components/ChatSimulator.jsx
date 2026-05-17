@@ -168,7 +168,7 @@ function TypingIndicator({ isAr }) {
     );
 }
 
-const CHECKOUT_URL = 'https://checkout.elegant-options.com/sales-automation-checkout';
+const CHECKOUT_URL = 'https://checkout.elegant-options.com/sales-automation';
 
 // ─── CTA Screen (demo ended) ───────────────────────────────────────────────────
 function CTAScreen({ lang, onRetry, projectName }) {
@@ -230,7 +230,7 @@ function CTAScreen({ lang, onRetry, projectName }) {
 
                 {/* Sub-heading */}
                 <p className="text-slate-400 text-center text-[11px] leading-relaxed mb-3">
-                    نظامنا يرد، يعرض، ويُغلق الصفقة — تلقائياً، 24/7، بدون موظف.
+                    نظامنا يرد، يعرض، ويُغلق الصفقة — تلقائياً، 24 ساعة، بدون موظف.
                 </p>
 
                 {/* Pre-button motivator */}
