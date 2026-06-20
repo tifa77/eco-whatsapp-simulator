@@ -5,12 +5,12 @@ import { Loader2, ShoppingCart, Zap, Star, Bot, Shield } from 'lucide-react';
 
 /* ═══════════════════ PARTICLES ═══════════════════════════════════════════════ */
 function Particles() {
-    const particles = Array.from({ length: 30 }).map((_, i) => ({
+    const [particles] = useState(() => Array.from({ length: 30 }).map((_, i) => ({
         id: i, size: 1.5 + Math.random() * 4,
         x: Math.random() * 100, y: Math.random() * 100,
         dur: 6 + Math.random() * 12, delay: Math.random() * 6,
         op: 0.08 + Math.random() * 0.2,
-    }));
+    })));
     return (
         <div className="fixed inset-0 pointer-events-none overflow-hidden z-0">
             {particles.map(p => (
@@ -88,23 +88,24 @@ function Testimonials({ lang }) {
 /* ═══════════════════ 3D PHONE ════════════════════════════════════════════════ */
 function Phone3D({ children, isAr }) {
     const [isSpinning, setIsSpinning] = useState(false);
-    const [clickCount, setClickCount] = useState(0);
+    const clickCount = useRef(0);
     const clickTimer = useRef(null);
 
     const handlePhoneClick = () => {
-        setClickCount(prev => {
-            const next = prev + 1;
-            if (next === 2) {
-                // ضغطتان → دوران كامل
-                setIsSpinning(true);
-                setTimeout(() => setIsSpinning(false), 1200);
-                clearTimeout(clickTimer.current);
-                return 0;
-            }
-            // انتظر 400ms للضغطة الثانية
-            clickTimer.current = setTimeout(() => setClickCount(0), 400);
-            return next;
-        });
+        clickCount.current += 1;
+        if (clickCount.current === 2) {
+            // ضغطتان → دوران كامل
+            setIsSpinning(true);
+            setTimeout(() => setIsSpinning(false), 1200);
+            clearTimeout(clickTimer.current);
+            clickCount.current = 0;
+            return;
+        }
+        // انتظر 400ms للضغطة الثانية
+        clearTimeout(clickTimer.current);
+        clickTimer.current = setTimeout(() => {
+            clickCount.current = 0;
+        }, 400);
     };
 
     return (
@@ -226,6 +227,52 @@ function Phone3D({ children, isAr }) {
     );
 }
 
+/* ═══════════════════ PHONE ONBOARDING ═══════════════════════════════════════════ */
+function PhoneOnboarding({ projectName, setProjectName, isAr, startSimulator }) {
+    return (
+        <div className="w-full h-full bg-[#050505] flex flex-col p-6 pt-16 pb-8 justify-between text-white" dir={isAr ? "rtl" : "ltr"}>
+            <div className="flex flex-col items-center gap-1">
+                <img src="/Logo.png" alt="Elegant Options" className="h-10 w-auto mb-1 drop-shadow-[0_0_12px_rgba(6,182,212,0.5)]"
+                    onError={e => { e.target.style.display = 'none'; }} />
+                <h3 className="text-white/60 text-[8px] font-bold tracking-[0.25em] uppercase">ELEGANT OPTIONS</h3>
+                <div className="w-8 h-[1px] bg-white/10 my-1" />
+            </div>
+
+            <div className="text-center my-auto flex flex-col gap-2">
+                <h2 className="text-cyan-400 font-extrabold text-[20px] tracking-wide">
+                    {isAr ? "جرّب نظام البيع الذكي" : "Try Smart Selling"}
+                </h2>
+                <p className="text-white/70 text-[11px] font-semibold leading-relaxed max-w-[240px] mx-auto">
+                    {isAr ? "اكتشف كيف يشتري عملاؤك منك عبر واتساب" : "Discover how your customers buy via WhatsApp"}
+                </p>
+            </div>
+
+            <div className="flex flex-col gap-4 mb-4">
+                <div className="flex flex-col gap-1.5">
+                    <label className="text-white/50 text-[11px] font-bold text-center">
+                        {isAr ? "اسم متجرك أو مشروعك" : "Your Store or Project Name"}
+                    </label>
+                    <input
+                        type="text"
+                        value={projectName}
+                        onChange={e => setProjectName(e.target.value)}
+                        placeholder={isAr ? "مثال: متجر الأناقة، مطعم نوار..." : "e.g., Elegance Store, Burger Joint..."}
+                        className="phone-input-field w-full bg-white/5 border border-white/10 rounded-xl px-4 py-3 text-white text-[13px] text-center focus:outline-none focus:border-cyan-500 focus:bg-white/10 transition-all font-semibold"
+                    />
+                </div>
+
+                <button
+                    onClick={startSimulator}
+                    disabled={!projectName.trim()}
+                    className="w-full py-3.5 bg-gradient-to-r from-cyan-600 to-cyan-500 disabled:opacity-40 disabled:cursor-not-allowed hover:from-cyan-500 hover:to-cyan-400 text-white font-black text-[14px] rounded-xl transition-all shadow-[0_4px_15px_rgba(6,182,212,0.3)] flex items-center justify-center gap-1.5"
+                >
+                    {isAr ? "🚀 بدأ التجربة" : "🚀 Start Experience"}
+                </button>
+            </div>
+        </div>
+    );
+}
+
 /* ═══════════════════ PHONE PREVIEW ═══════════════════════════════════════════ */
 function PhonePreview({ isAr = true }) {
     return (
@@ -299,31 +346,21 @@ function App() {
     };
 
     const t = isAr ? {
-        headline: 'زد مبيعاتك 3x — واتساب يبيع بدلاً عنك 🚀',
-        sub: 'عرض منتجاتك، استقبال الطلبات، وتحصيل الدفع — تلقائياً 24/7 🤖',
-        pain1: '💸 تخسر آلاف الدنانير يومياً بسبب ردود بطيئة',
-        pain2: '📉 منافسوك يبيعون وأنت تكتب ردوداً يدوية',
-        pain3: '😴 عملاؤك يطلبون الساعة 2 فجراً — ومن يرد؟',
-        pain4: '🔁 موظفوك يكررون نفس الإجابات كل يوم',
-        solution: '✅ بوت واتساب ذكي يعرض، يقنع، ويغلق الصفقة — بدون موظف',
-        nameLabel: 'ما اسم مشروعك؟',
-        namePlaceholder: 'مثال: مطعم / متجر / عيادة',
-        btn: '👇 شاهد كيف يشتري عميلك الآن — مجاناً',
+        headline: 'حوّل واتساب إلى آلة بيع فعّالة',
+        sub: 'ضاعف مبيعاتك 3 أضعاف',
+        desc: 'اعرض منتجاتك، استقبل الطلبات، والدفع - لعملائك تلقائياً\nكل شيء يتم داخل واتساب - بسرعة فائقة',
+        btn: 'تجربة بيع أسهل.. ومبيعات أعلى',
+        hint: '👇 اكتب اسم مشروعك وشاهد كيف يبيع واتساب بدلاً عنك',
         loading: 'جارٍ بناء متجرك...',
         counter: 'أكثر من 500+ متجر يستخدم النظام للبيع عبر واتساب',
         trust: '⭐ موثوق من +500 نشاط تجاري',
         ai: '🤖 مدعوم بالذكاء الاصطناعي للرد والإقناع',
     } : {
-        headline: '3x Your Sales — WhatsApp Sells For You 🚀',
-        sub: 'Showcase products, receive orders, collect payment — automatically 24/7 🤖',
-        pain1: '💸 Losing thousands daily from slow replies',
-        pain2: '📉 Competitors selling while you type manually',
-        pain3: '😴 Customers ordering at 2AM — who answers?',
-        pain4: '🔁 Staff repeating the same answers every day',
-        solution: '✅ Smart WhatsApp bot that showcases, convinces & closes — no staff needed',
-        nameLabel: 'What is your project name?',
-        namePlaceholder: 'e.g., Restaurant / Store / Clinic',
-        btn: '👇 See How Your Customer Buys Now — Free',
+        headline: 'Turn WhatsApp into a Powerful Sales Machine',
+        sub: 'Triple Your Sales (3x)',
+        desc: 'Showcase products, receive orders, and collect payment automatically\nEverything is done inside WhatsApp — at lightning speed',
+        btn: 'Easier Selling.. Higher Sales',
+        hint: '👇 Enter your project name and see how WhatsApp sells for you',
         loading: 'Building your store...',
         counter: '500+ stores already selling via WhatsApp',
         trust: '⭐ Trusted by 500+ businesses',
@@ -375,86 +412,65 @@ function App() {
 
                         {/* ─ Headline ─ */}
                         <motion.div initial={{ opacity: 0, y: -10 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.12 }}
-                            className="text-center max-w-2xl mb-3">
-                            <h1 className="text-[26px] sm:text-[32px] lg:text-[40px] font-black leading-[1.3] text-white">
+                            className="text-center max-w-2xl mb-2">
+                            <h1 className="text-[32px] sm:text-[44px] lg:text-[52px] font-black leading-[1.2] text-white">
                                 {t.headline}
                             </h1>
                         </motion.div>
 
                         {/* ─ Subheadline ─ */}
                         <motion.p initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 0.16 }}
-                            className="text-white/50 text-sm sm:text-[15px] text-center max-w-xl mb-6 leading-relaxed">
+                            className="text-cyan-400 text-lg sm:text-[22px] font-extrabold text-center max-w-xl mb-4">
                             {t.sub}
                         </motion.p>
 
-                        {/* ─ Pain Points ─ */}
-                        <motion.div initial={{ opacity: 0, y: 8 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.2 }}
-                            className="text-center mb-4 max-w-md space-y-1.5">
-                            {[t.pain1, t.pain2, t.pain3, t.pain4].map((p, i) => (
-                                <motion.p key={i} initial={{ opacity: 0, x: isAr ? 15 : -15 }} animate={{ opacity: 1, x: 0 }}
-                                    transition={{ delay: 0.25 + i * 0.08 }}
-                                    className="text-white/60 text-[13px] sm:text-[14px] leading-relaxed font-semibold">
-                                    {p}
-                                </motion.p>
-                            ))}
-                        </motion.div>
-
-                        {/* ─ Solution Line ─ */}
-                        <motion.p initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 0.45 }}
-                            className="text-cyan-400 font-bold text-[14px] text-center mb-6">
-                            {t.solution}
+                        {/* ─ Description ─ */}
+                        <motion.p initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 0.2 }}
+                            className="text-white/65 text-sm sm:text-[15px] text-center max-w-xl mb-8 whitespace-pre-line leading-relaxed font-semibold">
+                            {t.desc}
                         </motion.p>
 
-                        {/* ─ Project Name Input (glassmorphism) ─ */}
-                        <motion.div initial={{ opacity: 0, y: 8 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.5 }}
-                            className="w-full max-w-sm mb-5">
-                            <label className="block text-white/50 text-[12px] font-bold mb-2 text-center">{t.nameLabel}</label>
-                            <motion.div
-                                animate={nameActive ? { boxShadow: '0 0 25px rgba(6,182,212,0.15), 0 0 0 1px rgba(6,182,212,0.3)' } : { boxShadow: '0 0 0 rgba(0,0,0,0), 0 0 0 1px rgba(255,255,255,0.08)' }}
-                                className="rounded-xl overflow-hidden"
-                                style={{ background: 'rgba(255,255,255,0.04)', backdropFilter: 'blur(20px)' }}
-                            >
-                                <input
-                                    type="text"
-                                    value={projectName}
-                                    onChange={e => setProjectName(e.target.value)}
-                                    onFocus={() => setNameActive(true)}
-                                    onBlur={() => setNameActive(false)}
-                                    placeholder={t.namePlaceholder}
-                                    className="w-full bg-transparent px-4 py-3.5 text-white text-sm placeholder:text-white/20 focus:outline-none text-center"
-                                    dir={isAr ? 'rtl' : 'ltr'}
-                                />
-                            </motion.div>
-                        </motion.div>
+                        {/* ─ Top Action Button ─ */}
+                        <motion.button
+                            initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.24 }}
+                            whileHover={{ scale: 1.04, y: -3, boxShadow: '0 0 40px rgba(6,182,212,0.3)' }}
+                            whileTap={{ scale: 0.97 }}
+                            onClick={() => {
+                                const inputEl = document.querySelector('.phone-input-field');
+                                if (inputEl) {
+                                    inputEl.focus();
+                                    inputEl.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                                }
+                            }}
+                            className="relative inline-flex items-center justify-center gap-2.5 text-white font-black text-[15px] sm:text-[16px] px-10 py-4 rounded-full transition-all overflow-hidden mb-8 border border-cyan-500/30"
+                            style={{
+                                background: 'linear-gradient(135deg, rgba(6,182,212,0.2) 0%, rgba(34,197,94,0.1) 100%)',
+                                boxShadow: '0 0 25px rgba(6,182,212,0.15)',
+                            }}
+                        >
+                            <span className="relative z-10">{t.btn}</span>
+                        </motion.button>
+
+                        {/* ─ Hint Text ─ */}
+                        <motion.p initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 0.28 }}
+                            className="text-yellow-400 font-extrabold text-xs sm:text-[13px] text-center mb-6">
+                            {t.hint}
+                        </motion.p>
 
                         {/* ─ 3D Phone ─ */}
                         <motion.div initial={{ opacity: 0, scale: 0.93 }} animate={{ opacity: 1, scale: 1 }} transition={{ delay: 0.3, duration: 0.8 }}
-                            className="w-full max-w-md mb-4">
+                            className="w-full max-w-md mb-8">
                             <Phone3D isAr={isAr}>
-                                <PhonePreview isAr={isAr} />
+                                <PhoneOnboarding
+                                    projectName={projectName}
+                                    setProjectName={setProjectName}
+                                    isAr={isAr}
+                                    startSimulator={startSimulator}
+                                />
                             </Phone3D>
                         </motion.div>
 
-                        {/* ─ CTA Button (glassmorphism + glow) ─ */}
-                        <motion.button
-                            initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.55 }}
-                            whileHover={{ scale: 1.04, y: -3, boxShadow: '0 0 60px rgba(6,182,212,0.5), 0 0 120px rgba(37,211,102,0.2)' }}
-                            whileTap={{ scale: 0.97 }}
-                            onClick={startSimulator}
-                            className="relative inline-flex items-center justify-center gap-2.5 text-white font-black text-lg px-12 py-4.5 rounded-2xl transition-all overflow-hidden mb-4"
-                            style={{
-                                background: 'linear-gradient(135deg, #06b6d4, #22c55e)',
-                                boxShadow: '0 0 40px rgba(6,182,212,0.4), 0 0 80px rgba(37,211,102,0.15), inset 0 1px 0 rgba(255,255,255,0.2)',
-                                border: '1px solid rgba(255,255,255,0.15)',
-                            }}
-                        >
-                            <motion.div
-                                animate={{ x: ['-100%', '200%'] }}
-                                transition={{ repeat: Infinity, duration: 3, ease: 'linear', repeatDelay: 1.5 }}
-                                className="absolute inset-0 bg-gradient-to-r from-transparent via-white/20 to-transparent skew-x-12"
-                            />
-                            <span className="relative z-10 text-[17px]">{t.btn}</span>
-                        </motion.button>
+
 
                         {/* ─ Trust Badges ─ */}
                         <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 0.6 }}

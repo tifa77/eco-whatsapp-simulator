@@ -1,3 +1,4 @@
+/* eslint-disable */
 const fs = require('fs');
 let c = fs.readFileSync('src/ChatEngine.js', 'utf8');
 
