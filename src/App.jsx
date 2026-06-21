@@ -1,7 +1,8 @@
-import React, { useState, useRef } from 'react';
+import React, { useState, useRef, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import ChatSimulator from './components/ChatSimulator';
-import { Loader2, ShoppingCart, Zap, Star, Bot, Shield } from 'lucide-react';
+import { Loader2, ShoppingCart, Zap, Star, Bot, Shield, AlertCircle, CheckCircle2, ChevronRight } from 'lucide-react';
+import { BRAND_LOGOS } from './config/brands';
 
 /* ═══════════════════ PARTICLES ═══════════════════════════════════════════════ */
 function Particles() {
@@ -16,7 +17,8 @@ function Particles() {
             {particles.map(p => (
                 <motion.div key={p.id} className="absolute rounded-full"
                     style={{ width: p.size, height: p.size, left: `${p.x}%`, top: `${p.y}%`,
-                        background: p.id % 4 === 0 ? '#22d3ee' : p.id % 4 === 1 ? '#a855f7' : p.id % 4 === 2 ? '#25d366' : '#3b82f6',
+                        color: p.id % 4 === 0 ? '#22d3ee' : p.id % 4 === 1 ? '#a855f7' : p.id % 4 === 2 ? '#25d366' : '#3b82f6',
+                        background: 'currentColor',
                         opacity: p.op, boxShadow: `0 0 ${p.size * 4}px currentColor` }}
                     animate={{ y: [0, -18, 5, -12, 0], x: [0, 5, -5, 3, 0] }}
                     transition={{ duration: p.dur, delay: p.delay, repeat: Infinity, ease: 'easeInOut' }}
@@ -30,409 +32,511 @@ function Particles() {
     );
 }
 
-/* ═══════════════════ BRAND MARQUEE ═══════════════════════════════════════════ */
-function BrandMarquee() {
-    const brands = ['FLAVOR HOUSE', 'NICHE STYLE', 'CLOUD STORE', 'URBAN BITES', 'LUXE BEAUTY', 'TECH ZONE', 'PRIME WEAR', 'GLOW UP', 'FRESH MART', 'ELITE SHOP'];
+/* ═══════════════════ BRAND LOGO MARQUEE ══════════════════════════════════════ */
+function BrandMarquee({ lang }) {
+  const isAr = lang === 'ar';
+  const allBrands = [...BRAND_LOGOS, ...BRAND_LOGOS];
+
+  return (
+    <div className="w-full py-6">
+      <p className="text-center text-white/40 text-[11px] font-bold tracking-wider mb-5">
+        {isAr ? 'موثوق من قبل الشركات الرائدة' : 'TRUSTED BY LEADING BRANDS'}
+      </p>
+
+      <div className="w-full flex overflow-hidden py-2 mask-edges" dir="ltr">
+        <motion.div
+          className="flex gap-6 items-center"
+          animate={{ x: ['0%', '-50%'] }}
+          transition={{ duration: 32, ease: 'linear', repeat: Infinity }}
+        >
+          {allBrands.map((b, i) => (
+            <motion.div
+              key={i}
+              whileHover={{ y: -4, scale: 1.05 }}
+              className="shrink-0 w-[140px] h-[80px] rounded-2xl bg-white flex items-center justify-center p-3 transition-shadow hover:shadow-[0_8px_25px_rgba(37,211,102,0.15)]"
+              style={{ boxShadow: '0 4px 15px rgba(0,0,0,0.15)' }}
+            >
+              <img
+                src={b.logo}
+                alt={b.name}
+                className="max-h-full max-w-full object-contain"
+                onError={(e) => {
+                  e.currentTarget.style.display = 'none';
+                  const ph = e.currentTarget.nextElementSibling;
+                  if (ph) ph.style.display = 'flex';
+                }}
+              />
+              <span className="hidden items-center justify-center text-[10px] font-bold text-slate-500 text-center leading-tight">
+                {b.name}
+              </span>
+            </motion.div>
+          ))}
+        </motion.div>
+      </div>
+    </div>
+  );
+}
+
+/* ═══════════════════ TESTIMONIALS ════════════════════════════════════════════ */
+function Testimonials({ lang }) {
+    const isAr = lang === 'ar';
+    const allTestimonials = {
+      ar: [
+        { name: "سارة الغامدي", role: "متجر عبايات", avatar: "س", stars: 5, text: "أول أسبوع 47 طلب وأنا نايمة! البوت يرد ويبيع بدوني 😭🔥" },
+        { name: "فهد المطيري", role: "مطعم برجر", avatar: "ف", stars: 5, text: "المبيعات ارتفعت 40% في شهر — مافي طلب يضيع الحين 📈" },
+        { name: "نورة الكندي", role: "متجر إكسسوارات", avatar: "ن", stars: 5, text: "وفّرت راتب موظفتين! البوت أحسن من أي موظف 💯" },
+        { name: "محمد الشهري", role: "متجر إلكترونيات", avatar: "م", stars: 5, text: "العميل يختار ويدفع تلقائي — أنا بس أشحن 😂" },
+        { name: "ريم العجمي", role: "كيك هوم", avatar: "ر", stars: 5, text: "طلبات الساعة 11 بالليل والبوت يرد فوراً وعملائي راضين بالسرعة 😍" },
+        { name: "خالد الدوسري", role: "ملابس رجالي", avatar: "خ", stars: 5, text: "وفّرت ساعتين يومياً من الردود اليدوية وتأكيد الفواتير المزعجة 🙌" },
+        { name: "هند الزهراني", role: "صالون تجميل", avatar: "ه", stars: 5, text: "الحجوزات زادت 3 أضعاف — العميلات يحبون الرد السريع وحجز المواعيد الآلي ✅" },
+        { name: "عبدالله القحطاني", role: "متجر عطور", avatar: "ع", stars: 5, text: "80% من طلباتي الحين من الكاتلوج التلقائي والعميل يشتري لحاله 🤩" },
+        { name: "منى السبيعي", role: "ملابس أطفال", avatar: "م", stars: 5, text: "بيزنس صغير ونتائج كبيرة — البوت ما يتعب وشغال على مدار الساعة 😄" },
+        { name: "راشد المنصور", role: "وجبات صحية", avatar: "ر", stars: 5, text: "استرجعت تكلفة النظام 10 مرات في الشهر الأول من المبيعات التلقائية 🏆" },
+      ],
+      en: [
+        { name: "Sarah Al-Ghamdi", role: "Abaya Store", avatar: "S", stars: 5, text: "47 orders in the first week while sleeping! 😭🔥" },
+        { name: "Fahad Al-Mutairi", role: "Burger Restaurant", avatar: "F", stars: 5, text: "Sales up 40% in one month — zero lost orders 📈" },
+        { name: "Noura Al-Kindi", role: "Accessories Store", avatar: "N", stars: 5, text: "Saved cost of 2 employees! Bot works better 💯" },
+        { name: "Mohammed Al-Shahri", role: "Electronics Store", avatar: "M", stars: 5, text: "Customer selects & pays automatically — I just ship 😂" },
+        { name: "Reem Al-Ajami", role: "Home Bakery", avatar: "R", stars: 5, text: "11pm orders — bot replies instantly while I sleep 😍" },
+        { name: "Khalid Al-Dosari", role: "Men's Clothing", avatar: "K", stars: 5, text: "Saved 2 hours daily from manual replies and invoicing 🙌" },
+        { name: "Hind Al-Zahrani", role: "Beauty Salon", avatar: "H", stars: 5, text: "Bookings tripled — clients love instant scheduling ✅" },
+        { name: "Abdullah Al-Qahtani", role: "Perfume Store", avatar: "A", stars: 5, text: "80% of orders now come through the auto catalog 🤩" },
+        { name: "Mona Al-Subai", role: "Kids' Clothing", avatar: "M", stars: 5, text: "Small business, big results — bot never rests 😄" },
+        { name: "Rashed Al-Mansour", role: "Healthy Meals", avatar: "R", stars: 5, text: "Recovered system cost 10x in the first month 🏆" },
+      ]
+    };
+    const reviews = allTestimonials[isAr ? 'ar' : 'en'];
+
     return (
-        <div className="w-full overflow-hidden py-3 relative">
-            <div className="absolute inset-y-0 left-0 w-20 bg-gradient-to-r from-[#0A0A0A] to-transparent z-10" />
-            <div className="absolute inset-y-0 right-0 w-20 bg-gradient-to-l from-[#0A0A0A] to-transparent z-10" />
-            <motion.div className="flex gap-14 whitespace-nowrap"
-                animate={{ x: ['0%', '-50%'] }}
-                transition={{ duration: 28, repeat: Infinity, ease: 'linear' }}>
-                {[...brands, ...brands].map((b, i) => (
-                    <span key={i} className="text-white/[0.08] text-xs font-black tracking-[0.25em] uppercase select-none">{b}</span>
+        <div className="w-full flex overflow-hidden py-4 -mx-4 px-4 mask-edges" dir={isAr ? 'rtl' : 'ltr'}>
+            <motion.div
+                className="flex gap-4 items-stretch"
+                animate={{ x: isAr ? ['0%', '50%'] : ['0%', '-50%'] }}
+                transition={{ duration: 42, ease: "linear", repeat: Infinity }}
+            >
+                {[...reviews, ...reviews].map((r, i) => (
+                    <motion.div key={i} whileHover={{ y: -4, scale: 1.02 }} className="w-[280px] shrink-0 p-5 rounded-3xl border border-white/10 flex flex-col"
+                        style={{ background: 'rgba(255,255,255,0.03)', backdropFilter: 'blur(20px)', boxShadow: 'inset 0 1px 1px rgba(255,255,255,0.05), 0 10px 30px rgba(0,0,0,0.5)' }}>
+                        <div className="flex gap-3 items-center mb-3">
+                            <div className="w-10 h-10 rounded-full bg-gradient-to-tr from-[#25d366] to-[#128c7e] flex items-center justify-center text-white font-black text-sm">
+                                {r.avatar}
+                            </div>
+                            <div>
+                                <h4 className="text-white font-bold text-sm leading-tight">{r.name}</h4>
+                                <span className="text-white/40 text-[11px] font-bold">{r.role}</span>
+                            </div>
+                        </div>
+                        <div className="flex gap-0.5 mb-2.5">
+                            {[...Array(r.stars)].map((_, idx) => (
+                                <Star key={idx} size={11} className="text-yellow-400 fill-yellow-400" />
+                            ))}
+                        </div>
+                        <p className="text-white/70 text-[12.5px] leading-relaxed text-right font-medium">
+                            {r.text}
+                        </p>
+                    </motion.div>
                 ))}
             </motion.div>
         </div>
     );
 }
 
-/* ═══════════════════ TESTIMONIALS ════════════════════════════════════════════ */
-function Testimonials({ lang }) {
-    const isAr = lang === 'ar';
-    const reviews = isAr ? [
-        { text: 'رفعنا مبيعاتنا 3x في أول أسبوع! 🔥', name: 'سارة م.', role: 'صاحبة متجر عبايات' },
-        { text: 'ما عدنا نرد يدوياً على أي طلب ✅', name: 'فهد ع.', role: 'مطعم برجر' },
-        { text: 'أفضل استثمار عملناه لمتجرنا 💯', name: 'نورة ك.', role: 'متجر إكسسوارات' },
-    ] : [
-        { text: 'We tripled sales in the first week! 🔥', name: 'Sarah M.', role: 'Abaya Store Owner' },
-        { text: 'We no longer reply manually to any order ✅', name: 'Fahad A.', role: 'Burger Restaurant' },
-        { text: 'Best investment we made for our store 💯', name: 'Noura K.', role: 'Accessories Store' },
-    ];
-    return (
-        <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 w-full max-w-3xl">
-            {reviews.map((r, i) => (
-                <motion.div key={i} initial={{ opacity: 0, y: 12 }} animate={{ opacity: 1, y: 0 }}
-                    transition={{ delay: 0.7 + i * 0.12 }}
-                    className="bg-white/[0.03] border border-white/[0.06] rounded-2xl p-4 backdrop-blur-md hover:border-cyan-500/20 transition-all duration-300">
-                    <div className="flex gap-0.5 mb-2">
-                        {[1,2,3,4,5].map(s => <Star key={s} size={10} className="text-yellow-400 fill-yellow-400" />)}
-                    </div>
-                    <p className="text-white/90 text-[12px] font-bold leading-relaxed mb-3">"{r.text}"</p>
-                    <div className="flex items-center gap-2">
-                        <div className="w-6 h-6 rounded-full bg-gradient-to-br from-cyan-500 to-green-500 flex items-center justify-center text-white text-[9px] font-black">
-                            {r.name.charAt(0)}
-                        </div>
-                        <div>
-                            <p className="text-white/80 text-[10px] font-bold">{r.name}</p>
-                            <p className="text-slate-500 text-[9px]">{r.role}</p>
-                        </div>
-                    </div>
-                </motion.div>
-            ))}
-        </div>
-    );
-}
-
-/* ═══════════════════ 3D PHONE ════════════════════════════════════════════════ */
+/* ═══════════════════ STATIC GOLD PHONE ══════════════════════════════════════ */
 function Phone3D({ children, isAr }) {
-    const [isSpinning, setIsSpinning] = useState(false);
-    const clickCount = useRef(0);
-    const clickTimer = useRef(null);
-
-    const handlePhoneClick = () => {
-        clickCount.current += 1;
-        if (clickCount.current === 2) {
-            // ضغطتان → دوران كامل
-            setIsSpinning(true);
-            setTimeout(() => setIsSpinning(false), 1200);
-            clearTimeout(clickTimer.current);
-            clickCount.current = 0;
-            return;
-        }
-        // انتظر 400ms للضغطة الثانية
-        clearTimeout(clickTimer.current);
-        clickTimer.current = setTimeout(() => {
-            clickCount.current = 0;
-        }, 400);
-    };
-
     return (
-        <div className="relative w-full flex flex-col items-center justify-center py-2">
+        <div className="relative w-full flex flex-col items-center justify-center py-2 z-30">
             <div
-                onClick={handlePhoneClick}
-                className="relative w-[300px] sm:w-[340px] h-[620px] sm:h-[690px]"
-                style={{
-                    transform: isSpinning
-                        ? 'perspective(1200px) rotateY(360deg)'
-                        : 'perspective(1200px) rotateY(-12deg) rotateX(4deg)',
-                    transition: isSpinning
-                        ? 'transform 1.2s cubic-bezier(0.4, 0, 0.2, 1)'
-                        : 'transform 0.3s ease',
-                    animation: isSpinning ? 'none' : 'waveFloat 5s ease-in-out infinite',
-                    transformStyle: 'preserve-3d',
-                    cursor: 'pointer',
-                }}
+                className="relative w-[300px] sm:w-[340px] h-[610px] sm:h-[680px] select-none"
             >
                 {/* ─ Front Face ─ */}
                 <div style={{
-                    background: 'linear-gradient(145deg, #f5d078, #c8952a, #f5d078, #a67c2e)',
-                    borderRadius: '54px',
-                    padding: '12px',
+                    background: 'linear-gradient(135deg, #ffe082 0%, #d4af37 40%, #aa7c11 70%, #d4af37 100%)',
+                    borderRadius: '48px',
+                    padding: '8px',
                     boxShadow: `
-                        0 0 0 1px #b8860b,
-                        inset 0 0 0 1px rgba(255,220,100,0.4),
-                        0 30px 80px rgba(198,150,40,0.5),
-                        0 0 60px rgba(245,208,120,0.3)
+                        0 0 0 1px #aa7c11,
+                        inset 0 0 0 1px rgba(255,255,255,0.35),
+                        0 25px 60px rgba(0,0,0,0.7)
                     `,
                     position: 'absolute', inset: 0,
-                    backfaceVisibility: 'hidden',
                 }}>
-                    {/* الحواف المعدنية الجانبية */}
+                    {/* Metal Edge Highlight */}
                     <div style={{
                         position: 'absolute', inset: '0',
-                        borderRadius: '54px',
-                        background: 'linear-gradient(90deg, rgba(255,220,80,0.6) 0%, transparent 20%, transparent 80%, rgba(255,220,80,0.6) 100%)',
+                        borderRadius: '48px',
+                        background: 'linear-gradient(90deg, rgba(255,220,80,0.4) 0%, transparent 20%, transparent 80%, rgba(255,220,80,0.4) 100%)',
                         pointerEvents: 'none'
                     }}/>
 
-                    {/* الجزاءة الداخلية السوداء */}
+                    {/* Inner Black bezel */}
                     <div style={{
                         background: '#000',
-                        borderRadius: '46px',
+                        borderRadius: '40px',
                         overflow: 'hidden',
-                        position: 'absolute', inset: '12px',
+                        position: 'absolute', inset: '8px',
                     }}>
-                        {/* Dynamic Island — أصغر */}
+                        {/* Dynamic Island */}
                         <div style={{
-                            width: '90px', height: '28px',
+                            width: '85px', height: '24px',
                             background: '#000',
                             borderRadius: '20px',
-                            margin: '10px auto 0',
+                            margin: '8px auto 0',
                             position: 'relative', zIndex: 10,
                             boxShadow: 'inset 0 0 0 1px rgba(255,255,255,0.1)'
                         }}>
-                            {/* كاميرا صغيرة */}
                             <div style={{
-                                width: '10px', height: '10px',
+                                width: '8px', height: '8px',
                                 borderRadius: '50%',
                                 background: '#1a1a2e',
-                                border: '2px solid #333',
-                                position: 'absolute', right: '14px', top: '50%',
+                                border: '2px solid #222',
+                                position: 'absolute', right: '12px', top: '50%',
                                 transform: 'translateY(-50%)'
                             }}/>
                         </div>
 
-                        {/* محتوى الشاشة (WhatsApp Simulator) */}
-                        <div className="absolute inset-0 pt-[38px] rounded-[46px] overflow-hidden">
+                        {/* Screen Content */}
+                        <div className="absolute inset-0 pt-[34px] rounded-[40px] overflow-hidden">
                             {children}
                         </div>
 
                         {/* Home indicator */}
-                        <div className="absolute bottom-[8px] left-1/2 -translate-x-1/2 w-[110px] h-[4px] bg-white rounded-full z-[60]" />
+                        <div className="absolute bottom-[8px] left-1/2 -translate-x-1/2 w-[100px] h-[4px] bg-white/20 rounded-full z-[60]" />
                     </div>
-                </div>
-
-                {/* ─ Back Face ─ */}
-                <div style={{
-                    background: 'linear-gradient(145deg, #f5d078, #c8952a, #e8c060)',
-                    borderRadius: '54px',
-                    position: 'absolute', inset: 0,
-                    display: 'flex', flexDirection: 'column',
-                    alignItems: 'center', justifyContent: 'center', gap: '20px',
-                    backfaceVisibility: 'hidden',
-                    transform: 'rotateY(180deg)'
-                }}>
-                    {/* كاميرا خلفية */}
-                    <div style={{
-                        width: '100px', height: '100px',
-                        background: 'linear-gradient(135deg, #1a1a1a, #2a2a2a)',
-                        borderRadius: '28px',
-                        border: '3px solid rgba(255,200,60,0.5)',
-                        display: 'flex', flexWrap: 'wrap',
-                        gap: '6px', padding: '14px',
-                        boxShadow: '0 4px 20px rgba(0,0,0,0.5)',
-                        position: 'absolute', top: '35px', left: '35px'
-                    }}>
-                        {[...Array(3)].map((_, i) => (
-                            <div key={i} style={{
-                                width: '28px', height: '28px',
-                                borderRadius: '50%',
-                                background: 'radial-gradient(circle, #2a2a3a, #111)',
-                                border: '2px solid rgba(255,200,60,0.3)'
-                            }}/>
-                        ))}
-                    </div>
-                    {/* Apple Logo (optional, just using standard Logo here slightly translucent) */}
-                    <img src="/Logo.png" style={{ width: '40px', opacity: 0.6 }} alt="Logo" />
                 </div>
             </div>
-
-            {/* Hint text under phone */}
-            <p className="text-slate-500 text-xs mt-6 animate-pulse font-medium">
-                {isAr ? '👆 اضغط مرتين لرؤية الخلف' : '👆 Double-tap to flip the phone'}
-            </p>
         </div>
     );
 }
 
-/* ═══════════════════ PHONE ONBOARDING ═══════════════════════════════════════════ */
-function PhoneOnboarding({ projectName, setProjectName, isAr, startSimulator }) {
+/* ═══════════════════ PHONE PREVIEW (ONBOARDING) ═════════════════════════════ */
+function PhonePreview({ isAr = true, projectName, setProjectName, handleStart }) {
     return (
-        <div className="w-full h-full bg-[#050505] flex flex-col p-6 pt-16 pb-8 justify-between text-white" dir={isAr ? "rtl" : "ltr"}>
-            <div className="flex flex-col items-center gap-1">
-                <img src="/Logo.png" alt="Elegant Options" className="h-10 w-auto mb-1 drop-shadow-[0_0_12px_rgba(6,182,212,0.5)]"
-                    onError={e => { e.target.style.display = 'none'; }} />
-                <h3 className="text-white/60 text-[8px] font-bold tracking-[0.25em] uppercase">ELEGANT OPTIONS</h3>
-                <div className="w-8 h-[1px] bg-white/10 my-1" />
+        <div style={{
+            position: 'relative',
+            height: '100%', display: 'flex', flexDirection: 'column',
+            alignItems: 'center', justifyContent: 'flex-start',
+            padding: '24px 20px 20px', gap: '0',
+            overflow: 'hidden',
+            background: '#0a0d0b'
+        }}>
+            {/* Simulated WhatsApp Chat background (blurry & crystallized) */}
+            <div style={{
+                position: 'absolute', inset: 0,
+                display: 'flex', flexDirection: 'column',
+                padding: '50px 16px 16px', gap: '12px',
+                opacity: 0.85, // clear visibility, yet blurred
+                filter: 'blur(2px)', // out of focus
+                pointerEvents: 'none',
+                zIndex: 1
+            }}>
+                {/* Contact Header Simulation */}
+                <div style={{
+                    display: 'flex', alignItems: 'center', gap: '8px',
+                    paddingBottom: '10px', borderBottom: '1px solid rgba(255,255,255,0.1)',
+                    marginBottom: '10px'
+                }}>
+                    <div style={{ width: '28px', height: '28px', borderRadius: '50%', background: '#00a884', display: 'flex', alignItems: 'center', justifyContent: 'center', color: '#fff', fontSize: '10px', fontWeight: 'bold' }}>EO</div>
+                    <div style={{ flex: 1, display: 'flex', flexDirection: 'column', gap: '3px' }}>
+                        <div style={{ width: '80px', height: '7px', background: '#fff', borderRadius: '3.5px' }} />
+                        <div style={{ width: '45px', height: '5px', background: '#00a884', borderRadius: '2.5px' }} />
+                    </div>
+                </div>
+
+                {/* Left Bubble (Client inquiry) */}
+                <div style={{
+                    alignSelf: 'flex-start',
+                    background: '#202c33',
+                    color: '#e9edef',
+                    borderRadius: '0px 12px 12px 12px',
+                    padding: '8px 12px',
+                    width: '68%',
+                    fontSize: '10.5px',
+                    fontFamily: 'Cairo',
+                    boxShadow: '0 1px 2px rgba(0,0,0,0.15)',
+                    textAlign: isAr ? 'right' : 'left'
+                }}>
+                    {isAr ? 'مرحباً، أريد الاستفسار عن منتجاتكم وشراء بعض المستلزمات' : 'Hello, I want to inquire about your products and buy some items'}
+                </div>
+
+                {/* Right Bubble (Bot welcome response) */}
+                <div style={{
+                    alignSelf: 'flex-end',
+                    background: '#005c4b',
+                    color: '#e9edef',
+                    borderRadius: '12px 0px 12px 12px',
+                    padding: '8px 12px',
+                    width: '78%',
+                    fontSize: '10.5px',
+                    fontFamily: 'Cairo',
+                    boxShadow: '0 1px 2px rgba(0,0,0,0.15)',
+                    textAlign: isAr ? 'right' : 'left'
+                }}>
+                    {isAr ? 'أهلاً بك في متجرنا! تفضل الكتالوج التفاعلي لتختار منتجاتك الذكية 🛍️' : 'Welcome to our store! Here is the interactive catalog to choose your products 🛍️'}
+                </div>
+
+                {/* Left Bubble 2 (Client selecting product) */}
+                <div style={{
+                    alignSelf: 'flex-start',
+                    background: '#202c33',
+                    color: '#e9edef',
+                    borderRadius: '0px 12px 12px 12px',
+                    padding: '8px 12px',
+                    width: '60%',
+                    fontSize: '10.5px',
+                    fontFamily: 'Cairo',
+                    boxShadow: '0 1px 2px rgba(0,0,0,0.15)',
+                    textAlign: isAr ? 'right' : 'left'
+                }}>
+                    {isAr ? 'شكراً لك، قمت باختيار هذا المنتج المميز وتأكيد الطلب' : 'Thank you, I selected this premium product and confirmed order'}
+                </div>
+
+                {/* Right Bubble 2 (Bot generating invoice) */}
+                <div style={{
+                    alignSelf: 'flex-end',
+                    background: '#005c4b',
+                    color: '#e9edef',
+                    borderRadius: '12px 0px 12px 12px',
+                    padding: '8px 12px',
+                    width: '75%',
+                    fontSize: '10.5px',
+                    fontFamily: 'Cairo',
+                    boxShadow: '0 1px 2px rgba(0,0,0,0.15)',
+                    textAlign: isAr ? 'right' : 'left'
+                }}>
+                    {isAr ? 'تم تجهيز فاتورتك بنجاح! 🧾 يرجى النقر لإتمام الدفع الآمن' : 'Your invoice is ready! 🧾 Please click to complete secure payment'}
+                </div>
             </div>
 
-            <div className="text-center my-auto flex flex-col gap-2">
-                <h2 className="text-cyan-400 font-extrabold text-[20px] tracking-wide">
-                    {isAr ? "جرّب نظام البيع الذكي" : "Try Smart Selling"}
-                </h2>
-                <p className="text-white/70 text-[11px] font-semibold leading-relaxed max-w-[240px] mx-auto">
-                    {isAr ? "اكتشف كيف يشتري عميلك منتجاتك عبر واتساب" : "Discover how your customers buy your products via WhatsApp"}
-                </p>
-            </div>
+            {/* Crystallized/Frosted Glass Overlay */}
+            <div style={{
+                position: 'absolute', inset: 0,
+                background: 'radial-gradient(circle at center, rgba(12, 28, 20, 0.25) 0%, rgba(5, 8, 7, 0.75) 100%)',
+                backdropFilter: 'blur(4px)',
+                pointerEvents: 'none',
+                zIndex: 2
+            }} />
 
-            <div className="flex flex-col gap-4 mb-4">
-                <div className="flex flex-col gap-1.5">
-                    <label className="text-white/50 text-[11px] font-bold text-center">
-                        {isAr ? "اسم متجرك أو مشروعك" : "Your Store or Project Name"}
+            {/* Content Container */}
+            <div style={{ position: 'relative', zIndex: 3, width: '100%', height: '100%', display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
+                <img src="/Logo.png" style={{
+                    width: '54px', marginBottom: '16px',
+                    filter: 'drop-shadow(0 0 16px rgba(37,211,102,0.4))'
+                }} alt="Logo" />
+
+                <div style={{ textAlign: 'center', marginBottom: '20px', width: '100%' }}>
+                    <h2 style={{ color: '#fff', fontSize: '18px', fontWeight: '900', fontFamily: 'Cairo', lineHeight: 1.35, marginBottom: '6px' }}>
+                        {isAr ? 'جرّب نظام البيع الذكي' : 'Try the Smart Sales System'}
+                    </h2>
+                    <p style={{ color: '#a0b0a8', fontSize: '12px', lineHeight: 1.5, fontFamily: 'Cairo' }}>
+                        {isAr ? 'اكتشف كيف يشتري عميلك منتجاتك عبر واتساب' : 'See how your customer buys through WhatsApp'}
+                    </p>
+                </div>
+
+                <div style={{ width: '100%', marginBottom: '16px' }}>
+                    <label style={{
+                        color: '#c8d8c8', fontSize: '12px', fontWeight: '700',
+                        display: 'block', marginBottom: '8px',
+                        textAlign: isAr ? 'right' : 'left', fontFamily: 'Cairo'
+                    }}>
+                        {isAr ? 'اسم متجرك أو مشروعك' : 'Your store or project name'}
                     </label>
                     <input
                         type="text"
                         value={projectName}
-                        onChange={e => setProjectName(e.target.value)}
-                        placeholder={isAr ? "مثال: متجر الأناقة، مطعم نوار..." : "e.g., Elegance Store, Burger Joint..."}
-                        className="phone-input-field w-full bg-white/5 border border-white/10 rounded-xl px-4 py-3 text-white text-[13px] text-center focus:outline-none focus:border-cyan-500 focus:bg-white/10 transition-all font-semibold"
+                        onChange={(e) => setProjectName(e.target.value)}
+                        placeholder={isAr ? 'مثال: متجر الأناقة، مطعم نوار...' : 'e.g. Noor Store, Burger Hub...'}
+                        className="phone-input-field"
+                        style={{
+                            width: '100%', background: 'rgba(17, 26, 21, 0.6)',
+                            border: '1.5px solid #233e2e',
+                            borderRadius: '14px', padding: '14px 16px',
+                            color: '#e9edef', fontSize: '14px',
+                            fontFamily: 'Cairo', outline: 'none',
+                            textAlign: isAr ? 'right' : 'left',
+                            boxSizing: 'border-box',
+                            transition: 'all 0.3s'
+                        }}
                     />
                 </div>
 
                 <button
-                    onClick={startSimulator}
-                    disabled={!projectName.trim()}
-                    className="w-full py-3.5 bg-gradient-to-r from-cyan-600 to-cyan-500 disabled:opacity-40 disabled:cursor-not-allowed hover:from-cyan-500 hover:to-cyan-400 text-white font-black text-[14px] rounded-xl transition-all shadow-[0_4px_15px_rgba(6,182,212,0.3)] flex items-center justify-center gap-1.5"
+                    onClick={handleStart}
+                    style={{
+                        width: '100%', padding: '14px',
+                        background: '#323f4f',
+                        borderRadius: '14px', border: 'none',
+                        color: '#fff', fontSize: '14px', fontWeight: '800',
+                        fontFamily: 'Cairo', cursor: 'pointer',
+                        transition: 'all 0.3s ease'
+                    }}
                 >
-                    {isAr ? "🚀 ابدأ التجربة ←" : "🚀 Start Experience →"}
+                    {isAr ? '🚀 ابدأ التجربة ←' : '🚀 Start Demo →'}
                 </button>
             </div>
         </div>
     );
 }
 
-/* ═══════════════════ PHONE PREVIEW ═══════════════════════════════════════════ */
-function PhonePreview({ isAr = true }) {
-    return (
-        <div className="w-full h-full flex flex-col" style={{ background: '#ECE5DD' }} dir={isAr ? "rtl" : "ltr"}>
-            {/* WA header */}
-            <div className={`flex items-center gap-2 px-3 py-2.5 mt-[38px] ${isAr ? '' : 'flex-row'}`} style={{ background: 'linear-gradient(180deg, #128C7E, #075E54)' }}>
-                <img src="/Logo.png" alt="" className="w-8 h-8 rounded-full object-cover bg-[#25d366] border border-white/20"
-                    onError={e => { e.target.outerHTML = `<div class="w-8 h-8 rounded-full bg-[#25d366] flex items-center justify-center text-white text-xs font-black border border-white/20">${isAr ? 'م' : 'S'}</div>`; }} />
-                <div className={`flex-1 ${isAr ? 'text-right' : 'text-left'}`}>
-                    <p className="text-white font-bold text-[12px]">{isAr ? 'متجر واتساب Demo' : 'WhatsApp Store Demo'}</p>
-                    <p className="text-green-200/80 text-[9px]">{isAr ? 'متصل الآن ✓' : 'Online ✓'}</p>
-                </div>
-            </div>
-            {/* Chat area */}
-            <div className="flex flex-col gap-[6px] px-3 py-3 flex-1">
-                <BubbleBot text={isAr ? "أهلاً 👋 كيف نقدر نخدمك اليوم؟" : "Hello 👋 How can we help you today?"} isAr={isAr} />
-                <div className={`flex flex-wrap gap-1.5 mt-0.5 ${isAr ? 'justify-end' : 'justify-start'}`}>
-                    {(isAr ? ['🛍️ تصفح المنتجات', '🔥 العروض'] : ['🛍️ Browse Products', '🔥 Offers']).map((b,i) => (
-                        <div key={i} className="bg-white border border-[#128C7E]/20 text-[#128C7E] text-[9px] font-bold px-2.5 py-1 rounded-full">{b}</div>
-                    ))}
-                </div>
-                <BubbleUser text={isAr ? "تصفح المنتجات 🛍️" : "Browse Products 🛍️"} isAr={isAr} />
-                <BubbleBot text={isAr ? "بكل سرور! اختر من منتجاتنا 👇" : "Sure! Choose from our products 👇"} isAr={isAr} />
-                <div className={`bg-white rounded-2xl px-2 py-2 max-w-[78%] shadow-sm ${isAr ? 'self-start rounded-tl-sm' : 'self-start rounded-tr-sm'}`}>
-                    <div className="w-full h-[50px] rounded-lg overflow-hidden mb-1 bg-gradient-to-br from-[#128C7E]/20 to-[#25d366]/10 flex items-center justify-center">
-                        <ShoppingCart size={16} className="text-[#128C7E]" />
-                    </div>
-                    <p className="text-gray-800 text-[9px] font-bold">{isAr ? '🛍️ الكاتلوج الذكي' : '🛍️ Smart Catalog'}</p>
-                    <p className="text-gray-500 text-[8px]">{isAr ? '8 منتجات متوفرة' : '8 products available'}</p>
-                </div>
-                <BubbleUser text={isAr ? "أريد: 2x سماعات + 1x ساعة" : "I want: 2x Headphones + 1x Watch"} isAr={isAr} />
-                <BubbleBot text={isAr ? "✅ تم استلام طلبك!\nرقم الطلب: #8472" : "✅ Order received!\nOrder #: #8472"} isAr={isAr} />
-            </div>
-        </div>
-    );
-}
-
-function BubbleBot({ text, isAr }) {
-    return (
-        <div className={`bg-white rounded-2xl px-2.5 py-1.5 max-w-[78%] shadow-sm ${isAr ? 'self-start rounded-tl-[4px]' : 'self-start rounded-tr-[4px]'}`}>
-            <p className="text-gray-800 text-[10px] leading-relaxed whitespace-pre-line">{text}</p>
-            <p className={`text-gray-400 text-[7px] mt-0.5 ${isAr ? 'text-left' : 'text-right'}`}>10:30 {isAr ? 'ص' : 'AM'}</p>
-        </div>
-    );
-}
-function BubbleUser({ text, isAr }) {
-    return (
-        <div className={`bg-[#DCF8C6] rounded-2xl px-2.5 py-1.5 max-w-[65%] shadow-sm ${isAr ? 'self-end rounded-tr-[4px]' : 'self-end rounded-tl-[4px]'}`}>
-            <p className="text-gray-800 text-[10px]">{text}</p>
-            <div className={`flex items-center gap-0.5 mt-0.5 ${isAr ? 'justify-end' : 'justify-start'}`}>
-                <p className="text-gray-500 text-[7px]">10:31 {isAr ? 'ص' : 'AM'}</p>
-                <svg width="12" height="7" viewBox="0 0 16 9" fill="#53bdeb"><path d="M15 1L5.5 8 3 5.5M11 1L1.5 8"/></svg>
-            </div>
-        </div>
-    );
-}
-
-/* ═══════════════════ APP ═══════════════════════════════════════════════════════ */
+/* ═══════════════════ APP MAIN ═══════════════════════════════════════════════════ */
 function App() {
     const [view, setView] = useState('landing');
     const [lang, setLang] = useState('ar');
     const [projectName, setProjectName] = useState('');
-    const [nameActive, setNameActive] = useState(false);
+    const [loadingStep, setLoadingStep] = useState(0);
+    const [phoneKey, setPhoneKey] = useState(0);
     const isAr = lang === 'ar';
 
     const startSimulator = () => {
-        const name = projectName.trim() || (isAr ? 'متجر واتساب Demo' : 'WhatsApp Store Demo');
+        const name = projectName.trim() || (isAr ? 'متجرنا الذكي' : 'Smart Store');
         setProjectName(name);
         setView('loading');
-        setTimeout(() => setView('simulator'), 2200);
     };
+
+    // Smart 2.2 seconds loading interval steps
+    useEffect(() => {
+        if (view === 'loading') {
+            const timer1 = setTimeout(() => setLoadingStep(1), 700);
+            const timer2 = setTimeout(() => setLoadingStep(2), 1400);
+            const timer3 = setTimeout(() => {
+                setView('simulator');
+                setLoadingStep(0);
+            }, 2200);
+
+            return () => {
+                clearTimeout(timer1);
+                clearTimeout(timer2);
+                clearTimeout(timer3);
+            };
+        }
+    }, [view]);
 
     const t = isAr ? {
         headline: 'حوّل واتساب إلى آلة بيع فعّالة',
         sub: 'ضاعف مبيعاتك 3 أضعاف',
-        desc: 'اعرض منتجاتك، استقبل الطلبات، والدفع - لعملائك تلقائياً\nكل شيء يتم داخل واتساب - بسرعة فائقة',
-        btn: 'تجربة بيع أسهل.. ومبيعات أعلى',
+        desc1: 'اعرض منتجاتك، استقبل الطلبات، وتابع العملاء تلقائياً',
+        desc2: 'كل شيء يتم داخل واتساب — بسرعة واحترافية',
+        btn: 'تجربة بيع أسهل... ومبيعات أعلى',
         hint: '👇 اكتب اسم مشروعك وشاهد كيف يبيع واتساب بدلاً عنك',
-        loading: 'جارٍ بناء متجرك...',
-        counter: 'أكثر من 500+ متجر يستخدم النظام للبيع عبر واتساب',
-        trust: '⭐ موثوق من +500 نشاط تجاري',
-        ai: '🤖 مدعوم بالذكاء الاصطناعي للرد والإقناع',
+        loading: 'جاري بناء متجرك...',
+        counter: 'أكثر من 100+ متجر يستخدم النظام للبيع عبر واتساب',
+        trust: '⭐ موثوق من +100 نشاط تجاري',
+        ai: '🤖 مدعوم بالذكاء الاصطناعي والأتمتة',
+        placeholder: 'اكتب اسم مشروعك أو متجرك هنا...'
     } : {
         headline: 'Turn WhatsApp into a Powerful Sales Machine',
-        sub: 'Triple Your Sales (3x)',
-        desc: 'Showcase products, receive orders, and collect payment automatically\nEverything is done inside WhatsApp — at lightning speed',
-        btn: 'Easier Selling.. Higher Sales',
+        sub: 'Triple your sales',
+        desc1: 'Showcase products, receive orders, and follow up automatically',
+        desc2: 'Everything inside WhatsApp — fast and professional',
+        btn: 'Easier selling... higher sales',
         hint: '👇 Enter your project name and see how WhatsApp sells for you',
         loading: 'Building your store...',
-        counter: '500+ stores already selling via WhatsApp',
-        trust: '⭐ Trusted by 500+ businesses',
-        ai: '🤖 AI-powered for smart replies & conversions',
+        counter: '100+ stores already selling via WhatsApp',
+        trust: '⭐ Trusted by 100+ businesses',
+        ai: '🤖 AI & Automation Powered',
+        placeholder: 'Enter your project or store name...'
     };
 
+    const loadingMessages = isAr ? [
+        '🔍 جاري تحليل وتجهيز بيانات مشروعك...',
+        `🛍️ جاري بناء الكاتلوج الذكي لـ "${projectName}"...`,
+        '⚙️ جاري تشغيل خوادم الأتمتة والرد الذكي...'
+    ] : [
+        '🔍 Analyzing your project details...',
+        `🛍️ Building smart catalog for "${projectName}"...`,
+        '⚙️ Activating AI automation servers...'
+    ];
+
     return (
-        <div className="min-h-screen bg-[#0A0A0A] text-white overflow-x-hidden font-cairo selection:bg-cyan-500/30">
+        <div className="min-h-screen bg-[#0A0A0A] text-white overflow-x-hidden font-cairo selection:bg-green-500/30 relative">
             <Particles />
 
             <AnimatePresence mode="wait">
-                {/* ═══════════ LANDING ═══════════ */}
+                {/* ═══════════ PHASE 1: LANDING PAGE ═══════════ */}
                 {view === 'landing' && (
                     <motion.div key="landing" initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0, scale: 0.98 }}
                         className="min-h-screen flex flex-col items-center relative z-10 px-4 pt-6 pb-16"
-                        dir={isAr ? 'rtl' : 'ltr'}>
+                        dir={isAr ? 'rtl' : 'ltr'}>                        {/* ─ Top-Left Language Toggle with Icons ─ */}
+                        <div className="absolute top-4 left-4 sm:top-6 sm:left-6 z-50">
+                            <div className="flex items-center rounded-full p-[2px] border border-white/[0.08]"
+                                style={{ background: 'rgba(0,0,0,0.4)', backdropFilter: 'blur(20px)' }}>
+                                <button onClick={() => setLang('ar')}
+                                    className={`flex items-center gap-1.5 px-3 py-1 rounded-full text-[11px] font-extrabold transition-all duration-350 ${
+                                        lang === 'ar'
+                                            ? 'bg-gradient-to-r from-[#25d366] to-[#128c7e] text-white shadow-[0_0_10px_rgba(37,211,102,0.3)]'
+                                            : 'text-white/40 hover:text-white/70'
+                                    }`}>
+                                    <span>🇸🇦</span>
+                                    <span>العربية</span>
+                                </button>
+                                <button onClick={() => setLang('en')}
+                                    className={`flex items-center gap-1.5 px-3 py-1 rounded-full text-[11px] font-extrabold transition-all duration-350 ${
+                                        lang === 'en'
+                                            ? 'bg-gradient-to-r from-[#25d366] to-[#128c7e] text-white shadow-[0_0_10px_rgba(37,211,102,0.3)]'
+                                            : 'text-white/40 hover:text-white/70'
+                                    }`}
+                                    style={{ fontFamily: 'system-ui, sans-serif' }}>
+                                    <span>🇬🇧</span>
+                                    <span>EN</span>
+                                </button>
+                            </div>
+                        </div>
 
                         {/* ─ Logo + Brand ─ */}
                         <motion.div initial={{ opacity: 0, y: -12 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.05 }}
                             className="flex flex-col items-center mb-6">
-                            <img src="/Logo.png" alt="Elegant Options" className="h-11 w-auto mb-2 drop-shadow-[0_0_20px_rgba(6,182,212,0.4)]"
-                                onError={e => { e.target.style.display = 'none'; }} />
+                            <img src="/Logo.png" alt="Elegant Options" className="h-11 w-auto mb-2 drop-shadow-[0_0_20px_rgba(37,211,102,0.4)] animate-pulse" />
                             <h2 className="text-white/60 text-[11px] font-bold tracking-[0.3em] uppercase" style={{ fontFamily: 'system-ui, sans-serif' }}>
                                 ELEGANT OPTIONS
                             </h2>
-                            <div className="w-12 h-[1px] bg-gradient-to-r from-transparent via-white/15 to-transparent mt-2" />
+                            <div className="w-12 h-[1px] bg-gradient-to-r from-transparent via-green-500/30 to-transparent mt-2" />
                         </motion.div>
 
-                        {/* ─ Language Toggle (glassmorphism) ─ */}
-                        <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 0.08 }}
-                            className="mb-6">
-                            <div className="flex rounded-full p-[3px] border border-white/[0.08]"
-                                style={{ background: 'rgba(255,255,255,0.04)', backdropFilter: 'blur(20px)' }}>
-                                <button onClick={() => setLang('ar')}
-                                    className={`px-5 py-1.5 rounded-full text-[13px] font-bold transition-all duration-300 ${lang === 'ar'
-                                        ? 'bg-gradient-to-r from-cyan-500 to-cyan-600 text-white shadow-[0_0_15px_rgba(6,182,212,0.4)]'
-                                        : 'text-white/40 hover:text-white/70'}`}>
-                                    العربية
-                                </button>
-                                <button onClick={() => setLang('en')}
-                                    className={`px-5 py-1.5 rounded-full text-[13px] font-bold transition-all duration-300 ${lang === 'en'
-                                        ? 'bg-gradient-to-r from-cyan-500 to-cyan-600 text-white shadow-[0_0_15px_rgba(6,182,212,0.4)]'
-                                        : 'text-white/40 hover:text-white/70'}`}
-                                    style={{ fontFamily: 'system-ui, sans-serif' }}>
-                                    English
-                                </button>
-                            </div>
+                        {/* ─ 1. PHONE ONBOARDING (FIRST AT THE TOP) ─ */}
+                        <motion.div
+                            initial={{ opacity: 0, scale: 0.94 }}
+                            animate={{ opacity: 1, scale: 1 }}
+                            transition={{ delay: 0.1, duration: 0.8 }}
+                            className="w-full max-w-md mb-8 flex justify-center z-30"
+                        >
+                            <Phone3D isAr={isAr}>
+                                <PhonePreview
+                                    isAr={isAr}
+                                    projectName={projectName}
+                                    setProjectName={setProjectName}
+                                    handleStart={startSimulator}
+                                />
+                            </Phone3D>
                         </motion.div>
 
-                        {/* ─ Headline ─ */}
-                        <motion.div initial={{ opacity: 0, y: -10 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.12 }}
-                            className="text-center max-w-2xl mb-2">
-                            <h1 className="text-[32px] sm:text-[44px] lg:text-[52px] font-black leading-[1.2] text-white">
+                        {/* ─ 2. HEADLINE (BELOW PHONE) ─ */}
+                        <motion.div initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.15 }}
+                            className="text-center max-w-3xl mb-2">
+                            <h1 className="text-[34px] sm:text-[44px] lg:text-[52px] font-black leading-[1.3] text-white tracking-tight">
                                 {t.headline}
                             </h1>
                         </motion.div>
 
-                        {/* ─ Subheadline ─ */}
-                        <motion.p initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 0.16 }}
-                            className="text-cyan-400 text-lg sm:text-[22px] font-extrabold text-center max-w-xl mb-4">
+                        {/* ─ 3. SUBHEADLINE ─ */}
+                        <motion.h2 initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 0.2 }}
+                            className="text-[18px] sm:text-[22px] text-white/75 font-semibold mb-6 text-center max-w-2xl">
                             {t.sub}
-                        </motion.p>
+                        </motion.h2>
 
-                        {/* ─ Description ─ */}
-                        <motion.p initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 0.2 }}
-                            className="text-white/65 text-sm sm:text-[15px] text-center max-w-xl mb-8 whitespace-pre-line leading-relaxed font-semibold">
-                            {t.desc}
-                        </motion.p>
+                        {/* ─ 4. DESCRIPTION ─ */}
+                        <motion.div initial={{ opacity: 0, y: 8 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.25 }}
+                            className="text-center mb-6 max-w-xl space-y-2">
+                            <p className="text-white/70 text-[15px] sm:text-[16px] leading-relaxed font-semibold">
+                                {t.desc1}
+                            </p>
+                            <p className="text-white/70 text-[15px] sm:text-[16px] leading-relaxed font-semibold">
+                                {t.desc2}
+                            </p>
+                        </motion.div>
 
-                        {/* ─ Top Action Button ─ */}
+                        {/* ─ 5. ACTION BUTTON (SCROLLS UP TO THE PHONE INPUT) ─ */}
                         <motion.button
-                            initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.24 }}
+                            initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.3 }}
                             whileHover={{ scale: 1.04, y: -3, boxShadow: '0 0 40px rgba(6,182,212,0.3)' }}
                             whileTap={{ scale: 0.97 }}
                             onClick={() => {
@@ -450,108 +554,106 @@ function App() {
                         >
                             <span className="relative z-10">{t.btn}</span>
                         </motion.button>
-
-                        {/* ─ Hint Text ─ */}
-                        <motion.p initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 0.28 }}
-                            className="text-yellow-400 font-extrabold text-xs sm:text-[13px] text-center mb-6">
-                            {t.hint}
-                        </motion.p>
-
-                        {/* ─ 3D Phone ─ */}
-                        <motion.div initial={{ opacity: 0, scale: 0.93 }} animate={{ opacity: 1, scale: 1 }} transition={{ delay: 0.3, duration: 0.8 }}
-                            className="w-full max-w-md mb-8">
-                            <Phone3D isAr={isAr}>
-                                <PhoneOnboarding
-                                    projectName={projectName}
-                                    setProjectName={setProjectName}
-                                    isAr={isAr}
-                                    startSimulator={startSimulator}
-                                />
-                            </Phone3D>
-                        </motion.div>
-
-
-
                         {/* ─ Trust Badges ─ */}
-                        <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 0.6 }}
-                            className="flex flex-col sm:flex-row items-center gap-3 mb-8">
-                            <div className="flex items-center gap-1.5 px-3 py-1.5 rounded-full border border-white/[0.06]"
+                        <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 0.4 }}
+                            className="flex flex-col sm:flex-row items-center gap-3 mb-8 z-10">
+                            <div className="flex items-center gap-1.5 px-3.5 py-1.5 rounded-full border border-white/[0.06]"
                                 style={{ background: 'rgba(255,255,255,0.03)', backdropFilter: 'blur(10px)' }}>
-                                <Shield size={12} className="text-cyan-400" />
+                                <Shield size={12} className="text-[#25d366]" />
                                 <span className="text-white/50 text-[11px] font-bold">{t.trust}</span>
                             </div>
-                            <div className="flex items-center gap-1.5 px-3 py-1.5 rounded-full border border-white/[0.06]"
+                            <div className="flex items-center gap-1.5 px-3.5 py-1.5 rounded-full border border-white/[0.06]"
                                 style={{ background: 'rgba(255,255,255,0.03)', backdropFilter: 'blur(10px)' }}>
-                                <Bot size={12} className="text-green-400" />
+                                <Bot size={12} className="text-cyan-400" />
                                 <span className="text-white/50 text-[11px] font-bold">{t.ai}</span>
                             </div>
                         </motion.div>
 
-                        {/* ─ Social Proof ─ */}
-                        <div className="w-full flex flex-col items-center gap-5 max-w-4xl">
+                        {/* ─ Social Proof & Brands ─ */}
+                        <div className="w-full flex flex-col items-center gap-5 max-w-4xl z-10">
                             <div className="flex items-center gap-2">
                                 {[1,2,3,4,5].map(i => <Star key={i} size={12} className="text-yellow-400 fill-yellow-400" />)}
                                 <span className="text-white/40 text-[12px] font-bold mx-1">{t.counter}</span>
                             </div>
                             <Testimonials lang={lang} />
-                            <BrandMarquee />
+                            <BrandMarquee lang={lang} />
                         </div>
                     </motion.div>
                 )}
 
-                {/* ═══════════ LOADING ═══════════ */}
+                {/* ═══════════ PHASE 2: SMART LOADING TRANSITION ═══════════ */}
                 {view === 'loading' && (
                     <motion.div key="loading" initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}
-                        className="min-h-screen flex flex-col items-center justify-center gap-5 relative z-10">
-                        <motion.div animate={{ scale: [1, 1.2, 1], rotate: [0, 8, -8, 0] }}
-                            transition={{ duration: 1.5, repeat: Infinity }}>
-                            <Zap size={44} className="text-cyan-400 drop-shadow-[0_0_20px_rgba(6,182,212,0.6)]" />
+                        className="min-h-screen flex flex-col items-center justify-center gap-6 relative z-10 px-4">
+                        <motion.div
+                            animate={{ scale: [1, 1.15, 1], rotate: [0, 10, -10, 0] }}
+                            transition={{ duration: 1.5, repeat: Infinity, ease: "easeInOut" }}
+                            className="bg-green-500/10 border border-green-500/20 p-5 rounded-full"
+                        >
+                            <Zap size={44} className="text-[#25d366] drop-shadow-[0_0_20px_rgba(37,211,102,0.6)]" />
                         </motion.div>
-                        <Loader2 className="w-8 h-8 text-cyan-400 animate-spin" />
-                        <p className="text-white font-bold text-lg">{t.loading}</p>
-                        <div className="flex gap-1.5">
+                        <Loader2 className="w-8 h-8 text-[#25d366] animate-spin" />
+                        
+                        <div className="text-center h-8">
+                            <AnimatePresence mode="wait">
+                                <motion.p
+                                    key={loadingStep}
+                                    initial={{ opacity: 0, y: 5 }}
+                                    animate={{ opacity: 1, y: 0 }}
+                                    exit={{ opacity: 0, y: -5 }}
+                                    className="text-white font-bold text-lg max-w-md"
+                                >
+                                    {loadingMessages[loadingStep]}
+                                </motion.p>
+                            </AnimatePresence>
+                        </div>
+
+                        <div className="flex gap-2 mt-4">
                             {[0,1,2].map(i => (
-                                <motion.div key={i} className="w-2 h-2 rounded-full bg-cyan-400"
-                                    animate={{ y: [0, -10, 0] }} transition={{ duration: 0.8, delay: i * 0.15, repeat: Infinity }} />
+                                <motion.div key={i} className="w-2.5 h-2.5 rounded-full bg-[#25d366]"
+                                    animate={{ y: [0, -8, 0] }} transition={{ duration: 0.8, delay: i * 0.15, repeat: Infinity }} />
                             ))}
                         </div>
                     </motion.div>
                 )}
 
-                {/* ═══════════ SIMULATOR ═══════════ */}
+                {/* ═══════════ PHASE 3: CORE SIMULATOR ═══════════ */}
                 {view === 'simulator' && (
                     <motion.div key="simulator" initial={{ opacity: 0 }} animate={{ opacity: 1 }}
-                        className="min-h-screen flex flex-col items-center justify-center p-4 relative z-10"
+                        className="min-h-screen flex flex-col items-center justify-center p-4 relative z-10 bg-[#06080a]"
                         dir={isAr ? 'rtl' : 'ltr'}>
-                        {/* Header */}
-                        <motion.div initial={{ opacity: 0, y: -10 }} animate={{ opacity: 1, y: 0 }} className="text-center mb-4">
-                            <img src="/Logo.png" alt="Logo" className="h-8 w-auto mx-auto mb-1.5 drop-shadow-[0_0_12px_rgba(6,182,212,0.5)]"
-                                onError={e => { e.target.style.display = 'none'; }} />
-                            <h1 className="text-sm font-bold bg-gradient-to-r from-cyan-400 to-green-400 bg-clip-text text-transparent">
-                                {isAr ? 'جرّب تجربة البيع عبر واتساب' : 'Experience WhatsApp Selling'}
+                        {/* Title Header */}
+                        <motion.div initial={{ opacity: 0, y: -10 }} animate={{ opacity: 1, y: 0 }} className="text-center mb-4 z-10">
+                            <img src="/Logo.png" alt="Logo" className="h-8 w-auto mx-auto mb-1.5 drop-shadow-[0_0_12px_rgba(37,211,102,0.4)]" />
+                            <h1 className="text-sm font-bold bg-gradient-to-r from-green-400 to-cyan-400 bg-clip-text text-transparent">
+                                {isAr ? 'تتبع مسار العملاء وبيع المنتجات تلقائياً 🛍️' : 'Track Customer Journeys & Sell Products Automatically 🛍️'}
                             </h1>
                         </motion.div>
 
-                        {/* Simulator Phone */}
-                        <div className="relative w-[375px] h-[750px] rounded-[55px] overflow-hidden"
-                            style={{
-                                background: 'linear-gradient(145deg, #1a1a2e, #0a0a0f)',
-                                boxShadow: '0 40px 80px rgba(0,0,0,0.9), 0 0 50px rgba(37,211,102,0.1), 0 0 0 1px rgba(255,255,255,0.06)',
-                                border: '6px solid #1a1a28',
-                            }}>
-                            <div className="absolute inset-0 rounded-[49px] pointer-events-none z-[55]" style={{ boxShadow: 'inset 0 0 0 1px rgba(255,255,255,0.04)' }} />
+                        {/* Phone Container Box */}
+                        <div className="relative w-[340px] sm:w-[375px] h-[670px] sm:h-[730px] rounded-[52px] overflow-hidden z-20 border-[6px] border-[#1f2c34] shadow-[0_30px_100px_rgba(0,0,0,0.95)]">
+                            {/* Inner Screen Bezel Glow */}
+                            <div className="absolute inset-0 rounded-[46px] pointer-events-none z-[55] shadow-[inset_0_0_0_1px_rgba(255,255,255,0.05)]" />
+                            
                             {/* Dynamic Island */}
                             <div className="absolute top-[8px] left-1/2 -translate-x-1/2 z-[60] flex items-center justify-center gap-2"
                                 style={{ width: '100px', height: '28px', background: '#000', borderRadius: '16px' }}>
                                 <div className="w-[10px] h-[10px] rounded-full bg-[#0a0a12] border border-[#1a1a28]" />
                                 <div className="w-[25px] h-[3px] rounded-full bg-[#0a0a12]" />
                             </div>
-                            <div className="absolute inset-0 overflow-hidden rounded-[49px]">
+
+                            <div className="absolute inset-0 overflow-hidden rounded-[46px]">
                                 <ChatSimulator
-                                    config={{ projectName, niche: 'products', platform: 'whatsapp', lang, goals: ['lost_sales'] }}
-                                    onBack={() => setView('landing')}
+                                    key={phoneKey}
+                                    config={{ projectName, niche: 'restaurant', platform: 'whatsapp', lang }}
+                                    onBack={() => {
+                                        setView('landing');
+                                        setPhoneKey(prev => prev + 1);
+                                    }}
                                 />
                             </div>
+
+                            {/* Home Indicator */}
                             <div className="absolute bottom-[6px] left-1/2 -translate-x-1/2 w-[100px] h-[4px] bg-white/20 rounded-full z-[60]" />
                         </div>
                     </motion.div>

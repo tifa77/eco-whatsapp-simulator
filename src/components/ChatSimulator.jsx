@@ -64,9 +64,121 @@ function StatusBar() {
 }
 
 // ─── WhatsApp Chat Bubble ───────────────────────────────────────────────────────
-function ChatBubble({ msg, isAr }) {
+function ChatBubble({ msg, isAr, projectName }) {
     const isUser = msg.sender === 'user';
     const time = new Date(msg.timestamp).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+
+    // Location bubble
+    if (msg.isLocation) {
+        return (
+            <motion.div
+                initial={{ opacity: 0, y: 8, scale: 0.96 }}
+                animate={{ opacity: 1, y: 0, scale: 1 }}
+                transition={{ duration: 0.25 }}
+                className={`flex ${isUser ? (isAr ? 'justify-start' : 'justify-end') : (isAr ? 'justify-end' : 'justify-start')} mb-1`}
+            >
+                <div
+                    className={`relative overflow-hidden rounded-[18px] shadow-sm ${isUser
+                        ? `bg-[#DCF8C6] ${isAr ? 'rounded-tl-[4px]' : 'rounded-tr-[4px]'}`
+                        : `bg-white ${isAr ? 'rounded-tr-[4px]' : 'rounded-tl-[4px]'}`
+                    }`}
+                    style={{ width: '190px' }}
+                >
+                    {/* Map preview */}
+                    <div style={{ background: 'linear-gradient(135deg, #a8d5a2 0%, #7ec8a0 40%, #5aab8a 100%)', height: '90px', position: 'relative', overflow: 'hidden' }}>
+                        {/* Grid lines */}
+                        <svg width="100%" height="100%" style={{ position: 'absolute', inset: 0, opacity: 0.3 }}>
+                            <line x1="0" y1="45" x2="190" y2="45" stroke="#fff" strokeWidth="0.8" />
+                            <line x1="95" y1="0" x2="95" y2="90" stroke="#fff" strokeWidth="0.8" />
+                            <line x1="0" y1="22" x2="190" y2="22" stroke="#fff" strokeWidth="0.5" />
+                            <line x1="0" y1="68" x2="190" y2="68" stroke="#fff" strokeWidth="0.5" />
+                            <line x1="47" y1="0" x2="47" y2="90" stroke="#fff" strokeWidth="0.5" />
+                            <line x1="143" y1="0" x2="143" y2="90" stroke="#fff" strokeWidth="0.5" />
+                        </svg>
+                        {/* Roads */}
+                        <svg width="100%" height="100%" style={{ position: 'absolute', inset: 0, opacity: 0.5 }}>
+                            <line x1="30" y1="0" x2="60" y2="90" stroke="#fff" strokeWidth="2.5" />
+                            <line x1="120" y1="0" x2="150" y2="90" stroke="#fff" strokeWidth="2" />
+                            <line x1="0" y1="55" x2="190" y2="35" stroke="#fff" strokeWidth="2.5" />
+                        </svg>
+                        {/* Pin */}
+                        <div style={{ position: 'absolute', left: '50%', top: '50%', transform: 'translate(-50%, -100%)', filter: 'drop-shadow(0 2px 3px rgba(0,0,0,0.3))' }}>
+                            <svg width="22" height="28" viewBox="0 0 22 28">
+                                <path d="M11 0C6.48 0 2 4.48 2 10c0 7 9 18 9 18s9-11 9-18C20 4.48 15.52 0 11 0z" fill="#E53935" />
+                                <circle cx="11" cy="10" r="4" fill="#fff" />
+                            </svg>
+                        </div>
+                    </div>
+                    {/* Label */}
+                    <div className="px-3 py-1.5">
+                        <p className="text-[12px] font-semibold text-gray-800" dir={isAr ? 'rtl' : 'ltr'}>{isAr ? '📍 الموقع الحالي' : '📍 Current Location'}</p>
+                        <div className={`flex items-center gap-1 mt-0.5 ${isUser ? 'justify-end' : 'justify-start'}`}>
+                            <span className="text-[10px] text-gray-500">{time}</span>
+                            {isUser && <CheckCheck size={12} className="text-[#53bdeb]" />}
+                        </div>
+                    </div>
+                </div>
+            </motion.div>
+        );
+    }
+
+    // Receipt bubble
+    if (msg.isReceipt) {
+        const orderSummary = msg.receiptData?.orderSummary || '';
+        const orderTotal = msg.receiptData?.orderTotal || 0;
+        const customerName = msg.receiptData?.customerName || '';
+        const deliveryMethod = msg.receiptData?.deliveryMethod || '';
+        const orderNum = msg.receiptData?.orderNum || '';
+
+        return (
+            <motion.div
+                initial={{ opacity: 0, y: 8, scale: 0.96 }}
+                animate={{ opacity: 1, y: 0, scale: 1 }}
+                transition={{ duration: 0.25 }}
+                className={`flex ${isAr ? 'justify-end' : 'justify-start'} mb-1`}
+            >
+                <div
+                    className="relative overflow-hidden rounded-[18px] bg-white text-gray-900 px-4 py-3 shadow-sm border border-gray-150"
+                    style={{ width: '240px', borderRadius: isAr ? '18px 4px 18px 18px' : '4px 18px 18px 18px' }}
+                >
+                    <div className="flex justify-between items-center border-b pb-2 mb-2 border-dashed border-gray-200">
+                        <span className="font-extrabold text-[12px] text-gray-850 truncate max-w-[140px]">{projectName}</span>
+                        <span className="text-green-600 text-[10px] font-black bg-green-50 px-1.5 py-0.5 rounded">{isAr ? 'فاتورة معتمدة' : 'Invoice'}</span>
+                    </div>
+
+                    <div className="space-y-1.5 text-gray-600 text-[11px]" dir={isAr ? 'rtl' : 'ltr'}>
+                        <div className="flex justify-between">
+                            <span>{isAr ? 'رقم الطلب:' : 'Order ID:'}</span>
+                            <span className="font-bold text-gray-800">#{orderNum}</span>
+                        </div>
+                        <div className="flex justify-between">
+                            <span>{isAr ? 'العميل:' : 'Customer:'}</span>
+                            <span className="font-bold text-gray-800">{customerName || (isAr ? 'عميل محترم' : 'Valued Customer')}</span>
+                        </div>
+                        <div className="flex flex-col border-y py-1.5 my-1.5 border-gray-100 gap-0.5">
+                            <span className="text-gray-400 text-[10px]">{isAr ? 'المنتجات المطلوبة:' : 'Items:'}</span>
+                            <span className="font-semibold text-gray-850 leading-relaxed whitespace-pre-wrap">{orderSummary}</span>
+                        </div>
+                        <div className="flex justify-between">
+                            <span>{isAr ? 'طريقة الاستلام:' : 'Delivery:'}</span>
+                            <span className="font-bold text-gray-800">{deliveryMethod}</span>
+                        </div>
+                        <div className="flex justify-between border-t pt-2 mt-2 border-gray-100 text-[13px] font-black text-gray-900">
+                            <span>{isAr ? 'الإجمالي:' : 'Total:'}</span>
+                            <span className="text-[#128C7E]">
+                                {`$${orderTotal.toFixed(2)}`}
+                            </span>
+                        </div>
+                    </div>
+
+                    <div className={`flex items-center gap-1 mt-2.5 ${isUser ? 'justify-end' : 'justify-start'}`}>
+                        <span className="text-[10px] text-gray-400">{time}</span>
+                    </div>
+                </div>
+            </motion.div>
+        );
+    }
+
     return (
         <motion.div
             initial={{ opacity: 0, y: 8, scale: 0.96 }}
@@ -113,18 +225,14 @@ function TypingIndicator({ isAr }) {
     );
 }
 
+const CHECKOUT_URL = 'https://checkout.elegant-options.com/sales-automation';
+
 // ─── CTA Screen (demo ended) ───────────────────────────────────────────────────
 function CTAScreen({ lang, onRetry, projectName }) {
     const isAr = lang === 'ar';
     const [step, setStep] = useState('main'); // 'main' | 'no'
 
-    const openWhatsApp = () => {
-        const pn = projectName || '';
-        const msg = isAr
-            ? `مرحباً، أريد متجر واتساب لمشروعي${pn ? ': ' + pn : ''} 🚀`
-            : `Hello, I want a WhatsApp store${pn ? ' for: ' + pn : ''} 🚀`;
-        window.open(`https://wa.me/96566305551?text=${encodeURIComponent(msg)}`, '_blank');
-    };
+    const goToCheckout = () => window.open(CHECKOUT_URL, '_blank');
 
     if (step === 'no') {
         return (
@@ -132,27 +240,27 @@ function CTAScreen({ lang, onRetry, projectName }) {
                 initial={{ opacity: 0, scale: 0.95 }}
                 animate={{ opacity: 1, scale: 1 }}
                 className="bg-gradient-to-b from-[#0d1117] to-[#050509] rounded-2xl mx-3 p-5 border border-yellow-500/30 shadow-[0_0_30px_rgba(234,179,8,0.1)]"
-                dir={isAr ? 'rtl' : 'ltr'}
+                dir="rtl"
             >
                 <div className="text-center text-3xl mb-3">⏳</div>
                 <h3 className="text-white font-black text-center text-[15px] mb-2">
-                    {isAr ? 'لا تفوّت — تجربة مجانية + خصم 70% اليوم فقط' : "Don't miss out — Free trial + 70% OFF today only"}
+                    لا تدع الانتظار يسرق مبيعاتك
                 </h3>
-                <p className="text-slate-400 text-center text-[11px] mb-4">
-                    {isAr ? 'سيُبنى متجرك كاملاً بأسلوبك وهويتك ✨' : 'Your store fully built your way ✨'}
+                <p className="text-slate-400 text-center text-[12px] leading-relaxed mb-4">
+                    أتمت ردودك بالكامل، وألحق وثبّت اشتراكك الآن بـ <span className="text-yellow-400 font-black">97$</span> قبل زيادة سعر الخدمة!
                 </p>
                 <button
-                    onClick={openWhatsApp}
+                    onClick={goToCheckout}
                     className="w-full bg-gradient-to-r from-yellow-500 to-orange-500 text-white font-black py-3 rounded-xl text-sm shadow-[0_0_20px_rgba(234,179,8,0.4)] mb-2"
                 >
-                    {isAr ? '✨ ابدأ مجاناً الآن' : '✨ Start Free Now'}
+                    اشترك وابدأ البيع الآلي فوراً 💳
                 </button>
                 <button
                     onClick={onRetry}
                     className="w-full bg-white/[0.06] text-slate-300 font-bold py-2.5 rounded-xl text-sm flex items-center justify-center gap-2 border border-white/[0.08]"
                 >
                     <RefreshCw size={14} />
-                    {isAr ? '🔄 إعادة التجربة' : '🔄 Try Again'}
+                    🔄 إعادة التجربة
                 </button>
             </motion.div>
         );
@@ -162,36 +270,48 @@ function CTAScreen({ lang, onRetry, projectName }) {
         <motion.div
             initial={{ opacity: 0, y: 15 }}
             animate={{ opacity: 1, y: 0 }}
-            className="bg-gradient-to-b from-[#0d1117] to-[#050509] rounded-2xl mx-3 p-5 border border-cyan-500/30 shadow-[0_0_30px_rgba(6,182,212,0.15)]"
-            dir={isAr ? 'rtl' : 'ltr'}
+            className="rounded-2xl mx-3 p-5 border border-[#25d366]/30 shadow-[0_0_30px_rgba(37,211,102,0.12)]"
+            style={{ background: 'linear-gradient(160deg, #0d1117 0%, #0a1f14 60%, #050509 100%)' }}
+            dir="rtl"
         >
             {/* Stars */}
-            <div className="flex justify-center gap-1 mb-2">
-                {[1,2,3,4,5].map(i => <Star key={i} size={14} className="text-yellow-400 fill-yellow-400" />)}
+            <div className="flex justify-center gap-1 mb-3">
+                {[1,2,3,4,5].map(i => <Star key={i} size={13} className="text-yellow-400 fill-yellow-400" />)}
             </div>
-            <h3 className="text-white font-black text-center text-[15px] mb-1">
-                {isAr ? '🚀 هل تريد متجر واتساب يبيع بدلاً عنك؟' : '🚀 Want a WhatsApp store that sells for you?'}
+
+            {/* Main heading */}
+            <h3 className="text-white font-black text-center text-[15px] leading-snug mb-2">
+                {isAr 
+                    ? 'ضاعف أرباحك ومبيعاتك تلقائياً دون تضييع أي عميل! 📈' 
+                    : 'Double Your Profits & Sales Automatically Without Losing a Single Customer! 📈'}
             </h3>
-            <p className="text-slate-400 text-center text-[11px] mb-1">
-                {isAr ? 'لا مزيد من الردود اليدوية — الأتمتة تتولى كل شيء' : 'No more manual replies — automation handles everything'}
+
+            {/* Sub-heading */}
+            <p className="text-slate-400 text-center text-[11px] leading-relaxed mb-3">
+                {isAr 
+                    ? 'حوّل المحادثات إلى تدفق مستمر من الأرباح. نظام الأتمتة الذكي لدينا يقوم ببيع منتجاتك، تحصيل مدفوعاتك، ومتابعة عملائك على مدار الساعة 24/7 لزيادة دخلك تلقائياً وبأقل جهد!' 
+                    : 'Turn chats into a constant stream of profits. Our smart automation system sells your products, collects payments, and follows up with customers 24/7 to scale your revenue automatically!'}
             </p>
-            <p className="text-cyan-300 text-center text-[11px] mb-3">
-                {isAr ? '✨ سيُبنى متجرك كاملاً بأسلوبك وهويتك' : '✨ Your store will be fully built your way'}
+
+            {/* Pre-button motivator */}
+            <p className="text-[#25d366] text-center text-[11px] font-bold mb-3">
+                ⚡️ استثمارك الذكي للنمو بتكلفة أقل من 100 دولار في الشهر
             </p>
+
+            {/* Primary CTA */}
             <button
-                onClick={openWhatsApp}
-                className="w-full py-3 rounded-xl font-black text-sm text-white mb-2 relative overflow-hidden"
-                style={{ background: 'linear-gradient(135deg, #25d366, #128C7E)' }}
+                onClick={goToCheckout}
+                className="w-full py-3.5 rounded-xl font-black text-[14px] text-white mb-2 relative overflow-hidden"
+                style={{ background: 'linear-gradient(135deg, #25d366 0%, #128C7E 100%)', boxShadow: '0 0 24px rgba(37,211,102,0.35)' }}
             >
                 <motion.div
                     animate={{ x: ['-100%', '200%'] }}
                     transition={{ repeat: Infinity, duration: 2.5, ease: 'linear', repeatDelay: 1 }}
                     className="absolute inset-0 bg-gradient-to-r from-transparent via-white/20 to-transparent skew-x-12"
                 />
-                <span className="relative">
-                    {isAr ? 'ابدأ البيع اليوم 🔥 — خصم يتجاوز 70%' : 'Start Selling Today 🔥 — Over 70% OFF'}
-                </span>
+                <span className="relative">اشترك وابدأ البيع الآلي فوراً 💳</span>
             </button>
+
             <button
                 onClick={() => setStep('no')}
                 className="w-full py-2 rounded-xl text-slate-500 text-xs font-medium"
@@ -202,13 +322,10 @@ function CTAScreen({ lang, onRetry, projectName }) {
     );
 }
 
-// ─── FLOW STEPS ────────────────────────────────────────────────────────────────
-// 1:welcome → 2:catalog → 3:order_summary → 4:ask_name → 5:ask_location → 6:ask_payment → 7:confirm → ended
-
+// ─── Core Component ─────────────────────────────────────────────────────────────
 const ChatSimulatorInner = ({ config, onBack }) => {
     const { projectName, niche, platform, lang = 'ar' } = config;
     const isAr = lang === 'ar';
-    const isWa = platform !== 'instagram';
 
     // ── State ──
     const [messages, setMessages] = useState([]);
@@ -217,10 +334,11 @@ const ChatSimulatorInner = ({ config, onBack }) => {
     const [isTyping, setIsTyping] = useState(false);
     const [isDemoEnded, setIsDemoEnded] = useState(false);
     const [isCatalogOpen, setIsCatalogOpen] = useState(false);
-    const [flowStep, setFlowStep] = useState('welcome'); // welcome | catalog | order_summary | ask_name | ask_location | ask_payment | confirm | ended
+    const [flowStep, setFlowStep] = useState('welcome'); // welcome | catalog | ask_name | ask_location_type | ask_location_share | ask_payment | confirm_payment_btn | ended
     const [customerName, setCustomerName] = useState('');
     const [orderTotal, setOrderTotal] = useState(0);
     const [orderSummary, setOrderSummary] = useState('');
+    const [deliveryMethod, setDeliveryMethod] = useState('');
     const [narratorText, setNarratorText] = useState(isAr ? 'يبدأ العميل المحادثة 👋' : 'Customer starts chat 👋');
     const [toast, setToast] = useState('');
 
@@ -231,6 +349,7 @@ const ChatSimulatorInner = ({ config, onBack }) => {
     useEffect(() => { scrollToBottom(); }, [messages, isTyping, activeButtons, isDemoEnded]);
 
     const addBotMsg = (text, delay = 0, narr = '') => new Promise(resolve => {
+        setIsTyping(true);
         setTimeout(() => {
             setMessages(prev => [...prev, { id: Date.now() + Math.random(), text, sender: 'bot', timestamp: new Date() }]);
             if (narr) setNarratorText(narr);
@@ -245,7 +364,7 @@ const ChatSimulatorInner = ({ config, onBack }) => {
 
     const generateOrderNum = () => Math.floor(1000 + Math.random() * 9000).toString();
 
-    // ── Init (Step 1: Welcome with 4 buttons) ──
+    // ── Init (Step 1: Welcome) ──
     useEffect(() => {
         if (initialized.current) return;
         initialized.current = true;
@@ -259,16 +378,16 @@ const ChatSimulatorInner = ({ config, onBack }) => {
 
             setTimeout(() => {
                 const greetMsg = isAr
-                    ? `أهلاً 👋 كيف نقدر نخدمك اليوم؟`
-                    : `Hello 👋 How can we help you today?`;
+                    ? `أهلاً بك في متجر ${projectName || 'الذكي'}! 👋 كيف نقدر نخدمك اليوم؟`
+                    : `Welcome to ${projectName || 'Smart'} Store! 👋 How can we help you today?`;
                 setMessages(prev => [...prev, { id: Date.now(), text: greetMsg, sender: 'bot', timestamp: new Date() }]);
                 setToast('');
 
                 setTimeout(() => {
                     setIsTyping(false);
                     setActiveButtons(isAr
-                        ? ['🛒 تصفح المنتجات', '🔥 العروض', '📦 تتبع الطلب', '💬 تواصل معنا']
-                        : ['🛒 Browse Products', '🔥 Offers', '📦 Track Order', '💬 Contact Us']);
+                        ? ['🛒 تصفح المنتجات', '🔥 العروض', '💬 خدمة العملاء']
+                        : ['🛒 Browse Products', '🔥 Offers', '💬 Customer Service']);
                     setFlowStep('catalog');
                 }, 800);
             }, 1500);
@@ -280,7 +399,7 @@ const ChatSimulatorInner = ({ config, onBack }) => {
         addUserMsg(btn);
         setActiveButtons([]);
 
-        // Products / Browse
+        // Browse catalog
         if (btn.includes('تصفح') || btn.includes('Browse') || btn.includes('Products')) {
             setIsTyping(true);
             setNarratorText(isAr ? 'يفتح النظام الكاتلوج تلقائياً 🛒' : 'System opens catalog automatically 🛒');
@@ -301,113 +420,168 @@ const ChatSimulatorInner = ({ config, onBack }) => {
             setNarratorText(isAr ? 'عرض العروض الحالية 🔥' : 'Showing current offers 🔥');
             setTimeout(() => {
                 const msg = isAr
-                    ? '🔥 عروضنا الحالية:\n\n✅ خصم 20% على الإلكترونيات\n✅ اشتري 2 واحصل على الثالث مجاناً\n✅ توصيل مجاني للطلبات فوق 50 د.ك\n\n🛒 تصفح المنتجات للاستفادة من العروض!'
+                    ? '🔥 عروضنا الحالية:\n\n✅ خصم 20% على الإلكترونيات\n✅ اشتري 2 واحصل على الثالث مجاناً\n✅ توصيل مجاني للطلبات فوق $50\n\n🛒 تصفح المنتجات للاستفادة من العروض!'
                     : '🔥 Current offers:\n\n✅ 20% off Electronics\n✅ Buy 2 Get 1 Free\n✅ Free delivery on orders over $50\n\n🛒 Browse products to grab the deals!';
                 setMessages(prev => [...prev, { id: Date.now(), text: msg, sender: 'bot', timestamp: new Date() }]);
                 setIsTyping(false);
-                setActiveButtons([isAr ? '🛒 تصفح المنتجات' : '🛒 Browse Products']);
+                setActiveButtons([
+                    isAr ? '🛒 تصفح المنتجات' : '🛒 Browse Products',
+                    isAr ? '💬 خدمة العملاء' : '💬 Customer Service'
+                ]);
             }, 1200);
             return;
         }
 
-        // Track Order
-        if (btn.includes('تتبع') || btn.includes('Track')) {
+        // Contact Support
+        if (btn.includes('خدمة') || btn.includes('Customer') || btn.includes('تواصل') || btn.includes('Contact')) {
             setIsTyping(true);
-            setNarratorText(isAr ? 'عرض حالة الطلب 📦' : 'Showing order status 📦');
+            setNarratorText(isAr ? 'تحويل للخدمة 💬' : 'Connecting to service 💬');
             setTimeout(() => {
                 const msg = isAr
-                    ? '📦 آخر طلب لك:\n\nرقم الطلب: #7231\nالحالة: جاري التوصيل 🚚\nالوصول المتوقع: 25 دقيقة\n\nهل تريد طلب جديد؟ 🛒'
-                    : '📦 Your latest order:\n\nOrder #: #7231\nStatus: Out for delivery 🚚\nETA: 25 minutes\n\nWant to place a new order? 🛒';
+                    ? '💬 أهلاً! فريق خدمة العملاء في خدمتك\n⏰ أوقات العمل: 9 ص - 10 م\n\nكيف يمكننا مساعدتك؟'
+                    : '💬 Hello! Our customer service team is here for you\n⏰ Hours: 9 AM - 10 PM\n\nHow can we help you?';
                 setMessages(prev => [...prev, { id: Date.now(), text: msg, sender: 'bot', timestamp: new Date() }]);
                 setIsTyping(false);
-                setActiveButtons([isAr ? '🛒 تصفح المنتجات' : '🛒 Browse Products']);
-            }, 1200);
-            return;
-        }
-
-        // Contact
-        if (btn.includes('تواصل') || btn.includes('Contact')) {
-            setIsTyping(true);
-            setNarratorText(isAr ? 'تحويل للدعم 💬' : 'Connecting to support 💬');
-            setTimeout(() => {
-                const msg = isAr
-                    ? '💬 فريقنا جاهز لمساعدتك!\n\n📞 هاتف: 96566305551+\n⏰ أوقات العمل: 9 ص - 10 م\n\nأو يمكنك تصفح منتجاتنا مباشرة 👇'
-                    : '💬 Our team is ready to help!\n\n📞 Phone: +96566305551\n⏰ Hours: 9 AM - 10 PM\n\nOr browse our products directly 👇';
-                setMessages(prev => [...prev, { id: Date.now(), text: msg, sender: 'bot', timestamp: new Date() }]);
-                setIsTyping(false);
-                setActiveButtons([isAr ? '🛒 تصفح المنتجات' : '🛒 Browse Products']);
+                setActiveButtons(isAr
+                    ? ['📋 استفسار', '📝 شكوى']
+                    : ['📋 Inquiry', '📝 Complaint']);
+                setFlowStep('cs_type');
             }, 1000);
             return;
         }
 
-        // Re-open catalog button in chat
-        if (btn.includes('الكاتلوج') || btn.includes('Catalog')) {
-            setTimeout(() => setIsCatalogOpen(true), 300);
+        // CS Type Choice
+        if (flowStep === 'cs_type') {
+            const isInquiry = btn.includes('استفسار') || btn.includes('Inquiry');
+            setIsTyping(true);
+            setNarratorText(isAr ? 'جاري فتح نموذج الرسالة ✏️' : 'Opening message form ✏️');
+            setTimeout(() => {
+                const msg = isAr
+                    ? (isInquiry
+                        ? '📋 تفضل، اكتب استفسارك بالتفصيل وسنقوم بالرد عليك في أقرب وقت 👇'
+                        : '📝 تفضل، اكتب شكواك بالتفصيل وسنتعامل معها بأولوية قصوى 👇')
+                    : (isInquiry
+                        ? '📋 Please write your inquiry in detail and we will respond as soon as possible 👇'
+                        : '📝 Please write your complaint in detail and we will handle it with top priority 👇');
+                setMessages(prev => [...prev, { id: Date.now(), text: msg, sender: 'bot', timestamp: new Date() }]);
+                setIsTyping(false);
+                setActiveButtons([]);
+                setFlowStep(isInquiry ? 'cs_writing_inquiry' : 'cs_writing_complaint');
+                setNarratorText(isAr ? 'العميل يكتب رسالته ✏️' : 'Customer writing message ✏️');
+            }, 1000);
             return;
         }
 
-        // Location Type choice
+        // Delivery choice
         if (flowStep === 'ask_location_type') {
             const isDelivery = btn.includes('توصيل') || btn.includes('Deliver');
+            setDeliveryMethod(isDelivery
+                ? (isAr ? 'توصيل للموقع 🚚' : 'Delivery to location 🚚')
+                : (isAr ? 'استلام من الفرع 🏪' : 'Pickup from branch 🏪')
+            );
             setIsTyping(true);
-            setNarratorText(isAr ? 'يعالج النظام خيار الاستلام 📦' : 'Processing delivery option 📦');
-            
-            setTimeout(() => {
-                const msg = isDelivery
-                    ? (isAr ? "اختر طريقة الدفع 💳" : "Choose payment method 💳")
-                    : (isAr ? "سيكون طلبك جاهز خلال 20 دقيقة ✅\nاختر طريقة الدفع 💳" : "Your order will be ready in 20 mins ✅\nChoose payment method 💳");
-                
-                setMessages(prev => [...prev, { id: Date.now(), text: msg, sender: 'bot', timestamp: new Date() }]);
-                setActiveButtons(isAr ? ['💵 كاش عند الاستلام', '💳 دفع بالبطاقة'] : ['💵 Cash on Delivery', '💳 Pay by Card']);
-                setIsTyping(false);
-                setFlowStep('ask_payment');
-            }, 1000);
+
+            if (isDelivery) {
+                setNarratorText(isAr ? 'يطلب النظام إرسال الموقع 📍' : 'System requesting location 📍');
+                setTimeout(() => {
+                    const msg = isAr
+                        ? `ممتاز! 📍 أرسل لنا موقعك الجغرافي لنتمكن من توصيل طلبك بأسرع وقت:`
+                        : `Great! 📍 Please share your location so we can deliver your order as soon as possible:`;
+                    setMessages(prev => [...prev, { id: Date.now(), text: msg, sender: 'bot', timestamp: new Date() }]);
+                    setActiveButtons(isAr ? ['📍 إرسال اللوكيشن'] : ['📍 Share Location']);
+                    setIsTyping(false);
+                    setFlowStep('ask_location_share');
+                }, 1000);
+            } else {
+                setNarratorText(isAr ? 'تأكيد الاستلام الفرعي واختيار الدفع 💳' : 'Pickup checkout & payment selection 💳');
+                setTimeout(() => {
+                    const msg = isAr
+                        ? 'رائع! سيكون طلبك جاهزاً للاستلام من فرعنا الرئيسي خلال 20 دقيقة ✅\n\nيرجى اختيار طريقة الدفع المناسبة لك 👇'
+                        : 'Awesome! Your order will be ready for pickup from our main branch in 20 minutes ✅\n\nPlease select your preferred payment method 👇';
+                    setMessages(prev => [...prev, { id: Date.now(), text: msg, sender: 'bot', timestamp: new Date() }]);
+                    setActiveButtons(isAr ? ['💵 كاش عند الاستلام', '💳 دفع بالبطاقة'] : ['💵 Cash on Delivery', '💳 Pay by Card']);
+                    setIsTyping(false);
+                    setFlowStep('ask_payment');
+                }, 1000);
+            }
             return;
         }
 
-        // Payment choice
+        // Payment method choice
         if (flowStep === 'ask_payment') {
             const isCash = btn.includes('كاش') || btn.includes('Cash');
             setIsTyping(true);
-            setNarratorText(isAr ? 'يعالج النظام خيار الدفع 💳' : 'Processing payment 💳');
+            setNarratorText(isAr ? 'جاري تأكيد وتسجيل الطلب... 📝' : 'Registering order... 📝');
 
             if (isCash) {
                 setTimeout(() => {
                     const orderNum = generateOrderNum();
-                    const msg = isAr
-                        ? `تم تأكيد طلبك ✅\n🧾 رقم الطلب: #${orderNum}\nسيصلك قريباً 🚀`
-                        : `Order confirmed ✅\n🧾 Order #: #${orderNum}\nArrives soon 🚀`;
-                    setMessages(prev => [...prev, { id: Date.now(), text: msg, sender: 'bot', timestamp: new Date() }]);
+                    
+                    // Create receipt bubble
+                    setMessages(prev => [...prev, {
+                        id: Date.now() + 1,
+                        sender: 'bot',
+                        isReceipt: true,
+                        receiptData: {
+                            orderSummary,
+                            orderTotal,
+                            customerName,
+                            deliveryMethod: isAr ? 'كاش عند الاستلام 💵' : 'Cash on Delivery 💵',
+                            orderNum
+                        },
+                        timestamp: new Date()
+                    }]);
+
                     setIsTyping(false);
-                    setNarratorText(isAr ? 'تم إصدار رقم الطلب بنجاح ✅' : 'Order number issued ✅');
                     setFlowStep('ended');
+                    setNarratorText(isAr ? 'تم تأكيد طلبك بنجاح ✅' : 'Order confirmed successfully ✅');
                     setTimeout(() => {
                         addFinalMsg();
                     }, 1500);
                 }, 1400);
             } else {
-                // Card payment
+                // Card Payment Link
                 setTimeout(() => {
                     const msg = isAr
-                        ? `ممتاز! تفضل رابط الدفع الآمن:\n🔗 https://pay.elegantoptions.com/checkout\n(بانتظار تأكيد الدفع... ⏳)`
-                        : `Great! Here is your secure payment link:\n🔗 https://pay.elegantoptions.com/checkout\n(Waiting for payment... ⏳)`;
+                        ? `تفضل رابط الدفع الإلكتروني الآمن لمشروع ${projectName || 'الذكي'}:\n🔗 ${CHECKOUT_URL}\n\nيرجى النقر على الزر أدناه بعد إتمام عملية الدفع 👇`
+                        : `Here is your secure online payment link for ${projectName || 'Smart'} project:\n🔗 ${CHECKOUT_URL}\n\nPlease click the button below after completing the payment 👇`;
                     setMessages(prev => [...prev, { id: Date.now(), text: msg, sender: 'bot', timestamp: new Date() }]);
+                    setActiveButtons([isAr ? '✅ تم الدفع بنجاح' : '✅ Payment Completed']);
+                    setFlowStep('confirm_payment_btn');
                     setIsTyping(false);
-
-                    setTimeout(() => {
-                        setIsTyping(true);
-                        setTimeout(() => {
-                            const confirmMsg = isAr
-                                ? `تم استلام الدفع 🎉\nتم تأكيد طلبك برقم #${generateOrderNum()}\nشكراً لك 😊`
-                                : `Payment received 🎉\nOrder confirmed #${generateOrderNum()}\nThank you 😊`;
-                            setMessages(prev => [...prev, { id: Date.now(), text: confirmMsg, sender: 'bot', timestamp: new Date() }]);
-                            setIsTyping(false);
-                            setFlowStep('ended');
-                            setTimeout(addFinalMsg, 1500);
-                        }, 2500);
-                    }, 800);
-                }, 1400);
+                }, 1200);
             }
+            return;
+        }
+
+        // Card Payment Confirmation
+        if (flowStep === 'confirm_payment_btn') {
+            setIsTyping(true);
+            setNarratorText(isAr ? 'يتم التحقق من الدفع تلقائياً... 💳' : 'Verifying payment automatically... 💳');
+
+            setTimeout(() => {
+                const orderNum = generateOrderNum();
+
+                // Send invoice/receipt
+                setMessages(prev => [...prev, {
+                    id: Date.now() + 1,
+                    sender: 'bot',
+                    isReceipt: true,
+                    receiptData: {
+                        orderSummary,
+                        orderTotal,
+                        customerName,
+                        deliveryMethod: isAr ? 'دفع إلكتروني معتمد 💳' : 'Card Paid 💳',
+                        orderNum
+                    },
+                    timestamp: new Date()
+                }]);
+
+                setIsTyping(false);
+                setFlowStep('ended');
+                setNarratorText(isAr ? 'تم استلام الدفعة وإصدار الفاتورة تلقائياً! 🧾' : 'Payment received and invoice issued automatically! 🧾');
+                setTimeout(addFinalMsg, 1800);
+            }, 1800);
             return;
         }
     };
@@ -416,11 +590,11 @@ const ChatSimulatorInner = ({ config, onBack }) => {
         setIsTyping(true);
         setTimeout(() => {
             const msg = isAr
-                ? `شكراً لتسوقك معنا! 🌟\nتابعنا على واتساب لعروض حصرية\nنتمنى لك يوماً رائعاً ✨`
-                : `Thank you for shopping with us! 🌟\nFollow us on WhatsApp for exclusive offers\nHave a wonderful day ✨`;
+                ? `نشكرك على ثقتك بـ ${projectName || 'متجرنا الذكي'}! 🌟`
+                : `Thank you for choosing ${projectName || 'our Smart Store'}! 🌟`;
             setMessages(prev => [...prev, { id: Date.now(), text: msg, sender: 'bot', timestamp: new Date() }]);
             setIsTyping(false);
-            setNarratorText(isAr ? 'تم إتمام طلب الشراء بنجاح 🎉' : 'Purchase flow completed successfully 🎉');
+            setNarratorText(isAr ? 'أتمتة المحادثة انتهت بنجاح 🎉' : 'Chat automation completed successfully 🎉');
             setTimeout(() => setIsDemoEnded(true), 2000);
         }, 1200);
     };
@@ -431,30 +605,22 @@ const ChatSimulatorInner = ({ config, onBack }) => {
         setOrderSummary(summary);
         setOrderTotal(total);
 
-        const formattedTotal = isAr ? `${total.toFixed(2)} د.ك` : `$${total.toFixed(2)}`;
-        const userMsg = isAr ? `أريد طلب:\n${summary}` : `I want to order:\n${summary}`;
+        const userMsg = isAr ? `أريد طلب المنتجات التالية:\n${summary}` : `I want to order the following items:\n${summary}`;
         addUserMsg(userMsg);
         setIsTyping(true);
-        setNarratorText(isAr ? 'النظام يعرض ملخص الطلب ويطلب الاسم 📋' : 'System shows order summary and asks for name 📋');
+        setNarratorText(isAr ? 'النظام يسأل عن اسم العميل لتوثيق الفاتورة 📋' : 'System asking for customer name for invoice 📋');
 
-        // Step 3: Order summary and Ask Location Type
         setTimeout(() => {
-            const summaryMsg = isAr
-                ? `ممتاز! 🛍️ إجمالي طلبك: ${formattedTotal}\nكيف تريد استلام طلبك؟`
-                : `Great! 🛍️ Your total: ${formattedTotal}\nHow would you like to receive your order?`;
-            setMessages(prev => [...prev, { id: Date.now(), text: summaryMsg, sender: 'bot', timestamp: new Date() }]);
-            
-            setActiveButtons(isAr
-                ? ['📍 توصيل لموقعي', '🏪 استلام من الفرع']
-                : ['📍 Deliver to My Location', '🏪 Pickup from Branch']
-            );
+            const askNameMsg = isAr
+                ? `ممتاز جداً! 🛍️ إجمالي طلبك هو $${total.toFixed(2)}.\n\nيرجى كتابة اسمك الكريم لتسجيل الفاتورة باسمك والبدء بالتجهيز 📝`
+                : `Excellent choice! 🛍️ Your order total is $${total.toFixed(2)}.\n\nPlease type your name to register the invoice and start preparing 📝`;
+            setMessages(prev => [...prev, { id: Date.now(), text: askNameMsg, sender: 'bot', timestamp: new Date() }]);
             setIsTyping(false);
-            setFlowStep('ask_location_type');
-            setNarratorText(isAr ? 'النظام يطرح خيارات الاستلام 📦' : 'System asks for delivery options 📦');
-        }, 1500);
+            setFlowStep('ask_name');
+        }, 1400);
     };
 
-    // ── Handle Text Input ──
+    // ── Handle Text Input (Send Message) ──
     const handleSendText = (e) => {
         e.preventDefault();
         const text = inputText.trim();
@@ -462,11 +628,52 @@ const ChatSimulatorInner = ({ config, onBack }) => {
         setInputText('');
         addUserMsg(text);
         setIsTyping(true);
-        // fallback
+
+        // 1. Customer Service Inquiry Writing Flow
+        if (flowStep === 'cs_writing_inquiry' || flowStep === 'cs_writing_complaint') {
+            const isInquiry = flowStep === 'cs_writing_inquiry';
+            setNarratorText(isAr ? 'تم استلام الرسالة بنجاح وبسرعة فائقة ✅' : 'Message received instantly ✅');
+            setTimeout(() => {
+                const msg = isAr
+                    ? (isInquiry
+                        ? '✅ تم استلام استفسارك بنجاح!\n\nسيقوم أحد مسؤولي الدعم بالتواصل معك مباشرة، أو يمكنك تصفح المنتجات الآن 👇'
+                        : '✅ تم استلام شكواك بنجاح!\n\nتم تحويلها لمدير الفرع للمراجعة الفورية، وسنتواصل معك خلال دقائق معدودة 🙏')
+                    : (isInquiry
+                        ? '✅ Inquiry received successfully!\n\nOur support team will contact you shortly, or you can browse products now 👇'
+                        : '✅ Complaint received successfully!\n\nForwarded to branch manager for immediate review. We will contact you in a few minutes 🙏');
+                setMessages(prev => [...prev, { id: Date.now(), text: msg, sender: 'bot', timestamp: new Date() }]);
+                setIsTyping(false);
+                setActiveButtons([isAr ? '🛒 تصفح المنتجات' : '🛒 Browse Products']);
+                setFlowStep('catalog');
+            }, 1400);
+            return;
+        }
+
+        // 2. Ask Name Flow
+        if (flowStep === 'ask_name') {
+            setCustomerName(text);
+            setNarratorText(isAr ? 'النظام يرحب بالعميل باسمه ويطرح خيارات الاستلام 📦' : 'System welcomes customer by name and asks for delivery 📦');
+
+            setTimeout(() => {
+                const welcomeNameMsg = isAr
+                    ? `أهلاً بك يا ${text} في متجرنا! 🌸 كيف تفضل استلام طلبك اليوم؟`
+                    : `Hello ${text}! How would you like to receive your order today?`;
+                setMessages(prev => [...prev, { id: Date.now(), text: welcomeNameMsg, sender: 'bot', timestamp: new Date() }]);
+                setActiveButtons(isAr
+                    ? ['📍 توصيل لموقعي', '🏪 استلام من الفرع']
+                    : ['📍 Deliver to My Location', '🏪 Pickup from Branch']
+                );
+                setIsTyping(false);
+                setFlowStep('ask_location_type');
+            }, 1200);
+            return;
+        }
+
+        // Fallback chatbot text reply
         setTimeout(() => {
             setMessages(prev => [...prev, {
                 id: Date.now(),
-                text: isAr ? 'أهلاً! اضغط "تصفح المنتجات" للبدء 🛍️' : 'Hello! Tap "Browse Products" to start 🛍️',
+                text: isAr ? 'أهلاً بك! انقر على "تصفح المنتجات" للبدء بالطلب 🛍️' : 'Welcome! Click "Browse Products" to start ordering 🛍️',
                 sender: 'bot', timestamp: new Date()
             }]);
             setIsTyping(false);
@@ -476,19 +683,35 @@ const ChatSimulatorInner = ({ config, onBack }) => {
         }, 1000);
     };
 
-    // Handle location button
-    useEffect(() => {
-        // If the user taps the location button it goes through handleButtonClick which won't match
-        // We intercept it here via button click special case
-    }, []);
-
     const handleButtonClickWrapper = (btn) => {
-        if (btn.includes('موقع') || btn.includes('Location') || btn.includes('موقعي') || btn.includes('My Location')) {
-            addUserMsg(btn);
+        // Location Sharing Trigger
+        if ((btn.includes('اللوكيشن') || btn.includes('Share Location')) && flowStep === 'ask_location_share') {
             setActiveButtons([]);
-            handleButtonClick(btn); // fallback to location type logic if needed
+            
+            // Send user location message
+            setMessages(prev => [...prev, {
+                id: Date.now() + Math.random(),
+                text: isAr ? '📍 الموقع الحالي' : '📍 Current Location',
+                sender: 'user',
+                isLocation: true,
+                timestamp: new Date()
+            }]);
+
+            setIsTyping(true);
+            setNarratorText(isAr ? 'تم استلام الموقع الجغرافي بنجاح 📍' : 'Location received successfully 📍');
+            
+            setTimeout(() => {
+                const msg = isAr
+                    ? 'ممتاز! تم استلام موقعك الجغرافي وحفظه بنجاح لضمان سرعة التوصيل 🚚\n\nيرجى تحديد طريقة الدفع المفضلة لديك 👇'
+                    : 'Perfect! Location received and saved to ensure fast delivery 🚚\n\nPlease select your preferred payment method 👇';
+                setMessages(prev => [...prev, { id: Date.now(), text: msg, sender: 'bot', timestamp: new Date() }]);
+                setActiveButtons(isAr ? ['💵 كاش عند الاستلام', '💳 دفع بالبطاقة'] : ['💵 Cash on Delivery', '💳 Pay by Card']);
+                setIsTyping(false);
+                setFlowStep('ask_payment');
+            }, 1500);
             return;
         }
+
         handleButtonClick(btn);
     };
 
@@ -501,9 +724,10 @@ const ChatSimulatorInner = ({ config, onBack }) => {
         setCustomerName('');
         setOrderTotal(0);
         setOrderSummary('');
+        setDeliveryMethod('');
         setNarratorText(isAr ? 'يبدأ العميل من جديد 👋' : 'Customer starting over 👋');
         initialized.current = false;
-        // Trigger re-init
+
         setTimeout(() => {
             if (!initialized.current) {
                 initialized.current = true;
@@ -512,14 +736,41 @@ const ChatSimulatorInner = ({ config, onBack }) => {
                 setTimeout(() => {
                     setMessages(prev => [...prev, {
                         id: Date.now(),
-                        text: isAr ? 'أهلاً! 👋 اكتشف منتجاتنا واطلب بكل سهولة' : 'Hello! 👋 Discover our products and order with ease',
+                        text: isAr ? `أهلاً بك مجدداً في متجر ${projectName || 'الذكي'}! 🛍️ كيف يمكنني مساعدتك؟` : `Welcome back to ${projectName || 'Smart'} Store! 🛍️ How can I help you?`,
                         sender: 'bot', timestamp: new Date()
                     }]);
                     setIsTyping(false);
-                    setActiveButtons([isAr ? 'تصفح المنتجات 🛍️' : 'Browse Products 🛍️']);
+                    setActiveButtons([isAr ? '🛒 تصفح المنتجات' : '🛒 Browse Products']);
                     setFlowStep('catalog');
                 }, 1500);
             }
+        }, 300);
+    };
+
+    const returnToMainMenu = () => {
+        setMessages([]);
+        setActiveButtons([]);
+        setIsTyping(false);
+        setIsDemoEnded(false);
+        setFlowStep('welcome');
+        setCustomerName('');
+        setOrderTotal(0);
+        setOrderSummary('');
+        setDeliveryMethod('');
+        setNarratorText(isAr ? 'العودة للقائمة الرئيسية 🏠' : 'Returning to main menu 🏠');
+
+        setTimeout(() => {
+            const greetMsg = isAr
+                ? `أهلاً بك في متجر ${projectName || 'الذكي'}! 👋 كيف نقدر نخدمك اليوم؟`
+                : `Welcome to ${projectName || 'Smart'} Store! 👋 How can we help you today?`;
+            setMessages([
+                { id: Date.now(), text: greetMsg, sender: 'bot', timestamp: new Date() }
+            ]);
+            setActiveButtons(isAr
+                ? ['🛒 تصفح المنتجات', '🔥 العروض', '💬 خدمة العملاء']
+                : ['🛒 Browse Products', '🔥 Offers', '💬 Customer Service']
+            );
+            setFlowStep('catalog');
         }, 300);
     };
 
@@ -541,12 +792,12 @@ const ChatSimulatorInner = ({ config, onBack }) => {
                 src="/Logo.png"
                 alt=""
                 className="w-8 h-8 rounded-full object-cover bg-[#25d366] shrink-0"
-                onError={e => { e.target.outerHTML = '<div class="w-8 h-8 rounded-full bg-[#25d366] flex items-center justify-center text-white font-black text-sm shrink-0">' + (projectName?.charAt(0)?.toUpperCase() || 'م') + '</div>'; }}
+                onError={e => { e.target.outerHTML = `<div class="w-8 h-8 rounded-full bg-[#25d366] flex items-center justify-center text-white font-black text-sm shrink-0">${projectName?.charAt(0)?.toUpperCase() || 'م'}</div>`; }}
             />
             <div className="flex-1 min-w-0">
                 <div className="flex items-center gap-1">
-                    <h3 className="text-white font-semibold text-[15px] truncate max-w-[150px]">
-                      {projectName}
+                    <h3 className="text-white font-semibold text-[15px] truncate max-w-[120px]">
+                      {projectName || (isAr ? 'متجرنا الذكي' : 'Smart Store')}
                     </h3>
                     <svg width="14" height="14" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" className="shrink-0 mt-0.5">
                         <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2Z" fill="#25D366"/>
@@ -555,15 +806,29 @@ const ChatSimulatorInner = ({ config, onBack }) => {
                 </div>
                 <p className="text-green-200 text-[10px]">{isAr ? 'متصل الآن ✓' : 'Online ✓'}</p>
             </div>
-            <div className="flex items-center gap-3 text-white/80">
-                <Video size={20} />
-                <Phone size={18} />
+            <div className="flex items-center gap-2 text-white/80">
+                <button
+                    onClick={returnToMainMenu}
+                    style={{
+                        background: 'rgba(0,0,0,0.2)',
+                        border: '1px solid rgba(255,255,255,0.15)',
+                        borderRadius: '10px',
+                        color: '#f8fafc',
+                        padding: '4px 8px',
+                        fontSize: '11px',
+                        fontFamily: 'Cairo',
+                        cursor: 'pointer',
+                        display: 'flex',
+                        alignItems: 'center',
+                        gap: '4px'
+                    }}
+                >
+                    {isAr ? '🏠 الرئيسية' : '🏠 Main'}
+                </button>
                 <MoreVertical size={20} />
             </div>
         </div>
     );
-
-
 
     return (
         <div className="absolute inset-0 flex flex-col overflow-hidden" dir={isAr ? 'rtl' : 'ltr'}>
@@ -605,7 +870,7 @@ const ChatSimulatorInner = ({ config, onBack }) => {
                     </div>
 
                     {messages.map(msg => (
-                        <ChatBubble key={msg.id} msg={msg} isAr={isAr} />
+                        <ChatBubble key={msg.id} msg={msg} isAr={isAr} projectName={projectName} />
                     ))}
 
                     <AnimatePresence>
@@ -638,7 +903,7 @@ const ChatSimulatorInner = ({ config, onBack }) => {
                         <motion.div
                             initial={{ opacity: 0, y: 20 }}
                             animate={{ opacity: 1, y: 0 }}
-                            className="mt-4 mb-2"
+                            className="mt-4 mb-2 animate-bounce-subtle"
                         >
                             <CTAScreen lang={lang} onRetry={handleRetry} projectName={projectName} />
                         </motion.div>
@@ -648,20 +913,29 @@ const ChatSimulatorInner = ({ config, onBack }) => {
                 </div>
             </div>
 
-            {/* No Narrator Bar */}            {/* Input Bar */}
+            {/* Input Bar */}
             <div
                 className="absolute bottom-0 left-0 right-0 flex items-center gap-2 px-3 py-2"
                 style={{ background: '#F0F0F0', borderTop: '1px solid rgba(0,0,0,0.08)', zIndex: 40 }}
             >
                 <button className="text-[#54656F] p-1.5"><Smile size={22} /></button>
-                <form onSubmit={handleSendText} className="flex-1 flex items-center bg-white rounded-full px-4 gap-2 shadow-sm border border-black/5">
+                <form onSubmit={handleSendText} className="flex-1 flex items-center bg-white rounded-full px-4 gap-2 shadow-sm border border-black/5" style={(flowStep === 'ask_name' || flowStep === 'cs_writing_inquiry' || flowStep === 'cs_writing_complaint') ? { borderColor: '#25d366', borderWidth: '1.5px' } : {}}>
                     <input
                         type="text"
                         value={inputText}
                         onChange={e => setInputText(e.target.value)}
-                        placeholder={isAr ? 'اكتب رسالة...' : 'Type a message...'}
+                        placeholder={
+                            flowStep === 'ask_name'
+                                ? (isAr ? 'اكتب اسمك الكريم هنا...' : 'Write your name here...')
+                                : flowStep === 'cs_writing_inquiry'
+                                    ? (isAr ? 'اكتب استفسارك هنا...' : 'Write your inquiry here...')
+                                    : flowStep === 'cs_writing_complaint'
+                                        ? (isAr ? 'اكتب شكواك هنا...' : 'Write your complaint here...')
+                                        : (isAr ? 'اكتب رسالة...' : 'Type a message...')
+                        }
                         className="flex-1 bg-transparent text-gray-800 text-[13px] py-2.5 outline-none placeholder:text-gray-400"
                         dir={isAr ? 'rtl' : 'ltr'}
+                        autoFocus={flowStep === 'ask_name' || flowStep === 'cs_writing_inquiry' || flowStep === 'cs_writing_complaint'}
                     />
                     <button type="button" className="text-[#54656F]"><Paperclip size={18} /></button>
                 </form>
@@ -672,7 +946,7 @@ const ChatSimulatorInner = ({ config, onBack }) => {
                             handleSendText({ preventDefault: () => {} });
                         }
                     }}
-                    className="w-10 h-10 rounded-full flex items-center justify-center text-white shadow-md transition-all"
+                    className="w-10 h-10 rounded-full flex items-center justify-center text-white shadow-md transition-all shrink-0"
                     style={{ background: '#25d366' }}
                 >
                     {inputText.trim() ? <Send size={18} /> : <Mic size={18} />}
@@ -684,8 +958,10 @@ const ChatSimulatorInner = ({ config, onBack }) => {
                 isOpen={isCatalogOpen}
                 onClose={() => setIsCatalogOpen(false)}
                 onSubmit={handleCatalogSubmit}
+                onReturnToMain={returnToMainMenu}
                 lang={lang}
                 niche={niche}
+                projectName={projectName}
             />
         </div>
     );

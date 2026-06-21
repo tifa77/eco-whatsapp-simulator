@@ -32,3 +32,9 @@
   75%  { transform: perspective(1200px) rotateY(-13deg) rotateX(5deg) translateY(-6px); }
   100% { transform: perspective(1200px) rotateY(-12deg) rotateX(4deg) translateY(0px); }
 }
+
+/* ═══════════ MASK EDGES (shared by testimonials & brand strip) ═══════════ */
+.mask-edges {
+  -webkit-mask-image: linear-gradient(to right, transparent 0%, black 8%, black 92%, transparent 100%);
+  mask-image: linear-gradient(to right, transparent 0%, black 8%, black 92%, transparent 100%);
+}
