@@ -227,7 +227,6 @@ function TypingIndicator({ isAr }) {
 
 const CHECKOUT_URL = 'https://checkout.elegant-options.com/sales-automation';
 
-// ─── CTA Screen (demo ended) ───────────────────────────────────────────────────
 function CTAScreen({ lang, onRetry, projectName }) {
     const isAr = lang === 'ar';
     const [step, setStep] = useState('main'); // 'main' | 'no'
@@ -240,27 +239,31 @@ function CTAScreen({ lang, onRetry, projectName }) {
                 initial={{ opacity: 0, scale: 0.95 }}
                 animate={{ opacity: 1, scale: 1 }}
                 className="bg-gradient-to-b from-[#0d1117] to-[#050509] rounded-2xl mx-3 p-5 border border-yellow-500/30 shadow-[0_0_30px_rgba(234,179,8,0.1)]"
-                dir="rtl"
+                dir={isAr ? 'rtl' : 'ltr'}
             >
                 <div className="text-center text-3xl mb-3">⏳</div>
                 <h3 className="text-white font-black text-center text-[15px] mb-2">
-                    لا تدع الانتظار يسرق مبيعاتك
+                    {isAr ? 'لا تدع الانتظار يسرق مبيعاتك' : "Don't Let Waiting Steal Your Sales"}
                 </h3>
                 <p className="text-slate-400 text-center text-[12px] leading-relaxed mb-4">
-                    أتمت ردودك بالكامل، وألحق وثبّت اشتراكك الآن بـ <span className="text-yellow-400 font-black">97$</span> قبل زيادة سعر الخدمة!
+                    {isAr ? (
+                        <>أتمت ردودك بالكامل، وألحق وثبّت اشتراكك الآن بـ <span className="text-yellow-400 font-black">97$</span> قبل زيادة سعر الخدمة!</>
+                    ) : (
+                        <>Automate your replies completely, secure your subscription now for <span className="text-yellow-400 font-black">$97</span> before prices increase!</>
+                    )}
                 </p>
                 <button
                     onClick={goToCheckout}
                     className="w-full bg-gradient-to-r from-yellow-500 to-orange-500 text-white font-black py-3 rounded-xl text-sm shadow-[0_0_20px_rgba(234,179,8,0.4)] mb-2"
                 >
-                    اشترك وابدأ البيع الآلي فوراً 💳
+                    {isAr ? 'اشترك وابدأ البيع الآلي فوراً 💳' : 'Subscribe & Start Selling Now 💳'}
                 </button>
                 <button
                     onClick={onRetry}
                     className="w-full bg-white/[0.06] text-slate-300 font-bold py-2.5 rounded-xl text-sm flex items-center justify-center gap-2 border border-white/[0.08]"
                 >
                     <RefreshCw size={14} />
-                    🔄 إعادة التجربة
+                    {isAr ? '🔄 إعادة التجربة' : '🔄 Restart Demo'}
                 </button>
             </motion.div>
         );
@@ -272,7 +275,7 @@ function CTAScreen({ lang, onRetry, projectName }) {
             animate={{ opacity: 1, y: 0 }}
             className="rounded-2xl mx-3 p-5 border border-[#25d366]/30 shadow-[0_0_30px_rgba(37,211,102,0.12)]"
             style={{ background: 'linear-gradient(160deg, #0d1117 0%, #0a1f14 60%, #050509 100%)' }}
-            dir="rtl"
+            dir={isAr ? 'rtl' : 'ltr'}
         >
             {/* Stars */}
             <div className="flex justify-center gap-1 mb-3">
@@ -295,7 +298,7 @@ function CTAScreen({ lang, onRetry, projectName }) {
 
             {/* Pre-button motivator */}
             <p className="text-[#25d366] text-center text-[11px] font-bold mb-3">
-                ⚡️ استثمارك الذكي للنمو بتكلفة أقل من 100 دولار في الشهر
+                {isAr ? '⚡️ استثمارك الذكي للنمو بتكلفة أقل من 100 دولار في الشهر' : '⚡️ Your smart growth investment at less than $100/month'}
             </p>
 
             {/* Primary CTA */}
@@ -309,7 +312,7 @@ function CTAScreen({ lang, onRetry, projectName }) {
                     transition={{ repeat: Infinity, duration: 2.5, ease: 'linear', repeatDelay: 1 }}
                     className="absolute inset-0 bg-gradient-to-r from-transparent via-white/20 to-transparent skew-x-12"
                 />
-                <span className="relative">اشترك وابدأ البيع الآلي فوراً 💳</span>
+                <span className="relative">{isAr ? 'اشترك وابدأ البيع الآلي فوراً 💳' : 'Subscribe & Start Selling Now 💳'}</span>
             </button>
 
             <button
