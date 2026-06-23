@@ -433,12 +433,12 @@ function PhonePreview({ isAr = true, projectName, setProjectName, handleStart })
                     onClick={handleStart}
                     style={{
                         width: '100%', padding: '14px',
-                        background: 'linear-gradient(135deg, #fef08a 0%, #fde047 100%)',
+                        background: 'linear-gradient(135deg, #fef9c3 0%, #fef08a 100%)',
                         borderRadius: '14px', border: 'none',
                         color: '#0e1712', fontSize: '14.5px', fontWeight: '800',
                         fontFamily: 'Cairo', cursor: 'pointer',
                         transition: 'all 0.3s ease',
-                        boxShadow: '0 4px 15px rgba(253, 224, 71, 0.15)'
+                        boxShadow: '0 4px 15px rgba(254, 240, 138, 0.15)'
                     }}
                 >
                     {isAr ? '🚀 ابدأ التجربة ←' : '🚀 Start Demo →'}
