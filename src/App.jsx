@@ -80,64 +80,133 @@ function BrandMarquee({ lang }) {
 /* ═══════════════════ TESTIMONIALS ════════════════════════════════════════════ */
 function Testimonials({ lang }) {
     const isAr = lang === 'ar';
-    const allTestimonials = {
-      ar: [
-        { name: "سارة الغامدي", role: "متجر عبايات", avatar: "س", stars: 5, text: "أول أسبوع 47 طلب وأنا نايمة! البوت يرد ويبيع بدوني 😭🔥" },
-        { name: "فهد المطيري", role: "مطعم برجر", avatar: "ف", stars: 5, text: "المبيعات ارتفعت 40% في شهر — مافي طلب يضيع الحين 📈" },
-        { name: "نورة الكندي", role: "متجر إكسسوارات", avatar: "ن", stars: 5, text: "وفّرت راتب موظفتين! البوت أحسن من أي موظف 💯" },
-        { name: "محمد الشهري", role: "متجر إلكترونيات", avatar: "م", stars: 5, text: "العميل يختار ويدفع تلقائي — أنا بس أشحن 😂" },
-        { name: "ريم العجمي", role: "كيك هوم", avatar: "ر", stars: 5, text: "طلبات الساعة 11 بالليل والبوت يرد فوراً وعملائي راضين بالسرعة 😍" },
-        { name: "خالد الدوسري", role: "ملابس رجالي", avatar: "خ", stars: 5, text: "وفّرت ساعتين يومياً من الردود اليدوية وتأكيد الفواتير المزعجة 🙌" },
-        { name: "هند الزهراني", role: "صالون تجميل", avatar: "ه", stars: 5, text: "الحجوزات زادت 3 أضعاف — العميلات يحبون الرد السريع وحجز المواعيد الآلي ✅" },
-        { name: "عبدالله القحطاني", role: "متجر عطور", avatar: "ع", stars: 5, text: "80% من طلباتي الحين من الكاتلوج التلقائي والعميل يشتري لحاله 🤩" },
-        { name: "منى السبيعي", role: "ملابس أطفال", avatar: "م", stars: 5, text: "بيزنس صغير ونتائج كبيرة — البوت ما يتعب وشغال على مدار الساعة 😄" },
-        { name: "راشد المنصور", role: "وجبات صحية", avatar: "ر", stars: 5, text: "استرجعت تكلفة النظام 10 مرات في الشهر الأول من المبيعات التلقائية 🏆" },
-      ],
-      en: [
-        { name: "Sarah Al-Ghamdi", role: "Abaya Store", avatar: "S", stars: 5, text: "47 orders in the first week while sleeping! 😭🔥" },
-        { name: "Fahad Al-Mutairi", role: "Burger Restaurant", avatar: "F", stars: 5, text: "Sales up 40% in one month — zero lost orders 📈" },
-        { name: "Noura Al-Kindi", role: "Accessories Store", avatar: "N", stars: 5, text: "Saved cost of 2 employees! Bot works better 💯" },
-        { name: "Mohammed Al-Shahri", role: "Electronics Store", avatar: "M", stars: 5, text: "Customer selects & pays automatically — I just ship 😂" },
-        { name: "Reem Al-Ajami", role: "Home Bakery", avatar: "R", stars: 5, text: "11pm orders — bot replies instantly while I sleep 😍" },
-        { name: "Khalid Al-Dosari", role: "Men's Clothing", avatar: "K", stars: 5, text: "Saved 2 hours daily from manual replies and invoicing 🙌" },
-        { name: "Hind Al-Zahrani", role: "Beauty Salon", avatar: "H", stars: 5, text: "Bookings tripled — clients love instant scheduling ✅" },
-        { name: "Abdullah Al-Qahtani", role: "Perfume Store", avatar: "A", stars: 5, text: "80% of orders now come through the auto catalog 🤩" },
-        { name: "Mona Al-Subai", role: "Kids' Clothing", avatar: "M", stars: 5, text: "Small business, big results — bot never rests 😄" },
-        { name: "Rashed Al-Mansour", role: "Healthy Meals", avatar: "R", stars: 5, text: "Recovered system cost 10x in the first month 🏆" },
-      ]
-    };
-    const reviews = allTestimonials[isAr ? 'ar' : 'en'];
+    const reviews = [
+      { name: "عبدالرحمن العتيبي", role: "ملابس رجالي — الرياض 🇸🇦", stars: 5, text: "ما توقعت الفرق يكون بهالسرعة. من أول أسبوع صارت الرسائل ترد لحالها وأنا مشغول بالشغل." },
+      { name: "James W.", role: "Online Store — London, UK 🇬🇧", stars: 5, text: "Honestly didn't expect it to work this well. My WhatsApp handles all the customer questions and I just check the orders." },
+      { name: "فيصل البلوشي", role: "صالون رجالي — مسقط 🇴🇲", stars: 5, text: "من أول ما جربته حسيت إن في فرق. العميل يرسل ويحجز بنفسه وأنا بس أشوف الطلبات وأجهزها." },
+      { name: "يوسف الزعابي", role: "بقالة — أبوظبي 🇦🇪", stars: 5, text: "ما كنا نقدر نرد على كل رسالة بسرعة. دحين ما فيه طلب يفوتنا، حتى بالليل." },
+      { name: "Sarah L.", role: "Clothing Brand — New York, USA 🇺🇸", stars: 5, text: "Setup was simple and the team helped with everything. Within 2 days the bot was running on its own." },
+      { name: "نوف الشمري", role: "عطور ومكياج — الرياض 🇸🇦", stars: 5, text: "جربت الخدمة وأنا مترددة بالبداية، بس النتيجة كلمت نفسها. الطلبات زادت وما احتجت موظفة إضافية." },
+      { name: "لطيفة الرشيدي", role: "صالون نسائي — الشارقة 🇦🇪", stars: 5, text: "الحجوزات ما تتوقف. حتى الجمعة والسبت الأوتوميشن يشتغل وأنا ما أحتاج أكون موجودة." },
+      { name: "Thomas B.", role: "Sports Gear — Vienna, Austria 🇦🇹", stars: 5, text: "Really impressed with how natural the replies feel. Customers don't even realize it's automated." },
+      { name: "علي سلمان", role: "مطعم — المنامة 🇧🇭", stars: 5, text: "في البداية شككت بالموضوع، بس بعد أسبوعين قنعت. المبيعات من واتساب ارتفعت." },
+      { name: "خالد المهيري", role: "منتجات عضوية — دبي 🇦🇪", stars: 5, text: "الشغل على الإنستجرام كان مرهق. دحين كل رسالة تنرد تلقائي وأنا أركز على الطلبات اللي تحتاج تدخل." },
+      { name: "هنوف الكندي", role: "متجر إكسسوارات — الكويت 🇰🇼", stars: 5, text: "كنت أخاف ما يكون الرد طبيعي، بس العملاء ما حسوا بأي فرق. وبعضهم شكروني على السرعة." },
+      { name: "Layla A.", role: "Boutique — London, UK 🇬🇧", stars: 5, text: "My sales from WhatsApp doubled in the first month. The automation handles everything from product questions to confirmations." },
+      { name: "سارة المطيري", role: "كيك هوم — الكويت 🇰🇼", stars: 5, text: "ما كنت أتوقع إن الإعداد يكون بهالسهولة. الفريق ساعدني وفي يوم كل شي كان شغال." },
+      { name: "خلود القحطاني", role: "متجر عطور — جدة 🇸🇦", stars: 5, text: "الأوتوميشن صار يعرض المنتجات أحسن مني. والعميلة تكمل الشراء من غير ما تحتاج تتواصل معي." },
+      { name: "طارق الحارثي", role: "أجهزة كهربائية — الطائف 🇸🇦", stars: 5, text: "كل من جرب يقول نفس الكلام. ما يصدق إن الشغل يمشي من غيرك. وهذا اللي صار عندنا." },
+      { name: "Nadia F.", role: "Skincare — New York, USA 🇺🇸", stars: 5, text: "Best investment for my business this year. Response speed alone improved my conversion rate a lot." },
+      { name: "راشد المنصور", role: "وجبات — الشارقة 🇦🇪", stars: 5, text: "جربته وعندي مطعم صغير، الطلبات صارت تجي من واتساب وتتأكد لحالها. وفّر عليّ شي كثير." },
+      { name: "حمد المنصوري", role: "ورشة تقنية — دبي 🇦🇪", stars: 5, text: "الرد الفوري غيّر نظرة العملاء فينا. صاروا يحسون إننا كبار وعندنا نظام. والحين صار عندنا." },
+      { name: "مريم الهاشم", role: "متجر عبايات — الكويت 🇰🇼", stars: 5, text: "جاءتني طلبيتين الليلة الأولى وأنا نايمة. من ذاك الوقت وأنا ما أقدر أشتغل بدون الأوتوميشن." },
+      { name: "عمر الفارسي", role: "إلكترونيات — مسقط 🇴🇲", stars: 5, text: "ما كنت أصدق الكلام اللي يقولونه عن الأوتوميشن. بس بعد ما جربت، الكلام كان أقل من الحقيقة." },
+      { name: "نورة الكندي", role: "إكسسوارات — الكويت 🇰🇼", stars: 5, text: "الخدمة واضحة وما فيها تعقيد. ربطوا الحساب وشرحوا كل شي بخطوات. ودّي جربته من زمان." },
+      { name: "بدر السبيعي", role: "مستلزمات رياضية — الرياض 🇸🇦", stars: 5, text: "عملاؤنا من دول مختلفة ويحتاجون رد سريع. دحين ما عندنا مشكلة، الأوتوميشن يرد بأي وقت." },
+    ];
 
     return (
         <div className="w-full flex overflow-hidden py-4 -mx-4 px-4 mask-edges" dir={isAr ? 'rtl' : 'ltr'}>
             <motion.div
                 className="flex gap-4 items-stretch"
                 animate={{ x: isAr ? ['0%', '50%'] : ['0%', '-50%'] }}
-                transition={{ duration: 42, ease: "linear", repeat: Infinity }}
+                transition={{ duration: 90, ease: "linear", repeat: Infinity }}
             >
-                {[...reviews, ...reviews].map((r, i) => (
-                    <motion.div key={i} whileHover={{ y: -4, scale: 1.02 }} className="w-[280px] shrink-0 p-5 rounded-3xl border border-white/10 flex flex-col"
-                        style={{ background: 'rgba(255,255,255,0.03)', backdropFilter: 'blur(20px)', boxShadow: 'inset 0 1px 1px rgba(255,255,255,0.05), 0 10px 30px rgba(0,0,0,0.5)' }}>
-                        <div className="flex gap-3 items-center mb-3">
-                            <div className="w-10 h-10 rounded-full bg-gradient-to-tr from-[#25d366] to-[#128c7e] flex items-center justify-center text-white font-black text-sm">
-                                {r.avatar}
+                {[...reviews, ...reviews].map((r, i) => {
+                    const avatar = r.name ? r.name.charAt(0) : 'U';
+                    const isTextAr = !/^[A-Za-z]/.test(r.text);
+                    return (
+                        <motion.div key={i} whileHover={{ y: -4, scale: 1.02 }} className="w-[280px] shrink-0 p-5 rounded-3xl border border-white/10 flex flex-col"
+                            style={{ background: 'rgba(255,255,255,0.03)', backdropFilter: 'blur(20px)', boxShadow: 'inset 0 1px 1px rgba(255,255,255,0.05), 0 10px 30px rgba(0,0,0,0.5)' }}>
+                            <div className="flex gap-3 items-center mb-3">
+                                <div className="w-10 h-10 rounded-full bg-gradient-to-tr from-[#25d366] to-[#128c7e] flex items-center justify-center text-white font-black text-sm">
+                                    {avatar}
+                                </div>
+                                <div className={isAr ? 'text-right' : 'text-left'}>
+                                    <h4 className="text-white font-bold text-sm leading-tight">{r.name}</h4>
+                                    <span className="text-white/40 text-[11px] font-bold">{r.role}</span>
+                                </div>
                             </div>
-                            <div>
-                                <h4 className="text-white font-bold text-sm leading-tight">{r.name}</h4>
-                                <span className="text-white/40 text-[11px] font-bold">{r.role}</span>
+                            <div className={`flex gap-0.5 mb-2.5 ${isAr ? 'justify-end' : 'justify-start'}`}>
+                                {[...Array(r.stars)].map((_, idx) => (
+                                    <Star key={idx} size={11} className="text-yellow-400 fill-yellow-400" />
+                                ))}
                             </div>
-                        </div>
-                        <div className="flex gap-0.5 mb-2.5">
-                            {[...Array(r.stars)].map((_, idx) => (
-                                <Star key={idx} size={11} className="text-yellow-400 fill-yellow-400" />
-                            ))}
-                        </div>
-                        <p className="text-white/70 text-[12.5px] leading-relaxed text-right font-medium">
-                            {r.text}
-                        </p>
-                    </motion.div>
-                ))}
+                            <p className={`text-white/70 text-[12.5px] leading-relaxed font-medium ${isTextAr ? 'text-right' : 'text-left'}`}>
+                                {r.text}
+                            </p>
+                        </motion.div>
+                    );
+                })}
             </motion.div>
+        </div>
+    );
+}
+
+/* ═══════════════════ RECENT PROJECTS ══════════════════════════════════════════ */
+function RecentProjects({ lang }) {
+    const isAr = lang === 'ar';
+    const companies = [
+      { name: "شاورما هم هم",          serviceAr: "أوتوميشن واتساب",             serviceEn: "WhatsApp Automation",                      dateAr: "15 يونيو 2026",  dateEn: "15 Jun 2026",  active: true },
+      { name: "Leathermate",           serviceAr: "أوتوميشن واتساب",             serviceEn: "WhatsApp Automation",                      dateAr: "01 يونيو 2026",  dateEn: "01 Jun 2026",  active: true },
+      { name: "دار فاشون للأزياء",      serviceAr: "أوتوميشن واتساب",             serviceEn: "WhatsApp Automation",                      dateAr: "20 مايو 2026",   dateEn: "20 May 2026",   active: true },
+      { name: "مطاعم الأصيل",           serviceAr: "أوتوميشن واتساب وإنستجرام",  serviceEn: "WhatsApp & Instagram Automation",          dateAr: "10 مايو 2026",   dateEn: "10 May 2026",   active: true },
+      { name: "صالون نور للتجميل",      serviceAr: "أتمتة وحجز مواعيد",           serviceEn: "Appointment Scheduling & Automation",      dateAr: "28 أبريل 2026",  dateEn: "28 Apr 2026",  active: false },
+      { name: "محل الماسة للمجوهرات",   serviceAr: "نظام أتمتة ورد AI",            serviceEn: "AI Automation & Chat System",              dateAr: "15 أبريل 2026",  dateEn: "15 Apr 2026",  active: true },
+      { name: "سوبرماركت الوفاء",       serviceAr: "موقع مع أوتوميشن",            serviceEn: "Website with Automation",                  dateAr: "01 أبريل 2026",  dateEn: "01 Apr 2026",  active: true },
+      { name: "تك ستور للإلكترونيات",   serviceAr: "نظام متكامل للمبيعات",        serviceEn: "Integrated Sales System",                  dateAr: "18 مارس 2026",   dateEn: "18 Mar 2026",   active: false },
+      { name: "مؤسسة الفخر للأثاث",    serviceAr: "أوتوميشن واتساب",             serviceEn: "WhatsApp Automation",                      dateAr: "05 مارس 2026",   dateEn: "05 Mar 2026",   active: true },
+      { name: "عباية الأناقة",          serviceAr: "أتمتة وحجز مواعيد",           serviceEn: "Appointment Scheduling & Automation",      dateAr: "20 فبراير 2026", dateEn: "20 Feb 2026", active: false },
+      { name: "كافيه بيتا",             serviceAr: "نظام ردود تلقائية",           serviceEn: "Auto-reply System",                        dateAr: "10 فبراير 2026", dateEn: "10 Feb 2026", active: true },
+      { name: "متجر سبيستون",           serviceAr: "أوتوميشن واتساب",             serviceEn: "WhatsApp Automation",                      dateAr: "28 يناير 2026",  dateEn: "28 Jan 2026",  active: false },
+      { name: "صيدلية الشفاء",          serviceAr: "نظام أتمتة ورد AI",            serviceEn: "AI Automation & Chat System",              dateAr: "20 يناير 2026",  dateEn: "20 Jan 2026",  active: true },
+      { name: "مجوهرات الخليج",         serviceAr: "أوتوميشن واتساب وإنستجرام",  serviceEn: "WhatsApp & Instagram Automation",          dateAr: "12 يناير 2026",  dateEn: "12 Jan 2026",  active: true },
+      { name: "مطبخ أم سعد",            serviceAr: "نظام حجز وأوتوميشن",          serviceEn: "Booking & Automation System",              dateAr: "08 يناير 2026",  dateEn: "08 Jan 2026",  active: true },
+      { name: "عيادة البشرة المثالية",  serviceAr: "أتمتة وحجز مواعيد",           serviceEn: "Appointment Scheduling & Automation",      dateAr: "05 يناير 2026",  dateEn: "05 Jan 2026",  active: false },
+      { name: "هايبر فريش",             serviceAr: "موقع مع أوتوميشن",            serviceEn: "Website with Automation",                  dateAr: "04 يناير 2026",  dateEn: "04 Jan 2026",  active: true },
+      { name: "بوتيك ليلى",             serviceAr: "أوتوميشن واتساب",             serviceEn: "WhatsApp Automation",                      dateAr: "04 يناير 2026",  dateEn: "04 Jan 2026",  active: true },
+      { name: "مطعم الهدى",             serviceAr: "أوتوميشن واتساب وإنستجرام",  serviceEn: "WhatsApp & Instagram Automation",          dateAr: "03 يناير 2026",  dateEn: "03 Jan 2026",  active: true },
+      { name: "أكاديمية فن المكياج",    serviceAr: "أتمتة وحجز مواعيد",           serviceEn: "Appointment Scheduling & Automation",      dateAr: "03 يناير 2026",  dateEn: "03 Jan 2026",  active: false },
+      { name: "متجر الرياضة الأول",     serviceAr: "نظام متكامل للمبيعات",        serviceEn: "Integrated Sales System",                  dateAr: "03 يناير 2026",  dateEn: "03 Jan 2026",  active: true },
+    ];
+
+    return (
+        <div className="w-full flex flex-col items-center mt-12 mb-6 z-10 overflow-hidden">
+            <style>{`
+                @keyframes marqueeProjects {
+                    0% { transform: translateX(0); }
+                    100% { transform: translateX(-50%); }
+                }
+                .projects-marquee {
+                    display: flex;
+                    width: max-content;
+                    animation: marqueeProjects 65s linear infinite;
+                }
+                .projects-marquee:hover {
+                    animation-play-state: paused;
+                }
+            `}</style>
+            
+            <h3 className="text-white/40 text-[11px] font-bold tracking-[0.2em] uppercase mb-4 text-center">
+                {isAr ? 'مشاريعنا الأخيرة' : 'Our Recent Projects'}
+            </h3>
+            
+            <div className="w-full flex overflow-hidden py-3 -mx-4 px-4 mask-edges" dir="ltr">
+                <div className="projects-marquee gap-5">
+                    {[...companies, ...companies].map((c, i) => (
+                        <div key={i} className="flex items-center gap-3 px-4 py-2.5 rounded-2xl border border-white/[0.06] bg-white/[0.02] backdrop-blur-md shadow-sm shrink-0">
+                            <span className="relative flex h-2.5 w-2.5">
+                                <span className={`animate-ping absolute inline-flex h-full w-full rounded-full opacity-75 ${c.active ? 'bg-green-400' : 'bg-amber-400'}`}></span>
+                                <span className={`relative inline-flex rounded-full h-2.5 w-2.5 ${c.active ? 'bg-[#25d366] shadow-[0_0_8px_rgba(37,211,102,0.6)]' : 'bg-[#eab308] shadow-[0_0_8px_rgba(234,179,8,0.6)]'}`}></span>
+                            </span>
+                            
+                            <span className="font-extrabold text-white text-[13px] tracking-wide">{c.name}</span>
+                            <span className="text-white/50 text-[11px] font-semibold">{isAr ? c.serviceAr : c.serviceEn}</span>
+                            <span className="text-white/25 text-[10px] font-bold">{isAr ? c.dateAr : c.dateEn}</span>
+                        </div>
+                    ))}
+                </div>
+            </div>
         </div>
     );
 }
@@ -578,6 +647,7 @@ function App() {
                             </div>
                             <Testimonials lang={lang} />
                             <BrandMarquee lang={lang} />
+                            <RecentProjects lang={lang} />
                         </div>
                     </motion.div>
                 )}
