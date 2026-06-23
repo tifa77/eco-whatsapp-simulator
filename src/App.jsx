@@ -398,7 +398,7 @@ function PhonePreview({ isAr = true, projectName, setProjectName, handleStart })
                         {isAr ? 'جرّب نظام البيع الذكي' : 'Try the Smart Sales System'}
                     </h2>
                     <p style={{ color: '#a0b0a8', fontSize: '12px', lineHeight: 1.5, fontFamily: 'Cairo' }}>
-                        {isAr ? 'جرب الآن وشاهد كيف تتحول المحادثات تلقائياً إلى مبيعات وأرباح مستمرة! 🚀' : 'Try now and watch chats automatically turn into continuous sales and profits! 🚀'}
+                        {isAr ? 'شاهد كيف يتولى النظام الرد على عملائك، عرض الكتالوج، وإرسال الفاتورة تلقائياً! 🤖' : 'Watch how the system auto-replies, shows the catalog, and sends the invoice automatically! 🤖'}
                     </p>
                 </div>
 
@@ -433,12 +433,12 @@ function PhonePreview({ isAr = true, projectName, setProjectName, handleStart })
                     onClick={handleStart}
                     style={{
                         width: '100%', padding: '14px',
-                        background: 'linear-gradient(135deg, #F59E0B 0%, #D97706 100%)',
+                        background: 'linear-gradient(135deg, #fef08a 0%, #fde047 100%)',
                         borderRadius: '14px', border: 'none',
-                        color: '#000000', fontSize: '14.5px', fontWeight: '900',
+                        color: '#0e1712', fontSize: '14.5px', fontWeight: '800',
                         fontFamily: 'Cairo', cursor: 'pointer',
                         transition: 'all 0.3s ease',
-                        boxShadow: '0 4px 20px rgba(217, 119, 6, 0.35)'
+                        boxShadow: '0 4px 15px rgba(253, 224, 71, 0.15)'
                     }}
                 >
                     {isAr ? '🚀 ابدأ التجربة ←' : '🚀 Start Demo →'}
