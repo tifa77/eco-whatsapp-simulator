@@ -573,9 +573,12 @@ function ContactWidget({ lang }) {
 /* ═══════════════════ BOOKING MODAL ═══════════════════════════════════════════════ */
 function BookingModal({ isOpen, onClose, lang }) {
     const isAr = lang === 'ar';
+    const [isBooked, setIsBooked] = useState(false);
 
     useEffect(() => {
         if (isOpen) {
+            setIsBooked(false); // Reset when opened
+
             // Load the embed script dynamically
             const script = document.createElement('script');
             script.src = 'https://brand.elegant-options.com/js/form_embed.js';
@@ -583,11 +586,25 @@ function BookingModal({ isOpen, onClose, lang }) {
             script.async = true;
             document.body.appendChild(script);
 
+            // Listen to postMessage event from HighLevel iframe
+            const handleMessage = (event) => {
+                const isBookingComplete = 
+                    (Array.isArray(event.data) && event.data[0] === 'msgsndr-booking-complete') ||
+                    (typeof event.data === 'string' && event.data.includes('booking-complete'));
+                
+                if (isBookingComplete) {
+                    setIsBooked(true);
+                }
+            };
+
+            window.addEventListener('message', handleMessage);
+
             return () => {
                 const loadedScript = document.querySelector('script[src="https://brand.elegant-options.com/js/form_embed.js"]');
                 if (loadedScript) {
                     document.body.removeChild(loadedScript);
                 }
+                window.removeEventListener('message', handleMessage);
             };
         }
     }, [isOpen]);
@@ -614,22 +631,75 @@ function BookingModal({ isOpen, onClose, lang }) {
                     <X size={18} />
                 </button>
 
-                {/* Header */}
-                <div className="px-6 pt-6 pb-3 border-b border-white/5 text-right">
-                    <h3 className="text-white font-black text-[16px] pr-2" style={{ fontFamily: 'Cairo' }}>
-                        {isAr ? '📅 حجز موعد اجتماع مجاني' : '📅 Book a Free Meeting'}
-                    </h3>
-                </div>
+                {isBooked ? (
+                    <div className="p-8 flex flex-col items-center text-center gap-6" style={{ minHeight: '420px', justifyContent: 'center' }}>
+                        <motion.div
+                            initial={{ scale: 0 }}
+                            animate={{ scale: 1 }}
+                            transition={{ type: 'spring', stiffness: 200, damping: 15 }}
+                            className="w-20 h-20 rounded-full bg-green-500/10 border border-green-500/30 flex items-center justify-center text-green-400 shadow-[0_0_40px_rgba(34,197,94,0.15)]"
+                        >
+                            <CheckCircle2 size={44} className="animate-pulse" />
+                        </motion.div>
 
-                {/* Iframe Body */}
-                <div className="flex-1 p-2 bg-[#0A0A0A]" style={{ minHeight: '520px' }}>
-                    <iframe
-                        src="https://brand.elegant-options.com/widget/booking/xA4kEVDOLF2omAB2JPM4"
-                        style={{ width: '100%', height: '500px', border: 'none', overflow: 'hidden' }}
-                        scrolling="no"
-                        id="xA4kEVDOLF2omAB2JPM4_1782505878870"
-                    />
-                </div>
+                        <div className="space-y-3">
+                            <h3 className="text-white font-black text-2xl" style={{ fontFamily: 'Cairo' }}>
+                                {isAr ? 'تم حجز موعدك بنجاح! 🎉' : 'Appointment Booked Successfully! 🎉'}
+                            </h3>
+                            <p className="text-slate-300 text-sm leading-relaxed max-w-md mx-auto" style={{ fontFamily: 'Cairo' }}>
+                                {isAr 
+                                    ? 'شكراً لك! لقد تم تسجيل موعد الاجتماع بنجاح. سنقوم بالتواصل معك قريباً لتأكيد الموعد والبدء في تهيئة وتخصيص نظام الأتمتة بالكامل ليناسب مشروعك.'
+                                    : 'Thank you! Your meeting has been scheduled successfully. We will contact you shortly to confirm the appointment and start configuring the automation system to suit your project.'}
+                            </p>
+                        </div>
+
+                        <div className="w-full max-w-md bg-white/5 border border-white/10 rounded-2xl p-4 space-y-3 text-right" dir={isAr ? 'rtl' : 'ltr'}>
+                            <h4 className="text-white/80 font-bold text-xs uppercase tracking-wider" style={{ fontFamily: 'Cairo', textAlign: isAr ? 'right' : 'left' }}>
+                                {isAr ? 'الخطوات التالية:' : 'Next Steps:'}
+                            </h4>
+                            <ul className="text-slate-400 text-xs space-y-2" style={{ fontFamily: 'Cairo', textAlign: isAr ? 'right' : 'left' }}>
+                                <li className="flex items-start gap-2">
+                                    <span className="text-[#25d366] mt-0.5">•</span>
+                                    <span>{isAr ? 'سنرسل لك تفاصيل الموعد ورابط الاجتماع عبر بريدك الإلكتروني.' : 'We will send appointment details and meeting link to your email.'}</span>
+                                </li>
+                                <li className="flex items-start gap-2">
+                                    <span className="text-[#25d366] mt-0.5">•</span>
+                                    <span>{isAr ? 'سيتواصل معك خبير الأتمتة لدينا هاتفياً أو عبر الواتساب لتأكيد احتياجاتك.' : 'Our automation expert will reach out via call or WhatsApp to confirm your needs.'}</span>
+                                </li>
+                            </ul>
+                        </div>
+
+                        <button
+                            onClick={onClose}
+                            className="px-8 py-3 rounded-xl font-black text-sm text-black transition-all hover:opacity-90 active:scale-95 shadow-lg"
+                            style={{
+                                background: 'linear-gradient(135deg, #fef9c3 0%, #fef08a 100%)',
+                                fontFamily: 'Cairo'
+                            }}
+                        >
+                            {isAr ? 'موافق، إغلاق' : 'Okay, Close'}
+                        </button>
+                    </div>
+                ) : (
+                    <>
+                        {/* Header */}
+                        <div className="px-6 pt-6 pb-3 border-b border-white/5 text-right">
+                            <h3 className="text-white font-black text-[16px] pr-2" style={{ fontFamily: 'Cairo' }}>
+                                {isAr ? '📅 حجز موعد اجتماع مجاني' : '📅 Book a Free Meeting'}
+                            </h3>
+                        </div>
+
+                        {/* Iframe Body */}
+                        <div className="flex-1 p-2 bg-[#0A0A0A]" style={{ minHeight: '520px' }}>
+                            <iframe
+                                src="https://brand.elegant-options.com/widget/booking/xA4kEVDOLF2omAB2JPM4"
+                                style={{ width: '100%', height: '500px', border: 'none', overflow: 'hidden' }}
+                                scrolling="no"
+                                id="xA4kEVDOLF2omAB2JPM4_1782505878870"
+                            />
+                        </div>
+                    </>
+                )}
             </motion.div>
         </div>
     );
