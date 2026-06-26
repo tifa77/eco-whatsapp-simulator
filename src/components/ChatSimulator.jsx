@@ -339,12 +339,14 @@ function CTAScreen({ lang, onRetry, projectName, onBookMeeting }) {
                 <span className="relative z-10">📅 {isAr ? 'حجز موعد اجتماع مجاني' : 'Book a Free Meeting'}</span>
             </button>
 
+            {/* Restart Demo Button (replacing No Thanks) */}
             <button
-                onClick={() => setStep('no')}
-                className="w-full py-2 rounded-xl text-slate-500 text-xs font-medium"
+                onClick={onRetry}
+                className="w-full py-2.5 rounded-xl text-slate-400 hover:text-slate-200 text-xs font-bold transition-colors flex items-center justify-center gap-1.5"
                 style={{ fontFamily: 'Cairo' }}
             >
-                {isAr ? 'لا شكراً' : 'No thanks'}
+                <span>🔄</span>
+                <span>{isAr ? 'إعادة التجربة' : 'Restart Demo'}</span>
             </button>
         </motion.div>
     );
@@ -754,7 +756,9 @@ const ChatSimulatorInner = ({ config, onBack, onBookMeeting }) => {
                         sender: 'bot', timestamp: new Date()
                     }]);
                     setIsTyping(false);
-                    setActiveButtons([isAr ? '🛒 تصفح المنتجات' : '🛒 Browse Products']);
+                    setActiveButtons(isAr
+                        ? ['🛒 تصفح المنتجات', '🔥 العروض', '💬 خدمة العملاء']
+                        : ['🛒 Browse Products', '🔥 Offers', '💬 Customer Service']);
                     setFlowStep('catalog');
                 }, 1500);
             }
