@@ -288,8 +288,8 @@ function CTAScreen({ lang, onRetry, projectName }) {
             {/* Sub-heading */}
             <p className="text-slate-400 text-center text-[11px] leading-relaxed mb-3">
                 {isAr 
-                    ? 'حوّل المحادثات إلى تدفق مستمر من الأرباح. نظام الأتمتة الذكي لدينا يقوم ببيع منتجاتك، تحصيل مدفوعاتك، ومتابعة عملائك على مدار الساعة 24/7 لزيادة دخلك تلقائياً وبأقل جهد!' 
-                    : 'Turn chats into a constant stream of profits. Our smart automation system sells your products, collects payments, and follows up with customers 24/7 to scale your revenue automatically!'}
+                    ? 'حوّل المحادثات إلى تدفق مستمر من الأرباح. نظام الأتمتة الذكي لدينا يقوم ببيع منتجاتك، تحصيل مدفوعاتك، ومتابعة عملائك على مدار 24 ساعة لزيادة دخلك تلقائياً وبأقل جهد!' 
+                    : 'Turn chats into a constant stream of profits. Our smart automation system sells your products, collects payments, and follows up with customers 24 hours a day to scale your revenue automatically!'}
             </p>
 
             {/* Pre-button motivator */}

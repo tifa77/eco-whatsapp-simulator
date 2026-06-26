@@ -1,7 +1,7 @@
 import React, { useState, useRef, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import ChatSimulator from './components/ChatSimulator';
-import { Loader2, ShoppingCart, Zap, Star, Bot, Shield, AlertCircle, CheckCircle2, ChevronRight } from 'lucide-react';
+import { Loader2, ShoppingCart, Zap, Star, Bot, Shield, AlertCircle, CheckCircle2, ChevronRight, Mail, Phone, MessageCircle, X } from 'lucide-react';
 import { BRAND_LOGOS } from './config/brands';
 
 /* ═══════════════════ PARTICLES ═══════════════════════════════════════════════ */
@@ -448,6 +448,125 @@ function PhonePreview({ isAr = true, projectName, setProjectName, handleStart })
     );
 }
 
+
+/* ═══════════════════ CONTACT WIDGET ═══════════════════════════════════════════════ */
+function ContactWidget({ lang }) {
+    const [isOpen, setIsOpen] = useState(false);
+    const isAr = lang === 'ar';
+
+    const handleToggle = () => setIsOpen(!isOpen);
+
+    const contactNumber = '+96802321683';
+    const emailAddress = 'info@elegant-options.com';
+
+    return (
+        <div className="fixed bottom-6 left-6 z-[999] flex flex-col items-start gap-3 select-none">
+            <AnimatePresence>
+                {isOpen && (
+                    <motion.div
+                        initial={{ opacity: 0, scale: 0.9, y: 15 }}
+                        animate={{ opacity: 1, scale: 1, y: 0 }}
+                        exit={{ opacity: 0, scale: 0.9, y: 15 }}
+                        transition={{ duration: 0.2 }}
+                        className="bg-zinc-900/95 border border-white/[0.08] p-4 rounded-[24px] shadow-2xl backdrop-blur-md w-[260px] flex flex-col gap-3"
+                        style={{ borderBottomLeftRadius: '4px' }}
+                    >
+                        {/* Call Option */}
+                        <a
+                            href={`tel:${contactNumber}`}
+                            className="flex items-center justify-between hover:bg-white/5 p-1.5 rounded-xl transition-all duration-200"
+                        >
+                            <div className="flex-1 pr-3 text-right">
+                                <div className="text-white font-extrabold text-[13px]">{isAr ? 'اتصال' : 'Call'}</div>
+                                <div className="text-white/40 text-[11px] font-mono mt-0.5" dir="ltr">{contactNumber}</div>
+                            </div>
+                            <div className="w-9 h-9 rounded-full bg-[#a78566] text-white flex items-center justify-center shadow-md shrink-0">
+                                <Phone size={16} />
+                            </div>
+                        </a>
+
+                        {/* Divider */}
+                        <div className="h-[1px] bg-white/[0.06] w-full" />
+
+                        {/* WhatsApp Option */}
+                        <a
+                            href={`https://wa.me/96802321683`}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            className="flex items-center justify-between hover:bg-white/5 p-1.5 rounded-xl transition-all duration-200"
+                        >
+                            <div className="flex-1 pr-3 text-right">
+                                <div className="text-white font-extrabold text-[13px]">{isAr ? 'واتساب' : 'WhatsApp'}</div>
+                                <div className="text-white/40 text-[11px] font-mono mt-0.5" dir="ltr">{contactNumber}</div>
+                            </div>
+                            <div className="w-9 h-9 rounded-full bg-[#25d366] text-white flex items-center justify-center shadow-md shrink-0">
+                                <MessageCircle size={16} />
+                            </div>
+                        </a>
+
+                        {/* Divider */}
+                        <div className="h-[1px] bg-white/[0.06] w-full" />
+
+                        {/* Email Option */}
+                        <a
+                            href={`mailto:${emailAddress}`}
+                            className="flex items-center justify-between hover:bg-white/5 p-1.5 rounded-xl transition-all duration-200"
+                        >
+                            <div className="flex-1 pr-3 text-right">
+                                <div className="text-white font-extrabold text-[13px]">{isAr ? 'ايميل' : 'Email'}</div>
+                                <div className="text-white/40 text-[11px] font-mono mt-0.5" dir="ltr">{emailAddress}</div>
+                            </div>
+                            <div className="w-9 h-9 rounded-full bg-[#a78566] text-white flex items-center justify-center shadow-md shrink-0">
+                                <Mail size={16} />
+                            </div>
+                        </a>
+                    </motion.div>
+                )}
+            </AnimatePresence>
+
+            {/* Toggle Button */}
+            <motion.button
+                onClick={handleToggle}
+                whileHover={{ scale: 1.08 }}
+                whileTap={{ scale: 0.95 }}
+                className="w-14 h-14 rounded-full text-white flex items-center justify-center shadow-2xl relative z-10 transition-all duration-300"
+                style={{
+                    background: isOpen 
+                        ? 'rgba(255,255,255,0.08)' 
+                        : 'linear-gradient(135deg, #a78566 0%, #8c6d53 100%)',
+                    border: isOpen ? '1px solid rgba(255,255,255,0.15)' : 'none',
+                    boxShadow: isOpen ? 'none' : '0 8px 24px rgba(167,133,102,0.25)',
+                    backdropFilter: isOpen ? 'blur(10px)' : 'none'
+                }}
+            >
+                <AnimatePresence mode="wait">
+                    {isOpen ? (
+                        <motion.div
+                            key="close"
+                            initial={{ rotate: -90, opacity: 0 }}
+                            animate={{ rotate: 0, opacity: 1 }}
+                            exit={{ rotate: 90, opacity: 0 }}
+                            transition={{ duration: 0.15 }}
+                        >
+                            <X size={22} />
+                        </motion.div>
+                    ) : (
+                        <motion.div
+                            key="phone"
+                            initial={{ rotate: 90, opacity: 0 }}
+                            animate={{ rotate: 0, opacity: 1 }}
+                            exit={{ rotate: -90, opacity: 0 }}
+                            transition={{ duration: 0.15 }}
+                        >
+                            <Phone size={22} />
+                        </motion.div>
+                    )}
+                </AnimatePresence>
+            </motion.button>
+        </div>
+    );
+}
+
 /* ═══════════════════ APP MAIN ═══════════════════════════════════════════════════ */
 function App() {
     const [view, setView] = useState('landing');
@@ -730,6 +849,7 @@ function App() {
                     </motion.div>
                 )}
             </AnimatePresence>
+            <ContactWidget lang={lang} />
         </div>
     );
 }
