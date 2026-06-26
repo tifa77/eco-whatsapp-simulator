@@ -278,118 +278,171 @@ function Phone3D({ children, isAr }) {
     );
 }
 
-/* ═══════════════════ PHONE PREVIEW (CHAT TEASER) ═════════════════════════════ */
-function PhonePreview({ isAr = true, projectName }) {
-    const name = projectName.trim() || (isAr ? 'متجرنا الذكي' : 'Smart Store');
+/* ═══════════════════ PHONE PREVIEW (ONBOARDING) ═════════════════════════════ */
+function PhonePreview({ isAr = true, projectName, setProjectName, handleStart }) {
     return (
         <div style={{
             position: 'relative',
             height: '100%', display: 'flex', flexDirection: 'column',
-            justifyContent: 'space-between',
-            padding: '48px 16px 20px',
+            alignItems: 'center', justifyContent: 'flex-start',
+            padding: '24px 20px 20px', gap: '0',
             overflow: 'hidden',
-            background: '#0b141a',
-            boxSizing: 'border-box'
+            background: '#0a0d0b'
         }}>
-            {/* Contact Header Simulation */}
+            {/* Simulated WhatsApp Chat background (blurry & crystallized) */}
             <div style={{
-                display: 'flex', alignItems: 'center', gap: '10px',
-                padding: '10px 12px', background: '#202c33',
-                borderRadius: '16px', border: '1px solid rgba(255,255,255,0.06)',
-                zIndex: 5
+                position: 'absolute', inset: 0,
+                display: 'flex', flexDirection: 'column',
+                padding: '50px 16px 16px', gap: '12px',
+                opacity: 0.85, // clear visibility, yet blurred
+                filter: 'blur(2px)', // out of focus
+                pointerEvents: 'none',
+                zIndex: 1
             }}>
-                <img src="/Logo.png" alt="Logo" style={{ width: '28px', height: '28px', borderRadius: '50%', background: '#fff', padding: '3px' }} />
-                <div style={{ flex: 1, display: 'flex', flexDirection: 'column', textAlign: isAr ? 'right' : 'left' }}>
-                    <span style={{ color: '#fff', fontSize: '11.5px', fontWeight: 'bold', fontFamily: 'Cairo' }}>{name}</span>
-                    <span style={{ color: '#00a884', fontSize: '8.5px', fontWeight: 'bold', fontFamily: 'Cairo', marginTop: '1px' }}>{isAr ? 'متصل الآن' : 'Online'}</span>
+                {/* Contact Header Simulation */}
+                <div style={{
+                    display: 'flex', alignItems: 'center', gap: '8px',
+                    paddingBottom: '10px', borderBottom: '1px solid rgba(255,255,255,0.1)',
+                    marginBottom: '10px'
+                }}>
+                    <div style={{ width: '28px', height: '28px', borderRadius: '50%', background: '#00a884', display: 'flex', alignItems: 'center', justifyContent: 'center', color: '#fff', fontSize: '10px', fontWeight: 'bold' }}>EO</div>
+                    <div style={{ flex: 1, display: 'flex', flexDirection: 'column', gap: '3px' }}>
+                        <div style={{ width: '80px', height: '7px', background: '#fff', borderRadius: '3.5px' }} />
+                        <div style={{ width: '45px', height: '5px', background: '#00a884', borderRadius: '2.5px' }} />
+                    </div>
                 </div>
-                <div style={{ width: '6px', height: '6px', borderRadius: '50%', background: '#25d366' }} />
-            </div>
 
-            {/* Chat Area */}
-            <div style={{
-                flex: 1, display: 'flex', flexDirection: 'column',
-                gap: '10px', padding: '12px 0', overflow: 'hidden',
-                justifyContent: 'flex-end', zIndex: 4
-            }}>
-                {/* Bubble 1 (Left) */}
+                {/* Left Bubble (Client inquiry) */}
                 <div style={{
                     alignSelf: 'flex-start',
                     background: '#202c33',
                     color: '#e9edef',
                     borderRadius: '0px 12px 12px 12px',
+                    padding: '8px 12px',
+                    width: '68%',
+                    fontSize: '10.5px',
+                    fontFamily: 'Cairo',
+                    boxShadow: '0 1px 2px rgba(0,0,0,0.15)',
+                    textAlign: isAr ? 'right' : 'left'
+                }}>
+                    {isAr ? 'مرحباً، أريد الاستفسار عن منتجاتكم وشراء بعض المستلزمات' : 'Hello, I want to inquire about your products and buy some items'}
+                </div>
+
+                {/* Right Bubble (Bot welcome response) */}
+                <div style={{
+                    alignSelf: 'flex-end',
+                    background: '#005c4b',
+                    color: '#e9edef',
+                    borderRadius: '12px 0px 12px 12px',
+                    padding: '8px 12px',
+                    width: '78%',
+                    fontSize: '10.5px',
+                    fontFamily: 'Cairo',
+                    boxShadow: '0 1px 2px rgba(0,0,0,0.15)',
+                    textAlign: isAr ? 'right' : 'left'
+                }}>
+                    {isAr ? 'أهلاً بك في متجرنا! تفضل الكتالوج التفاعلي لتختار منتجاتك الذكية 🛍️' : 'Welcome to our store! Here is the interactive catalog to choose your products 🛍️'}
+                </div>
+
+                {/* Left Bubble 2 (Client selecting product) */}
+                <div style={{
+                    alignSelf: 'flex-start',
+                    background: '#202c33',
+                    color: '#e9edef',
+                    borderRadius: '0px 12px 12px 12px',
+                    padding: '8px 12px',
+                    width: '60%',
+                    fontSize: '10.5px',
+                    fontFamily: 'Cairo',
+                    boxShadow: '0 1px 2px rgba(0,0,0,0.15)',
+                    textAlign: isAr ? 'right' : 'left'
+                }}>
+                    {isAr ? 'شكراً لك، قمت باختيار هذا المنتج المميز وتأكيد الطلب' : 'Thank you, I selected this premium product and confirmed order'}
+                </div>
+
+                {/* Right Bubble 2 (Bot generating invoice) */}
+                <div style={{
+                    alignSelf: 'flex-end',
+                    background: '#005c4b',
+                    color: '#e9edef',
+                    borderRadius: '12px 0px 12px 12px',
                     padding: '8px 12px',
                     width: '75%',
-                    fontSize: '10px',
+                    fontSize: '10.5px',
                     fontFamily: 'Cairo',
-                    boxShadow: '0 1px 2px rgba(0,0,0,0.2)',
+                    boxShadow: '0 1px 2px rgba(0,0,0,0.15)',
                     textAlign: isAr ? 'right' : 'left'
                 }}>
-                    {isAr ? 'مرحباً، أريد الاستفسار عن منتجاتكم وشراء بعض المستلزمات 👋' : 'Hello, I want to inquire about your products 👋'}
-                </div>
-
-                {/* Bubble 2 (Right) */}
-                <div style={{
-                    alignSelf: 'flex-end',
-                    background: '#005c4b',
-                    color: '#e9edef',
-                    borderRadius: '12px 0px 12px 12px',
-                    padding: '8px 12px',
-                    width: '80%',
-                    fontSize: '10px',
-                    fontFamily: 'Cairo',
-                    boxShadow: '0 1px 2px rgba(0,0,0,0.2)',
-                    textAlign: isAr ? 'right' : 'left'
-                }}>
-                    {isAr ? `أهلاً بك في متجرنا! تفضل الكتالوج التفاعلي لتختار منتجاتك الذكية 🛍️` : `Welcome! Here is our interactive catalog to choose your products 🛍️`}
-                </div>
-
-                {/* Bubble 3 (Left) */}
-                <div style={{
-                    alignSelf: 'flex-start',
-                    background: '#202c33',
-                    color: '#e9edef',
-                    borderRadius: '0px 12px 12px 12px',
-                    padding: '8px 12px',
-                    width: '65%',
-                    fontSize: '10px',
-                    fontFamily: 'Cairo',
-                    boxShadow: '0 1px 2px rgba(0,0,0,0.2)',
-                    textAlign: isAr ? 'right' : 'left'
-                }}>
-                    {isAr ? 'شكراً لك، قمت باختيار المنتجات وتأكيد الطلب 🛒' : 'Thank you, I selected the items and confirmed my order 🛒'}
-                </div>
-
-                {/* Bubble 4 (Right) */}
-                <div style={{
-                    alignSelf: 'flex-end',
-                    background: '#005c4b',
-                    color: '#e9edef',
-                    borderRadius: '12px 0px 12px 12px',
-                    padding: '8px 12px',
-                    width: '80%',
-                    fontSize: '10px',
-                    fontFamily: 'Cairo',
-                    boxShadow: '0 1px 2px rgba(0,0,0,0.2)',
-                    textAlign: isAr ? 'right' : 'left'
-                }}>
-                    {isAr ? 'تم تجهيز فاتورتك بنجاح! 🧾 تفضل الفاتورة لإتمام الطلب' : 'Your invoice has been successfully generated! 🧾'}
+                    {isAr ? 'تم تجهيز فاتورتك بنجاح! 🧾 يرجى النقر لإتمام الدفع الآمن' : 'Your invoice is ready! 🧾 Please click to complete secure payment'}
                 </div>
             </div>
 
-            {/* Bottom Keyboard placeholder */}
+            {/* Crystallized/Frosted Glass Overlay */}
             <div style={{
-                display: 'flex', alignItems: 'center', gap: '8px',
-                padding: '6px 10px', background: '#202c33',
-                borderRadius: '20px', border: '1px solid rgba(255,255,255,0.06)',
-                zIndex: 5
-            }}>
-                <div style={{ flex: 1, color: 'rgba(255,255,255,0.35)', fontSize: '11px', fontFamily: 'Cairo', textAlign: isAr ? 'right' : 'left' }}>
-                    {isAr ? 'اكتب رسالة...' : 'Type a message...'}
+                position: 'absolute', inset: 0,
+                background: 'radial-gradient(circle at center, rgba(12, 28, 20, 0.25) 0%, rgba(5, 8, 7, 0.75) 100%)',
+                backdropFilter: 'blur(4px)',
+                pointerEvents: 'none',
+                zIndex: 2
+            }} />
+
+            {/* Content Container */}
+            <div style={{ position: 'relative', zIndex: 3, width: '100%', height: '100%', display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
+                <img src="/Logo.png" style={{
+                    width: '54px', marginBottom: '16px',
+                    filter: 'drop-shadow(0 0 16px rgba(37,211,102,0.4))'
+                }} alt="Logo" />
+
+                <div style={{ textAlign: 'center', marginBottom: '20px', width: '100%' }}>
+                    <h2 style={{ color: '#fff', fontSize: '18px', fontWeight: '900', fontFamily: 'Cairo', lineHeight: 1.35, marginBottom: '6px' }}>
+                        {isAr ? 'جرّب نظام البيع الذكي' : 'Try the Smart Sales System'}
+                    </h2>
+                    <p style={{ color: '#a0b0a8', fontSize: '12px', lineHeight: 1.5, fontFamily: 'Cairo' }}>
+                        {isAr ? 'شاهد كيف يتولى النظام الرد على عملائك، عرض الكتالوج، وإرسال الفاتورة تلقائياً! 🤖' : 'Watch how the system auto-replies, shows the catalog, and sends the invoice automatically! 🤖'}
+                    </p>
                 </div>
-                <div style={{ width: '24px', height: '24px', borderRadius: '50%', background: '#00a884', display: 'flex', alignItems: 'center', justifyContent: 'center', color: '#fff' }}>
-                    <svg viewBox="0 0 24 24" width="12" height="12" fill="currentColor"><path d="M1.101 21.757L23.8 12.028 1.101 2.3l.011 7.912 13.623 1.816-13.623 1.817-.011 7.912z" /></svg>
+
+                <div style={{ width: '100%', marginBottom: '16px' }}>
+                    <label style={{
+                        color: '#c8d8c8', fontSize: '12px', fontWeight: '700',
+                        display: 'block', marginBottom: '8px',
+                        textAlign: isAr ? 'right' : 'left', fontFamily: 'Cairo'
+                    }}>
+                        {isAr ? 'اسم متجرك أو مشروعك' : 'Your store or project name'}
+                    </label>
+                    <input
+                        type="text"
+                        value={projectName}
+                        onChange={(e) => setProjectName(e.target.value)}
+                        placeholder={isAr ? 'مثال: متجر الأناقة، مطعم نوار...' : 'e.g. Noor Store, Burger Hub...'}
+                        className="phone-input-field"
+                        style={{
+                            width: '100%', background: 'rgba(17, 26, 21, 0.6)',
+                            border: '1.5px solid #233e2e',
+                            borderRadius: '14px', padding: '14px 16px',
+                            color: '#e9edef', fontSize: '14px',
+                            fontFamily: 'Cairo', outline: 'none',
+                            textAlign: isAr ? 'right' : 'left',
+                            boxSizing: 'border-box',
+                            transition: 'all 0.3s'
+                        }}
+                    />
                 </div>
+
+                <button
+                    onClick={handleStart}
+                    style={{
+                        width: '100%', padding: '14px',
+                        background: 'linear-gradient(135deg, #fef9c3 0%, #fef08a 100%)',
+                        borderRadius: '14px', border: 'none',
+                        color: '#0e1712', fontSize: '14.5px', fontWeight: '800',
+                        fontFamily: 'Cairo', cursor: 'pointer',
+                        transition: 'all 0.3s ease',
+                        boxShadow: '0 4px 15px rgba(254, 240, 138, 0.15)'
+                    }}
+                >
+                    {isAr ? '🚀 ابدأ التجربة ←' : '🚀 Start Demo →'}
+                </button>
             </div>
         </div>
     );
@@ -697,82 +750,43 @@ function App() {
                             <div className="w-12 h-[1px] bg-gradient-to-r from-transparent via-green-500/30 to-transparent mt-2" />
                         </motion.div>
 
-                        {/* ─ 1. PHONE PREVIEW CONTAINER ─ */}
+                        {/* ─ 1. PHONE ONBOARDING (FIRST AT THE TOP) ─ */}
                         <motion.div
                             initial={{ opacity: 0, scale: 0.94 }}
                             animate={{ opacity: 1, scale: 1 }}
                             transition={{ delay: 0.1, duration: 0.8 }}
-                            className="w-full max-w-md mb-6 flex justify-center z-30"
+                            className="w-full max-w-md mb-8 flex justify-center z-30"
                         >
                             <Phone3D isAr={isAr}>
                                 <PhonePreview
                                     isAr={isAr}
                                     projectName={projectName}
+                                    setProjectName={setProjectName}
+                                    handleStart={startSimulator}
                                 />
                             </Phone3D>
                         </motion.div>
 
-                        {/* ─ NEW COMPACT CTA & BOOKING CARD (BELOW PHONE) ─ */}
-                        <motion.div
-                            initial={{ opacity: 0, y: 15 }}
-                            animate={{ opacity: 1, y: 0 }}
-                            transition={{ delay: 0.15, duration: 0.6 }}
-                            className="w-full max-w-md bg-zinc-950/70 border border-white/[0.08] p-5 rounded-[28px] shadow-2xl backdrop-blur-md flex flex-col gap-4 z-30 mb-8"
+                                                            {/* ─ 5. ACTION BUTTON (SCROLLS UP TO THE PHONE INPUT) ─ */}
+                        <motion.button
+                            initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.3 }}
+                            whileHover={{ scale: 1.04, y: -3, boxShadow: '0 0 40px rgba(6,182,212,0.3)' }}
+                            whileTap={{ scale: 0.97 }}
+                            onClick={() => {
+                                const inputEl = document.querySelector('.phone-input-field');
+                                if (inputEl) {
+                                    inputEl.focus();
+                                    inputEl.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                                }
+                            }}
+                            className="relative inline-flex items-center justify-center gap-2.5 text-white font-black text-[15px] sm:text-[16px] px-10 py-4 rounded-full transition-all overflow-hidden mb-8 border border-cyan-500/30"
+                            style={{
+                                background: 'linear-gradient(135deg, rgba(6,182,212,0.2) 0%, rgba(34,197,94,0.1) 100%)',
+                                boxShadow: '0 0 25px rgba(6,182,212,0.15)',
+                            }}
                         >
-                            {/* Demo Input Field */}
-                            <div className="flex flex-col gap-2">
-                                <label className="text-white/70 text-[11.5px] font-black tracking-wider uppercase text-right">
-                                    {isAr ? 'اسم مشروعك أو متجرك لتجربة المحاكي' : 'Your project or store name for the demo'}
-                                </label>
-                                <div className="flex gap-2">
-                                    <input
-                                        type="text"
-                                        value={projectName}
-                                        onChange={(e) => setProjectName(e.target.value)}
-                                        placeholder={isAr ? 'مثال: متجر العطور، مطعم فلان...' : 'e.g. Perfume Shop, Burger Hub...'}
-                                        className="phone-input-field flex-1 bg-white/5 border border-white/10 rounded-xl px-4 py-3 text-white text-[13px] outline-none transition-all focus:border-green-500/50 focus:bg-white/10"
-                                        style={{ fontFamily: 'Cairo', textAlign: isAr ? 'right' : 'left' }}
-                                    />
-                                    <button
-                                        onClick={startSimulator}
-                                        className="px-5 py-3 rounded-xl font-black text-[13px] text-black transition-all shadow-lg hover:shadow-green-500/20 active:scale-95 shrink-0"
-                                        style={{
-                                            background: 'linear-gradient(135deg, #fef9c3 0%, #fef08a 100%)',
-                                            fontFamily: 'Cairo'
-                                        }}
-                                    >
-                                        {isAr ? 'ابدأ التجربة 🚀' : 'Start Demo 🚀'}
-                                    </button>
-                                </div>
-                            </div>
-
-                            {/* Divider with 'أو' (OR) */}
-                            <div className="flex items-center gap-3 my-0.5">
-                                <div className="h-[1px] bg-white/10 flex-1" />
-                                <span className="text-[10px] font-bold text-white/30 uppercase">{isAr ? 'أو' : 'OR'}</span>
-                                <div className="h-[1px] bg-white/10 flex-1" />
-                            </div>
-
-                            {/* Meeting Booking Button */}
-                            <div className="flex flex-col gap-2.5">
-                                <button
-                                    onClick={() => setIsBookingOpen(true)}
-                                    className="w-full py-3.5 rounded-xl border border-cyan-500/30 text-white font-black text-[13px] transition-all hover:bg-cyan-500/10 flex items-center justify-center gap-2 active:scale-98"
-                                    style={{
-                                        background: 'linear-gradient(135deg, rgba(6,182,212,0.1) 0%, rgba(34,197,94,0.05) 100%)',
-                                        fontFamily: 'Cairo'
-                                    }}
-                                >
-                                    <span>📅</span>
-                                    <span>{isAr ? 'حجز موعد اجتماع مجاني' : 'Book a Free Meeting'}</span>
-                                </button>
-                                <p className="text-white/40 text-[10.5px] text-center leading-relaxed font-semibold px-2">
-                                    {isAr 
-                                        ? 'سنقوم بتهيئة وإعداد نظام الأتمتة بالكامل وتخصيصه ليتناسب تماماً مع طبيعة عملك ومنتجاتك خلال الاجتماع.'
-                                        : 'We will fully configure, set up, and customize the automation system to perfectly fit your business during the meeting.'}
-                                </p>
-                            </div>
-                        </motion.div>
+                            <span className="relative z-10">{t.btn}</span>
+                        </motion.button>
 
                         {/* ─ 2. HEADLINE (BELOW PHONE) ─ */}
                         <motion.div initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.2 }}
@@ -895,6 +909,7 @@ function App() {
                                         setView('landing');
                                         setPhoneKey(prev => prev + 1);
                                     }}
+                                    onBookMeeting={() => setIsBookingOpen(true)}
                                 />
                             </div>
 

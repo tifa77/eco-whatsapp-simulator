@@ -223,7 +223,7 @@ function TypingIndicator({ isAr }) {
 
 const CHECKOUT_URL = 'https://checkout.elegant-options.com/sales-automation';
 
-function CTAScreen({ lang, onRetry, projectName }) {
+function CTAScreen({ lang, onRetry, projectName, onBookMeeting }) {
     const isAr = lang === 'ar';
     const [step, setStep] = useState('main'); // 'main' | 'no'
 
@@ -250,7 +250,7 @@ function CTAScreen({ lang, onRetry, projectName }) {
                 </p>
                 <button
                     onClick={goToCheckout}
-                    className="w-full bg-gradient-to-r from-yellow-500 to-orange-500 text-white font-black py-3 rounded-xl text-sm shadow-[0_0_20px_rgba(234,179,8,0.4)] mb-2"
+                    className="w-full bg-gradient-to-r from-yellow-500 to-orange-500 text-white font-black py-3.5 rounded-xl text-[13.5px] shadow-[0_0_20px_rgba(234,179,8,0.4)] mb-2"
                 >
                     {isAr ? 'اشترك وابدأ البيع الآلي فوراً 💳' : 'Subscribe & Start Selling Now 💳'}
                 </button>
@@ -279,41 +279,70 @@ function CTAScreen({ lang, onRetry, projectName }) {
             </div>
 
             {/* Main heading */}
-            <h3 className="text-white font-black text-center text-[15px] leading-snug mb-2">
+            <h3 className="text-white font-black text-center text-[15px] leading-snug mb-2" style={{ fontFamily: 'Cairo' }}>
                 {isAr 
                     ? 'ضاعف أرباحك ومبيعاتك تلقائياً دون تضييع أي عميل! 📈' 
                     : 'Double Your Profits & Sales Automatically Without Losing a Single Customer! 📈'}
             </h3>
 
             {/* Sub-heading */}
-            <p className="text-slate-400 text-center text-[11px] leading-relaxed mb-3">
+            <p className="text-slate-400 text-center text-[11px] leading-relaxed mb-3.5" style={{ fontFamily: 'Cairo' }}>
                 {isAr 
                     ? 'حوّل المحادثات إلى تدفق مستمر من الأرباح. نظام الأتمتة الذكي لدينا يقوم ببيع منتجاتك، تحصيل مدفوعاتك، ومتابعة عملائك على مدار 24 ساعة لزيادة دخلك تلقائياً وبأقل جهد!' 
                     : 'Turn chats into a constant stream of profits. Our smart automation system sells your products, collects payments, and follows up with customers 24 hours a day to scale your revenue automatically!'}
             </p>
 
-            {/* Pre-button motivator */}
-            <p className="text-[#25d366] text-center text-[11px] font-bold mb-3">
+            {/* Explanatory sentence for booking meeting config (No mention of online store) */}
+            <p className="text-white/90 text-center text-[10.5px] leading-relaxed mb-3.5 p-3 bg-white/5 rounded-xl border border-white/10" style={{ fontFamily: 'Cairo' }}>
+                {isAr 
+                    ? '💡 احجز موعد اجتماعك المجاني الآن لاستكشاف كيف نقوم بتهيئة وتخصيص نظام الأتمتة بالكامل ليناسب مشروعك ويحقق لك أفضل النتائج.'
+                    : '💡 Book your free meeting now to explore how we configure and customize the automation system to perfectly fit your project and achieve the best results.'}
+            </p>
+
+            <p className="text-[#25d366] text-center text-[11.5px] font-bold mb-3.5" style={{ fontFamily: 'Cairo' }}>
                 {isAr ? '⚡️ استثمارك الذكي للنمو بتكلفة أقل من 100 دولار في الشهر' : '⚡️ Your smart growth investment at less than $100/month'}
             </p>
 
-            {/* Primary CTA */}
+            {/* Subscribe Button */}
             <button
                 onClick={goToCheckout}
-                className="w-full py-3.5 rounded-xl font-black text-[14px] text-white mb-2 relative overflow-hidden"
-                style={{ background: 'linear-gradient(135deg, #25d366 0%, #128C7E 100%)', boxShadow: '0 0 24px rgba(37,211,102,0.35)' }}
+                className="w-full py-3.5 rounded-xl font-black text-[13.5px] text-white mb-2 relative overflow-hidden flex items-center justify-center gap-2 transition-all active:scale-98"
+                style={{
+                    background: 'linear-gradient(135deg, #25d366 0%, #10b981 100%)',
+                    boxShadow: '0 4px 15px rgba(37,211,102,0.3)',
+                    fontFamily: 'Cairo'
+                }}
             >
                 <motion.div
                     animate={{ x: ['-100%', '200%'] }}
                     transition={{ repeat: Infinity, duration: 2.5, ease: 'linear', repeatDelay: 1 }}
                     className="absolute inset-0 bg-gradient-to-r from-transparent via-white/20 to-transparent skew-x-12"
                 />
-                <span className="relative">{isAr ? 'اشترك وابدأ البيع الآلي فوراً 💳' : 'Subscribe & Start Selling Now 💳'}</span>
+                <span className="relative z-10">{isAr ? 'اشترك وابدأ البيع الآلي فوراً 💳' : 'Subscribe & Start Selling Now 💳'}</span>
+            </button>
+
+            {/* Secondary CTA (Book Meeting) */}
+            <button
+                onClick={onBookMeeting}
+                className="w-full py-3.5 rounded-xl text-white font-black text-[13.5px] mb-3 relative overflow-hidden flex items-center justify-center gap-2 transition-all active:scale-98"
+                style={{
+                    background: 'linear-gradient(135deg, #06b6d4 0%, #2563eb 100%)',
+                    boxShadow: '0 4px 15px rgba(6,182,212,0.3)',
+                    fontFamily: 'Cairo'
+                }}
+            >
+                <motion.div
+                    animate={{ x: ['-100%', '200%'] }}
+                    transition={{ repeat: Infinity, duration: 2.5, ease: 'linear', repeatDelay: 1.5 }}
+                    className="absolute inset-0 bg-gradient-to-r from-transparent via-white/20 to-transparent skew-x-12"
+                />
+                <span className="relative z-10">📅 {isAr ? 'حجز موعد اجتماع مجاني' : 'Book a Free Meeting'}</span>
             </button>
 
             <button
                 onClick={() => setStep('no')}
                 className="w-full py-2 rounded-xl text-slate-500 text-xs font-medium"
+                style={{ fontFamily: 'Cairo' }}
             >
                 {isAr ? 'لا شكراً' : 'No thanks'}
             </button>
@@ -322,7 +351,7 @@ function CTAScreen({ lang, onRetry, projectName }) {
 }
 
 // ─── Core Component ─────────────────────────────────────────────────────────────
-const ChatSimulatorInner = ({ config, onBack }) => {
+const ChatSimulatorInner = ({ config, onBack, onBookMeeting }) => {
     const { projectName, niche, platform, lang = 'ar' } = config;
     const isAr = lang === 'ar';
 
@@ -890,7 +919,7 @@ const ChatSimulatorInner = ({ config, onBack }) => {
                             animate={{ opacity: 1, y: 0 }}
                             className="mt-4 mb-2 animate-bounce-subtle"
                         >
-                            <CTAScreen lang={lang} onRetry={handleRetry} projectName={projectName} />
+                            <CTAScreen lang={lang} onRetry={handleRetry} projectName={projectName} onBookMeeting={onBookMeeting} />
                         </motion.div>
                     )}
 
