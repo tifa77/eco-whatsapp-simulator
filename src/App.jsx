@@ -449,14 +449,38 @@ function PhonePreview({ isAr = true, projectName, setProjectName, handleStart })
 }
 
 /* ═══════════════════ CONTACT WIDGET ═══════════════════════════════════════════════ */
-function ContactWidget({ lang }) {
+function ContactWidget({ lang, view }) {
     const [isOpen, setIsOpen] = useState(false);
+    const [isVisible, setIsVisible] = useState(false);
     const isAr = lang === 'ar';
+
+    useEffect(() => {
+        if (view !== 'landing') {
+            setIsVisible(false);
+            return;
+        }
+
+        const handleScroll = () => {
+            if (window.scrollY > 400) {
+                setIsVisible(true);
+            } else {
+                setIsVisible(false);
+            }
+        };
+
+        handleScroll();
+        window.addEventListener('scroll', handleScroll);
+        return () => {
+            window.removeEventListener('scroll', handleScroll);
+        };
+    }, [view]);
 
     const handleToggle = () => setIsOpen(!isOpen);
 
     const contactNumber = '+96802321683';
     const emailAddress = 'info@elegant-options.com';
+
+    if (!isVisible) return null;
 
     return (
         <div className="fixed bottom-6 left-6 z-[999] flex flex-col items-start gap-3 select-none">
@@ -613,7 +637,7 @@ function BookingModal({ isOpen, onClose, lang }) {
 
     return (
         <div 
-            className="fixed inset-0 z-[1000] flex items-center justify-center p-4 bg-black/85 backdrop-blur-sm"
+            className="fixed inset-0 z-[1000] flex items-center justify-center p-2 sm:p-4 bg-black/85 backdrop-blur-sm overflow-y-auto"
             onClick={onClose}
         >
             <motion.div
@@ -621,7 +645,7 @@ function BookingModal({ isOpen, onClose, lang }) {
                 animate={{ opacity: 1, scale: 1, y: 0 }}
                 exit={{ opacity: 0, scale: 0.95, y: 20 }}
                 onClick={e => e.stopPropagation()}
-                className="bg-zinc-950 border border-white/10 rounded-[32px] overflow-hidden shadow-2xl w-full max-w-2xl flex flex-col relative"
+                className="bg-zinc-950 border border-white/10 rounded-[24px] sm:rounded-[32px] overflow-hidden shadow-2xl w-full max-w-2xl flex flex-col relative my-auto max-h-[92vh] sm:max-h-none"
             >
                 {/* Close Button */}
                 <button
@@ -690,11 +714,11 @@ function BookingModal({ isOpen, onClose, lang }) {
                         </div>
 
                         {/* Iframe Body */}
-                        <div className="flex-1 p-2 bg-[#0A0A0A]" style={{ minHeight: '520px' }}>
+                        <div className="flex-1 p-1 bg-[#0A0A0A] overflow-y-auto" style={{ height: '70vh', minHeight: '480px', maxHeight: '650px' }}>
                             <iframe
                                 src="https://brand.elegant-options.com/widget/booking/xA4kEVDOLF2omAB2JPM4"
-                                style={{ width: '100%', height: '500px', border: 'none', overflow: 'hidden' }}
-                                scrolling="no"
+                                style={{ width: '100%', height: '100%', minHeight: '620px', border: 'none' }}
+                                scrolling="yes"
                                 id="xA4kEVDOLF2omAB2JPM4_1782505878870"
                             />
                         </div>
@@ -989,7 +1013,7 @@ function App() {
                     </motion.div>
                 )}
             </AnimatePresence>
-            <ContactWidget lang={lang} />
+            <ContactWidget lang={lang} view={view} />
             <BookingModal isOpen={isBookingOpen} onClose={() => setIsBookingOpen(false)} lang={lang} />
         </div>
     );
