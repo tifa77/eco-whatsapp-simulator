@@ -151,10 +151,6 @@ function ChatBubble({ msg, isAr, projectName }) {
                             <span>{isAr ? 'رقم الطلب:' : 'Order ID:'}</span>
                             <span className="font-bold text-gray-800">#{orderNum}</span>
                         </div>
-                        <div className="flex justify-between">
-                            <span>{isAr ? 'العميل:' : 'Customer:'}</span>
-                            <span className="font-bold text-gray-800">{customerName || (isAr ? 'عميل محترم' : 'Valued Customer')}</span>
-                        </div>
                         <div className="flex flex-col border-y py-1.5 my-1.5 border-gray-100 gap-0.5">
                             <span className="text-gray-400 text-[10px]">{isAr ? 'المنتجات المطلوبة:' : 'Items:'}</span>
                             <span className="font-semibold text-gray-850 leading-relaxed whitespace-pre-wrap">{orderSummary}</span>
@@ -337,7 +333,7 @@ const ChatSimulatorInner = ({ config, onBack }) => {
     const [isTyping, setIsTyping] = useState(false);
     const [isDemoEnded, setIsDemoEnded] = useState(false);
     const [isCatalogOpen, setIsCatalogOpen] = useState(false);
-    const [flowStep, setFlowStep] = useState('welcome'); // welcome | catalog | ask_name | ask_location_type | ask_location_share | ask_payment | confirm_payment_btn | ended
+    const [flowStep, setFlowStep] = useState('welcome'); // welcome | catalog | ask_location_type | ask_location_share | ask_payment | confirm_payment_btn | ended
     const [customerName, setCustomerName] = useState('');
     const [orderTotal, setOrderTotal] = useState(0);
     const [orderSummary, setOrderSummary] = useState('');
@@ -611,15 +607,19 @@ const ChatSimulatorInner = ({ config, onBack }) => {
         const userMsg = isAr ? `أريد طلب المنتجات التالية:\n${summary}` : `I want to order the following items:\n${summary}`;
         addUserMsg(userMsg);
         setIsTyping(true);
-        setNarratorText(isAr ? 'النظام يسأل عن اسم العميل لتوثيق الفاتورة 📋' : 'System asking for customer name for invoice 📋');
+        setNarratorText(isAr ? 'النظام يطرح خيارات الاستلام والتوصيل 📦' : 'System asking for delivery options 📦');
 
         setTimeout(() => {
-            const askNameMsg = isAr
-                ? `ممتاز جداً! 🛍️ إجمالي طلبك هو $${total.toFixed(2)}.\n\nيرجى كتابة اسمك الكريم لتسجيل الفاتورة باسمك والبدء بالتجهيز 📝`
-                : `Excellent choice! 🛍️ Your order total is $${total.toFixed(2)}.\n\nPlease type your name to register the invoice and start preparing 📝`;
-            setMessages(prev => [...prev, { id: Date.now(), text: askNameMsg, sender: 'bot', timestamp: new Date() }]);
+            const askDeliveryMsg = isAr
+                ? `ممتاز جداً! 🛍️ إجمالي طلبك هو $${total.toFixed(2)}.\n\nكيف تفضل استلام طلبك اليوم؟`
+                : `Excellent choice! 🛍️ Your order total is $${total.toFixed(2)}.\n\nHow would you like to receive your order today?`;
+            setMessages(prev => [...prev, { id: Date.now(), text: askDeliveryMsg, sender: 'bot', timestamp: new Date() }]);
+            setActiveButtons(isAr
+                ? ['📍 توصيل لموقعي', '🏪 استلام من الفرع']
+                : ['📍 Deliver to My Location', '🏪 Pickup from Branch']
+            );
             setIsTyping(false);
-            setFlowStep('ask_name');
+            setFlowStep('ask_location_type');
         }, 1400);
     };
 
@@ -652,25 +652,7 @@ const ChatSimulatorInner = ({ config, onBack }) => {
             return;
         }
 
-        // 2. Ask Name Flow
-        if (flowStep === 'ask_name') {
-            setCustomerName(text);
-            setNarratorText(isAr ? 'النظام يرحب بالعميل باسمه ويطرح خيارات الاستلام 📦' : 'System welcomes customer by name and asks for delivery 📦');
 
-            setTimeout(() => {
-                const welcomeNameMsg = isAr
-                    ? `أهلاً بك يا ${text} في متجرنا! 🌸 كيف تفضل استلام طلبك اليوم؟`
-                    : `Hello ${text}! How would you like to receive your order today?`;
-                setMessages(prev => [...prev, { id: Date.now(), text: welcomeNameMsg, sender: 'bot', timestamp: new Date() }]);
-                setActiveButtons(isAr
-                    ? ['📍 توصيل لموقعي', '🏪 استلام من الفرع']
-                    : ['📍 Deliver to My Location', '🏪 Pickup from Branch']
-                );
-                setIsTyping(false);
-                setFlowStep('ask_location_type');
-            }, 1200);
-            return;
-        }
 
         // Fallback chatbot text reply
         setTimeout(() => {
@@ -922,23 +904,21 @@ const ChatSimulatorInner = ({ config, onBack }) => {
                 style={{ background: '#F0F0F0', borderTop: '1px solid rgba(0,0,0,0.08)', zIndex: 40 }}
             >
                 <button className="text-[#54656F] p-1.5"><Smile size={22} /></button>
-                <form onSubmit={handleSendText} className="flex-1 flex items-center bg-white rounded-full px-4 gap-2 shadow-sm border border-black/5" style={(flowStep === 'ask_name' || flowStep === 'cs_writing_inquiry' || flowStep === 'cs_writing_complaint') ? { borderColor: '#25d366', borderWidth: '1.5px' } : {}}>
+                <form onSubmit={handleSendText} className="flex-1 flex items-center bg-white rounded-full px-4 gap-2 shadow-sm border border-black/5" style={(flowStep === 'cs_writing_inquiry' || flowStep === 'cs_writing_complaint') ? { borderColor: '#25d366', borderWidth: '1.5px' } : {}}>
                     <input
                         type="text"
                         value={inputText}
                         onChange={e => setInputText(e.target.value)}
                         placeholder={
-                            flowStep === 'ask_name'
-                                ? (isAr ? 'اكتب اسمك الكريم هنا...' : 'Write your name here...')
-                                : flowStep === 'cs_writing_inquiry'
-                                    ? (isAr ? 'اكتب استفسارك هنا...' : 'Write your inquiry here...')
-                                    : flowStep === 'cs_writing_complaint'
-                                        ? (isAr ? 'اكتب شكواك هنا...' : 'Write your complaint here...')
-                                        : (isAr ? 'اكتب رسالة...' : 'Type a message...')
+                            flowStep === 'cs_writing_inquiry'
+                                ? (isAr ? 'اكتب استفسارك هنا...' : 'Write your inquiry here...')
+                                : flowStep === 'cs_writing_complaint'
+                                    ? (isAr ? 'اكتب شكواك هنا...' : 'Write your complaint here...')
+                                    : (isAr ? 'اكتب رسالة...' : 'Type a message...')
                         }
                         className="flex-1 bg-transparent text-gray-800 text-[13px] py-2.5 outline-none placeholder:text-gray-400"
                         dir={isAr ? 'rtl' : 'ltr'}
-                        autoFocus={flowStep === 'ask_name' || flowStep === 'cs_writing_inquiry' || flowStep === 'cs_writing_complaint'}
+                        autoFocus={flowStep === 'cs_writing_inquiry' || flowStep === 'cs_writing_complaint'}
                     />
                     <button type="button" className="text-[#54656F]"><Paperclip size={18} /></button>
                 </form>
