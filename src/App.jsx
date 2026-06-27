@@ -716,7 +716,7 @@ function BookingModal({ isOpen, onClose, lang }) {
                         {/* Iframe Body */}
                         <div className="flex-1 p-1 bg-[#0A0A0A] overflow-y-auto" style={{ height: '70vh', minHeight: '480px', maxHeight: '650px' }}>
                             <iframe
-                                src="https://brand.elegant-options.com/widget/booking/xA4kEVDOLF2omAB2JPM4"
+                                src={`https://brand.elegant-options.com/widget/booking/xA4kEVDOLF2omAB2JPM4?lang=${isAr ? 'ar' : 'en'}`}
                                 style={{ width: '100%', height: '100%', minHeight: '620px', border: 'none' }}
                                 scrolling="yes"
                                 id="xA4kEVDOLF2omAB2JPM4_1782505878870"
