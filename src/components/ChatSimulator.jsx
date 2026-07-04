@@ -129,6 +129,16 @@ function ChatBubble({ msg, isAr, projectName }) {
         const customerName = msg.receiptData?.customerName || '';
         const deliveryMethod = msg.receiptData?.deliveryMethod || '';
         const orderNum = msg.receiptData?.orderNum || '';
+        
+        const isBooking = msg.receiptData?.isBooking || false;
+        const isServices = msg.receiptData?.isServices || false;
+        const isOther = msg.receiptData?.isOther || false;
+        
+        const bookingService = msg.receiptData?.bookingService || '';
+        const bookingTime = msg.receiptData?.bookingTime || '';
+        const serviceType = msg.receiptData?.serviceType || '';
+        const serviceBudget = msg.receiptData?.serviceBudget || '';
+        const customerPhone = msg.receiptData?.customerPhone || '';
 
         return (
             <motion.div
@@ -143,31 +153,111 @@ function ChatBubble({ msg, isAr, projectName }) {
                 >
                     <div className="flex justify-between items-center border-b pb-2 mb-2 border-dashed border-gray-200">
                         <span className="font-extrabold text-[12px] text-gray-850 truncate max-w-[140px]">{projectName}</span>
-                        <span className="text-green-600 text-[10px] font-black bg-green-50 px-1.5 py-0.5 rounded">{isAr ? 'فاتورة معتمدة' : 'Invoice'}</span>
+                        <span className="text-green-600 text-[10px] font-black bg-green-50 px-1.5 py-0.5 rounded">
+                            {isBooking 
+                                ? (isAr ? 'تأكيد حجز' : 'Booking Confirmed') 
+                                : isServices 
+                                    ? (isAr ? 'طلب خدمات' : 'Service Quote') 
+                                    : isOther 
+                                        ? (isAr ? 'طلب اتصال' : 'Callback Request')
+                                        : (isAr ? 'فاتورة معتمدة' : 'Invoice')
+                            }
+                        </span>
                     </div>
 
                     <div className="space-y-1.5 text-gray-600 text-[11px]" dir={isAr ? 'rtl' : 'ltr'}>
-                        <div className="flex justify-between">
-                            <span>{isAr ? 'رقم الطلب:' : 'Order ID:'}</span>
-                            <span className="font-bold text-gray-800">#{orderNum}</span>
-                        </div>
-                        <div className="flex flex-col border-y py-1.5 my-1.5 border-gray-100 gap-0.5">
-                            <span className="text-gray-400 text-[10px]">{isAr ? 'المنتجات المطلوبة:' : 'Items:'}</span>
-                            <span className="font-semibold text-gray-850 leading-relaxed whitespace-pre-wrap">{orderSummary}</span>
-                        </div>
-                        <div className="flex justify-between">
-                            <span>{isAr ? 'طريقة الاستلام:' : 'Delivery:'}</span>
-                            <span className="font-bold text-gray-800">{deliveryMethod}</span>
-                        </div>
-                        <div className="flex justify-between border-t pt-2 mt-2 border-gray-100 text-[13px] font-black text-gray-900">
-                            <span>{isAr ? 'الإجمالي:' : 'Total:'}</span>
-                            <span className="text-[#128C7E]">
-                                {`$${orderTotal.toFixed(2)}`}
-                            </span>
-                        </div>
+                        {isBooking && (
+                            <>
+                                <div className="flex justify-between">
+                                    <span>{isAr ? 'رمز الحجز:' : 'Ref ID:'}</span>
+                                    <span className="font-bold text-gray-800">#{orderNum}</span>
+                                </div>
+                                <div className="flex justify-between">
+                                    <span>{isAr ? 'الخدمة/العيادة:' : 'Service:'}</span>
+                                    <span className="font-bold text-gray-800">{bookingService}</span>
+                                </div>
+                                <div className="flex justify-between">
+                                    <span>{isAr ? 'الموعد:' : 'Appointment:'}</span>
+                                    <span className="font-bold text-gray-800">{bookingTime}</span>
+                                </div>
+                                <div className="flex justify-between">
+                                    <span>{isAr ? 'الاسم:' : 'Name:'}</span>
+                                    <span className="font-bold text-gray-800">{customerName}</span>
+                                </div>
+                                <div className="flex justify-between">
+                                    <span>{isAr ? 'الهاتف:' : 'Phone:'}</span>
+                                    <span className="font-bold text-gray-850">{customerPhone}</span>
+                                </div>
+                            </>
+                        )}
+
+                        {isServices && (
+                            <>
+                                <div className="flex justify-between">
+                                    <span>{isAr ? 'رمز الطلب:' : 'Request ID:'}</span>
+                                    <span className="font-bold text-gray-800">#{orderNum}</span>
+                                </div>
+                                <div className="flex justify-between">
+                                    <span>{isAr ? 'الخدمة المطلوبة:' : 'Service:'}</span>
+                                    <span className="font-bold text-gray-850">{serviceType}</span>
+                                </div>
+                                <div className="flex justify-between">
+                                    <span>{isAr ? 'الميزانية:' : 'Budget:'}</span>
+                                    <span className="font-bold text-gray-850">{serviceBudget}</span>
+                                </div>
+                                <div className="flex justify-between">
+                                    <span>{isAr ? 'العميل:' : 'Client:'}</span>
+                                    <span className="font-bold text-gray-800">{customerName}</span>
+                                </div>
+                                <div className="flex justify-between">
+                                    <span>{isAr ? 'الاتصال:' : 'Contact:'}</span>
+                                    <span className="font-bold text-gray-850">{customerPhone}</span>
+                                </div>
+                            </>
+                        )}
+
+                        {isOther && (
+                            <>
+                                <div className="flex justify-between">
+                                    <span>{isAr ? 'رقم الطلب:' : 'Request ID:'}</span>
+                                    <span className="font-bold text-gray-800">#{orderNum}</span>
+                                </div>
+                                <div className="flex justify-between">
+                                    <span>{isAr ? 'الاسم:' : 'Name:'}</span>
+                                    <span className="font-bold text-gray-800">{customerName}</span>
+                                </div>
+                                <div className="flex justify-between">
+                                    <span>{isAr ? 'رقم الاتصال:' : 'Phone:'}</span>
+                                    <span className="font-bold text-gray-850">{customerPhone}</span>
+                                </div>
+                            </>
+                        )}
+
+                        {!isBooking && !isServices && !isOther && (
+                            <>
+                                <div className="flex justify-between">
+                                    <span>{isAr ? 'رقم الطلب:' : 'Order ID:'}</span>
+                                    <span className="font-bold text-gray-800">#{orderNum}</span>
+                                </div>
+                                <div className="flex flex-col border-y py-1.5 my-1.5 border-gray-100 gap-0.5">
+                                    <span className="text-gray-400 text-[10px]">{isAr ? 'المنتجات المطلوبة:' : 'Items:'}</span>
+                                    <span className="font-semibold text-gray-850 leading-relaxed whitespace-pre-wrap">{orderSummary}</span>
+                                </div>
+                                <div className="flex justify-between">
+                                    <span>{isAr ? 'طريقة الاستلام:' : 'Delivery:'}</span>
+                                    <span className="font-bold text-gray-800">{deliveryMethod}</span>
+                                </div>
+                                <div className="flex justify-between border-t pt-2 mt-2 border-gray-100 text-[13px] font-black text-gray-900">
+                                    <span>{isAr ? 'الإجمالي:' : 'Total:'}</span>
+                                    <span className="text-[#128C7E]">
+                                        {`$${orderTotal.toFixed(2)}`}
+                                    </span>
+                                </div>
+                            </>
+                        )}
                     </div>
 
-                    <div className={`flex items-center gap-1 mt-2.5 ${isUser ? 'justify-end' : 'justify-start'}`}>
+                    <div className="flex items-center gap-1 mt-2.5 justify-end">
                         <span className="text-[10px] text-gray-400">{time}</span>
                     </div>
                 </div>
@@ -353,7 +443,7 @@ function CTAScreen({ lang, onRetry, projectName, onBookMeeting }) {
 }
 
 // ─── Core Component ─────────────────────────────────────────────────────────────
-const ChatSimulatorInner = ({ config, onBack, onBookMeeting }) => {
+const ChatSimulatorInner = ({ config, onBack, onBookMeeting, onDemoEnded, onResetDemo }) => {
     const { projectName, niche, platform, lang = 'ar' } = config;
     const isAr = lang === 'ar';
 
@@ -371,6 +461,14 @@ const ChatSimulatorInner = ({ config, onBack, onBookMeeting }) => {
     const [deliveryMethod, setDeliveryMethod] = useState('');
     const [narratorText, setNarratorText] = useState(isAr ? 'يبدأ العميل المحادثة 👋' : 'Customer starts chat 👋');
     const [toast, setToast] = useState('');
+
+    // ── Niche State Variables ──
+    const [bookingService, setBookingService] = useState('');
+    const [bookingDay, setBookingDay] = useState('');
+    const [bookingTime, setBookingTime] = useState('');
+    const [customerPhone, setCustomerPhone] = useState('');
+    const [serviceType, setServiceType] = useState('');
+    const [serviceBudget, setServiceBudget] = useState('');
 
     const initialized = useRef(false);
     const messagesEndRef = useRef(null);
@@ -407,18 +505,75 @@ const ChatSimulatorInner = ({ config, onBack, onBookMeeting }) => {
             setNarratorText(isAr ? 'يرحّب النظام بالعميل 👋' : 'System welcomes customer 👋');
 
             setTimeout(() => {
-                const greetMsg = isAr
-                    ? `أهلاً بك في متجر ${projectName || 'الذكي'}! 👋 كيف نقدر نخدمك اليوم؟`
-                    : `Welcome to ${projectName || 'Smart'} Store! 👋 How can we help you today?`;
+                let greetMsg = '';
+                let buttons = [];
+                let nextStep = 'catalog';
+
+                if (niche === 'restaurant') {
+                    greetMsg = isAr
+                        ? `أهلاً بك في مطعم ${projectName || 'الذكي'}! 🍔 كيف نقدر نخدمك اليوم؟`
+                        : `Welcome to ${projectName || 'Smart'} Restaurant! 🍔 How can we serve you today?`;
+                    buttons = isAr
+                        ? ['🍔 تصفح المنيو', '🔥 عروض اليوم', '💬 خدمة العملاء']
+                        : ['🍔 Browse Menu', '🔥 Today\'s Offers', '💬 Customer Support'];
+                    nextStep = 'catalog';
+                } else if (niche === 'ecommerce') {
+                    greetMsg = isAr
+                        ? `أهلاً بك في متجر ${projectName || 'الذكي'}! 🛍️ كيف نقدر نخدمك اليوم؟`
+                        : `Welcome to ${projectName || 'Smart'} Store! 🛍️ How can we help you today?`;
+                    buttons = isAr
+                        ? ['🛒 تصفح المنتجات', '🔥 العروض', '💬 خدمة العملاء']
+                        : ['🛒 Browse Products', '🔥 Offers', '💬 Customer Service'];
+                    nextStep = 'catalog';
+                } else if (niche === 'clinic') {
+                    greetMsg = isAr
+                        ? `أهلاً بك في عيادة ${projectName || 'الطبية'}! 🩺 كيف نقدر نخدمك اليوم؟`
+                        : `Welcome to ${projectName || 'Smart'} Clinic! 🩺 How can we help you today?`;
+                    buttons = isAr
+                        ? ['📅 حجز موعد', '🩺 الخدمات الطبية', '💬 استفسار']
+                        : ['📅 Book Appointment', '🩺 Medical Services', '💬 Inquiry'];
+                    nextStep = 'clinic_welcome';
+                } else if (niche === 'salon') {
+                    greetMsg = isAr
+                        ? `أهلاً بك في صالون ${projectName || 'للتجميل'}! 💅 كيف نقدر نخدمك اليوم؟`
+                        : `Welcome to ${projectName || 'Smart'} Salon! 💅 How can we serve you today?`;
+                    buttons = isAr
+                        ? ['📅 حجز موعد', '💅 خدمات الصالون', '💬 استفسار']
+                        : ['📅 Book Appointment', '💅 Salon Services', '💬 Inquiry'];
+                    nextStep = 'salon_welcome';
+                } else if (niche === 'consultant') {
+                    greetMsg = isAr
+                        ? `أهلاً بك مع المستشار ${projectName || 'الذكي'}! 💡 كيف نقدر نخدمك اليوم؟`
+                        : `Welcome to ${projectName || 'Smart'} Consulting! 💡 How can we assist you today?`;
+                    buttons = isAr
+                        ? ['📅 حجز موعد', '💡 الخدمات الاستشارية', '💬 استفسار']
+                        : ['📅 Book Appointment', '💡 Advisory Services', '💬 Inquiry'];
+                    nextStep = 'consultant_welcome';
+                } else if (niche === 'services') {
+                    greetMsg = isAr
+                        ? `أهلاً بك في شركة ${projectName || 'الذكية'}! 💼 كيف نقدر نخدمك اليوم؟`
+                        : `Welcome to ${projectName || 'Smart'} Services! 💼 How can we serve you today?`;
+                    buttons = isAr
+                        ? ['💼 طلب خدمة', '✨ خدماتنا', '💬 تواصل معنا']
+                        : ['💼 Request Service', '✨ Our Services', '💬 Contact Support'];
+                    nextStep = 'services_welcome';
+                } else {
+                    greetMsg = isAr
+                        ? `أهلاً بك في ${projectName || 'مشروعنا'}! 👋 كيف نقدر نخدمك اليوم؟`
+                        : `Welcome to ${projectName || 'our project'}! 👋 How can we assist you today?`;
+                    buttons = isAr
+                        ? ['💬 استفسار عام', '📞 طلب اتصال', '📍 الفرع والموقع']
+                        : ['💬 General Inquiry', '📞 Request Call', '📍 Branch Location'];
+                    nextStep = 'other_welcome';
+                }
+
                 setMessages(prev => [...prev, { id: Date.now(), text: greetMsg, sender: 'bot', timestamp: new Date() }]);
                 setToast('');
 
                 setTimeout(() => {
                     setIsTyping(false);
-                    setActiveButtons(isAr
-                        ? ['🛒 تصفح المنتجات', '🔥 العروض', '💬 خدمة العملاء']
-                        : ['🛒 Browse Products', '🔥 Offers', '💬 Customer Service']);
-                    setFlowStep('catalog');
+                    setActiveButtons(buttons);
+                    setFlowStep(nextStep);
                 }, 800);
             }, 1500);
         }, 800);
@@ -429,8 +584,263 @@ const ChatSimulatorInner = ({ config, onBack, onBookMeeting }) => {
         addUserMsg(btn);
         setActiveButtons([]);
 
+        // ── Clinic, Salon, Consultant Welcome Options ──
+        if (flowStep === 'clinic_welcome' || flowStep === 'salon_welcome' || flowStep === 'consultant_welcome') {
+            const isBooking = btn.includes('حجز') || btn.includes('Book');
+            const isServices = btn.includes('الخدمات') || btn.includes('Services');
+            setIsTyping(true);
+
+            if (isBooking) {
+                setNarratorText(isAr ? 'يطلب البوت اختيار نوع الخدمة/التخصص 📋' : 'Bot requesting service type 📋');
+                setTimeout(() => {
+                    let msg = '';
+                    let buttons = [];
+                    if (niche === 'clinic') {
+                        msg = isAr ? 'ممتاز! يرجى اختيار تخصص العيادة المطلوب:' : 'Excellent! Please select the desired clinic specialty:';
+                        buttons = isAr ? ['🦷 عيادة الأسنان', '💅 الجلدية والتجميل', '👶 طب الأطفال'] : ['🦷 Dental Clinic', '💅 Dermatology', '👶 Pediatrics'];
+                    } else if (niche === 'salon') {
+                        msg = isAr ? 'رائع! يرجى اختيار الخدمة المطلوبة:' : 'Great! Please select the desired service:';
+                        buttons = isAr ? ['💇 قص وتسريح شعر', '💅 العناية بالأظافر', '✨ تنظيف البشرة'] : ['💇 Hair Styling', '💅 Nail Care', '✨ Skin Cleansing'];
+                    } else {
+                        msg = isAr ? 'يسعدنا جداً مساعدتك! اختر نوع الجلسة الاستشارية:' : 'Happy to help! Choose the type of consultation session:';
+                        buttons = isAr ? ['💡 استشارة عمل', '🏋️ تدريب شخصي', '🤝 جلسة إرشادية'] : ['💡 Business Consult', '🏋️ Personal Training', '🤝 Mentorship Session'];
+                    }
+                    setMessages(prev => [...prev, { id: Date.now(), text: msg, sender: 'bot', timestamp: new Date() }]);
+                    setIsTyping(false);
+                    setActiveButtons(buttons);
+                    setFlowStep(niche === 'clinic' ? 'clinic_specialty' : niche === 'salon' ? 'salon_service' : 'consultant_session');
+                }, 1000);
+            } else if (isServices) {
+                setNarratorText(isAr ? 'عرض الخدمات المتاحة... ✨' : 'Showing available services... ✨');
+                setTimeout(() => {
+                    let msg = '';
+                    if (niche === 'clinic') {
+                        msg = isAr 
+                            ? `نقدم في عيادة ${projectName || 'الطبية'} خدمات رعاية صحية متكاملة للأسنان، والتجميل، وطب الأطفال بأحدث التقنيات الطبية.`
+                            : `At ${projectName || 'our'} Clinic, we offer integrated healthcare services in dentistry, cosmetology, and pediatrics using the latest medical technologies.`;
+                    } else if (niche === 'salon') {
+                        msg = isAr
+                            ? `يقدم صالون ${projectName || 'للتجميل'} خدمات العناية بالشعر، الأظافر، البشرة، والميك اب الاحترافي على أيدي خبيرات معتمدات.`
+                            : `At ${projectName || 'our'} Salon, we offer hair styling, nail care, skincare, and professional makeup services by certified experts.`;
+                    } else {
+                        msg = isAr
+                            ? `نقدم جلسات استشارية متخصصة في تطوير الأعمال، الكوتشينج الرياضي، والإرشاد الشخصي لتحقيق أفضل النتائج.`
+                            : `We offer specialized consulting sessions in business development, fitness coaching, and personal mentorship to achieve the best results.`;
+                    }
+                    setMessages(prev => [...prev, { id: Date.now(), text: msg, sender: 'bot', timestamp: new Date() }]);
+                    setIsTyping(false);
+                    setActiveButtons(isAr 
+                        ? ['📅 حجز موعد', '💬 استفسار'] 
+                        : ['📅 Book Appointment', '💬 Inquiry']
+                    );
+                }, 1200);
+            } else {
+                setIsTyping(true);
+                setNarratorText(isAr ? 'فتح نموذج الرسالة 💬' : 'Opening message form 💬');
+                setTimeout(() => {
+                    const msg = isAr 
+                        ? 'تفّضل، اكتب استفسارك بالتفصيل وسيقوم فريقنا بالرد عليك مباشرة 👇'
+                        : 'Please write your inquiry in detail and our team will reply shortly 👇';
+                    setMessages(prev => [...prev, { id: Date.now(), text: msg, sender: 'bot', timestamp: new Date() }]);
+                    setIsTyping(false);
+                    setActiveButtons([]);
+                    setFlowStep('cs_writing_inquiry');
+                }, 1000);
+            }
+            return;
+        }
+
+        // ── Specialty/Service Choice -> Day Selection ──
+        if (flowStep === 'clinic_specialty' || flowStep === 'salon_service' || flowStep === 'consultant_session') {
+            setBookingService(btn);
+            setIsTyping(true);
+            setNarratorText(isAr ? 'يطلب البوت تحديد يوم الحجز 📅' : 'Bot requesting appointment day 📅');
+            setTimeout(() => {
+                const msg = isAr 
+                    ? `ما هو اليوم المناسب للحجز في ${projectName || 'مشروعنا'}؟`
+                    : `What is the suitable day for booking at ${projectName || 'our project'}?`;
+                const buttons = isAr 
+                    ? ['📅 غداً', '📅 بعد غد', '📅 الأسبوع القادم']
+                    : ['📅 Tomorrow', '📅 Day after tomorrow', '📅 Next week'];
+                setMessages(prev => [...prev, { id: Date.now(), text: msg, sender: 'bot', timestamp: new Date() }]);
+                setIsTyping(false);
+                setActiveButtons(buttons);
+                setFlowStep('booking_day');
+            }, 1000);
+            return;
+        }
+
+        // ── Day Choice -> Propose Time Slots ──
+        if (flowStep === 'booking_day') {
+            setBookingDay(btn);
+            setIsTyping(true);
+            setNarratorText(isAr ? 'البوت يقترح الأوقات المتوفرة لليوم المحدد 🕒' : 'Bot proposing available times for selected day 🕒');
+            setTimeout(() => {
+                const cleanDay = btn.replace('📅 ', '');
+                const msg = isAr 
+                    ? `ممتاز! الأوقات المتاحة ليوم (${cleanDay}) هي:`
+                    : `Great! Available times for (${cleanDay}) are:`;
+                const buttons = isAr 
+                    ? ['🕒 10:00 صباحاً', '🕒 3:00 مساءً', '🕒 7:00 مساءً']
+                    : ['🕒 10:00 AM', '🕒 3:00 PM', '🕒 7:00 PM'];
+                setMessages(prev => [...prev, { id: Date.now(), text: msg, sender: 'bot', timestamp: new Date() }]);
+                setIsTyping(false);
+                setActiveButtons(buttons);
+                setFlowStep('booking_time');
+            }, 1000);
+            return;
+        }
+
+        // ── Time Choice -> Ask Client Name ──
+        if (flowStep === 'booking_time') {
+            setBookingTime(btn);
+            setIsTyping(true);
+            setNarratorText(isAr ? 'يطلب البوت كتابة اسم العميل ✍️' : 'Bot requesting customer name ✍️');
+            setTimeout(() => {
+                const msg = isAr 
+                    ? 'من فضلك اكتب الاسم الكريم لتأكيد الحجز 👇'
+                    : 'Please write the client\'s full name to confirm the booking 👇';
+                setMessages(prev => [...prev, { id: Date.now(), text: msg, sender: 'bot', timestamp: new Date() }]);
+                setIsTyping(false);
+                setActiveButtons([]);
+                setFlowStep('booking_ask_name');
+            }, 1000);
+            return;
+        }
+
+        // ── Services Welcome Options ──
+        if (flowStep === 'services_welcome') {
+            const isRequest = btn.includes('طلب') || btn.includes('Request');
+            const isInfo = btn.includes('خدماتنا') || btn.includes('Services');
+            setIsTyping(true);
+
+            if (isRequest) {
+                setNarratorText(isAr ? 'يطلب البوت تحديد نوع الخدمة المطلوبة 📋' : 'Bot requesting service type 📋');
+                setTimeout(() => {
+                    const msg = isAr 
+                        ? 'يسعدنا خدمتك! يرجى اختيار الخدمة المطلوبة للبدء:'
+                        : 'Happy to serve you! Please select the desired service:';
+                    const buttons = isAr 
+                        ? ['💻 تطوير برمجيات', '📈 تسويق رقمي', '🎨 تصميم هويات وتصاميم']
+                        : ['💻 Software Dev', '📈 Digital Marketing', '🎨 Branding & Design'];
+                    setMessages(prev => [...prev, { id: Date.now(), text: msg, sender: 'bot', timestamp: new Date() }]);
+                    setIsTyping(false);
+                    setActiveButtons(buttons);
+                    setFlowStep('services_type');
+                }, 1000);
+            } else if (isInfo) {
+                setNarratorText(isAr ? 'عرض الخدمات المتاحة... 💼' : 'Showing available services... 💼');
+                setTimeout(() => {
+                    const msg = isAr 
+                        ? `نقدم في شركة ${projectName || 'الخدمية'} خدمات تطوير المواقع والتطبيقات، التسويق الإلكتروني، وتصميم الهويات البصرية باحترافية كاملة.`
+                        : `We offer custom software development, digital marketing, and branding services with professional quality at ${projectName || 'our'} company.`;
+                    setMessages(prev => [...prev, { id: Date.now(), text: msg, sender: 'bot', timestamp: new Date() }]);
+                    setIsTyping(false);
+                    setActiveButtons(isAr 
+                        ? ['💼 طلب خدمة', '💬 تواصل معنا'] 
+                        : ['💼 Request Service', '💬 Contact Support']
+                    );
+                }, 1200);
+            } else {
+                setIsTyping(true);
+                setNarratorText(isAr ? 'تحويل للدعم 💬' : 'Connecting to support 💬');
+                setTimeout(() => {
+                    const msg = isAr 
+                        ? 'تفضل، اكتب استفسارك وسيقوم فريقنا بالتواصل معك في أقرب وقت 👇'
+                        : 'Please write your inquiry and our team will get back to you shortly 👇';
+                    setMessages(prev => [...prev, { id: Date.now(), text: msg, sender: 'bot', timestamp: new Date() }]);
+                    setIsTyping(false);
+                    setActiveButtons([]);
+                    setFlowStep('cs_writing_inquiry');
+                }, 1000);
+            }
+            return;
+        }
+
+        // ── Services Type -> Budget Selection ──
+        if (flowStep === 'services_type') {
+            setServiceType(btn);
+            setIsTyping(true);
+            setNarratorText(isAr ? 'يطلب البوت تحديد ميزانية المشروع 💵' : 'Bot requesting project budget 💵');
+            setTimeout(() => {
+                const msg = isAr 
+                    ? 'ممتاز! يرجى اختيار الميزانية التقريبية المرصودة للمشروع:'
+                    : 'Great! Please choose the estimated budget for this project:';
+                const buttons = isAr 
+                    ? ['💵 $500 - $1500', '💵 $1500 - $5000', '💵 أكثر من $5000']
+                    : ['💵 $500 - $1500', '💵 $1500 - $5000', '💵 More than $5000'];
+                setMessages(prev => [...prev, { id: Date.now(), text: msg, sender: 'bot', timestamp: new Date() }]);
+                setIsTyping(false);
+                setActiveButtons(buttons);
+                setFlowStep('services_budget');
+            }, 1000);
+            return;
+        }
+
+        // ── Services Budget -> Ask Details ──
+        if (flowStep === 'services_budget') {
+            setServiceBudget(btn);
+            setIsTyping(true);
+            setNarratorText(isAr ? 'يطلب البوت تفاصيل الطلب ✍️' : 'Bot requesting request brief ✍️');
+            setTimeout(() => {
+                const msg = isAr 
+                    ? 'رائع! اكتب وصفاً مختصراً للخدمة أو فكرة مشروعك لنتمكن من دراستها 👇'
+                    : 'Awesome! Please write a brief description or idea of your service request 👇';
+                setMessages(prev => [...prev, { id: Date.now(), text: msg, sender: 'bot', timestamp: new Date() }]);
+                setIsTyping(false);
+                setActiveButtons([]);
+                setFlowStep('services_ask_details');
+            }, 1000);
+            return;
+        }
+
+        // ── Other Niche Welcome Options ──
+        if (flowStep === 'other_welcome') {
+            const isCallback = btn.includes('اتصال') || btn.includes('Call');
+            const isLocation = btn.includes('الفرع') || btn.includes('Location') || btn.includes('موقع');
+            setIsTyping(true);
+
+            if (isCallback) {
+                setNarratorText(isAr ? 'يطلب البوت كتابة الاسم لطلب الاتصال ✍️' : 'Bot requesting name for callback ✍️');
+                setTimeout(() => {
+                    const msg = isAr 
+                        ? 'يسعدنا جداً الاتصال بك! من فضلك اكتب الاسم الكريم أولاً 👇'
+                        : 'We would love to call you! Please write your full name first 👇';
+                    setMessages(prev => [...prev, { id: Date.now(), text: msg, sender: 'bot', timestamp: new Date() }]);
+                    setIsTyping(false);
+                    setActiveButtons([]);
+                    setFlowStep('other_ask_name');
+                }, 1000);
+            } else if (isLocation) {
+                setNarratorText(isAr ? 'إرسال معلومات الفرع الجغرافي 📍' : 'Sending branch location info 📍');
+                setTimeout(() => {
+                    const msg = isAr 
+                        ? `📍 فرعنا الرئيسي يقع في:\nسلطنة عُمان، مسقط، الخوير، شارع المها.\n⏰ ساعات العمل: 9 ص - 9 م`
+                        : `📍 Our main branch is located at:\nMuscat, Al Khuwair, Al Maha St, Oman.\n⏰ Working Hours: 9 AM - 9 PM`;
+                    setMessages(prev => [...prev, { id: Date.now(), text: msg, sender: 'bot', timestamp: new Date() }]);
+                    setIsTyping(false);
+                    setActiveButtons(isAr 
+                        ? ['💬 استفسار عام', '📞 طلب اتصال'] 
+                        : ['💬 General Inquiry', '📞 Request Call']
+                    );
+                }, 1200);
+            } else {
+                setNarratorText(isAr ? 'فتح نموذج الاستفسار 📋' : 'Opening inquiry form 📋');
+                setTimeout(() => {
+                    const msg = isAr 
+                        ? 'تفضل باعتراض استفسارك بالتفصيل هنا وسيقوم فريقنا بالرد الفوري 👇'
+                        : 'Please write your inquiry details here and our team will respond shortly 👇';
+                    setMessages(prev => [...prev, { id: Date.now(), text: msg, sender: 'bot', timestamp: new Date() }]);
+                    setIsTyping(false);
+                    setActiveButtons([]);
+                    setFlowStep('cs_writing_inquiry');
+                }, 1000);
+            }
+            return;
+        }
+
         // Browse catalog
-        if (btn.includes('تصفح') || btn.includes('Browse') || btn.includes('Products')) {
+        if (btn.includes('تصفح') || btn.includes('Browse') || btn.includes('Products') || btn.includes('المنيو') || btn.includes('Menu')) {
             setIsTyping(true);
             setNarratorText(isAr ? 'يفتح النظام الكاتلوج تلقائياً 🛒' : 'System opens catalog automatically 🛒');
             setTimeout(() => {
@@ -625,7 +1035,10 @@ const ChatSimulatorInner = ({ config, onBack, onBookMeeting }) => {
             setMessages(prev => [...prev, { id: Date.now(), text: msg, sender: 'bot', timestamp: new Date() }]);
             setIsTyping(false);
             setNarratorText(isAr ? 'أتمتة المحادثة انتهت بنجاح 🎉' : 'Chat automation completed successfully 🎉');
-            setTimeout(() => setIsDemoEnded(true), 2000);
+            setTimeout(() => {
+                setIsDemoEnded(true);
+                if (onDemoEnded) onDemoEnded();
+            }, 2000);
         }, 1200);
     };
 
@@ -670,31 +1083,205 @@ const ChatSimulatorInner = ({ config, onBack, onBookMeeting }) => {
             setTimeout(() => {
                 const msg = isAr
                     ? (isInquiry
-                        ? '✅ تم استلام استفسارك بنجاح!\n\nسيقوم أحد مسؤولي الدعم بالتواصل معك مباشرة، أو يمكنك تصفح المنتجات الآن 👇'
-                        : '✅ تم استلام شكواك بنجاح!\n\nتم تحويلها لمدير الفرع للمراجعة الفورية، وسنتواصل معك خلال دقائق معدودة 🙏')
+                        ? '✅ تم استلام استفسارك بنجاح!\n\nسيقوم أحد مسؤولي الدعم بالتواصل معك مباشرة، أو يمكنك العودة للاختيارات الرئيسية أدناه 👇'
+                        : '✅ تم استلام شكواك بنجاح!\n\nتم تحويلها للمراجعة الفورية، وسنتواصل معك خلال دقائق معدودة 🙏')
                     : (isInquiry
-                        ? '✅ Inquiry received successfully!\n\nOur support team will contact you shortly, or you can browse products now 👇'
-                        : '✅ Complaint received successfully!\n\nForwarded to branch manager for immediate review. We will contact you in a few minutes 🙏');
+                        ? '✅ Inquiry received successfully!\n\nOur support team will contact you shortly, or you can return to main options below 👇'
+                        : '✅ Complaint received successfully!\n\nForwarded for immediate review. We will contact you in a few minutes 🙏');
+                
+                let buttons = [isAr ? '🛒 تصفح المنتجات' : '🛒 Browse Products'];
+                let nextStep = 'catalog';
+
+                if (niche === 'restaurant') {
+                    buttons = isAr ? ['🍔 تصفح المنيو'] : ['🍔 Browse Menu'];
+                    nextStep = 'catalog';
+                } else if (niche === 'clinic' || niche === 'salon' || niche === 'consultant') {
+                    buttons = isAr ? ['📅 حجز موعد'] : ['📅 Book Appointment'];
+                    nextStep = niche === 'clinic' ? 'clinic_welcome' : niche === 'salon' ? 'salon_welcome' : 'consultant_welcome';
+                } else if (niche === 'services') {
+                    buttons = isAr ? ['💼 طلب خدمة'] : ['💼 Request Service'];
+                    nextStep = 'services_welcome';
+                } else if (niche === 'other') {
+                    buttons = isAr ? ['💬 استفسار عام', '📞 طلب اتصال'] : ['💬 General Inquiry', '📞 Request Call'];
+                    nextStep = 'other_welcome';
+                }
+
                 setMessages(prev => [...prev, { id: Date.now(), text: msg, sender: 'bot', timestamp: new Date() }]);
                 setIsTyping(false);
-                setActiveButtons([isAr ? '🛒 تصفح المنتجات' : '🛒 Browse Products']);
-                setFlowStep('catalog');
+                setActiveButtons(buttons);
+                setFlowStep(nextStep);
             }, 1400);
             return;
         }
 
+        // 2. Booking Flow: Ask Name -> Ask Phone
+        if (flowStep === 'booking_ask_name') {
+            setCustomerName(text);
+            setNarratorText(isAr ? 'يتم حفظ الاسم وطلب رقم الهاتف 📱' : 'Name saved, requesting phone number 📱');
+            setTimeout(() => {
+                const msg = isAr 
+                    ? 'أخيراً، أرسل رقم الجوال للتواصل وسرعة تأكيد الموعد 👇'
+                    : 'Finally, please share your contact phone number 👇';
+                setMessages(prev => [...prev, { id: Date.now(), text: msg, sender: 'bot', timestamp: new Date() }]);
+                setIsTyping(false);
+                setFlowStep('booking_ask_phone');
+            }, 1200);
+            return;
+        }
 
+        // 3. Booking Flow: Ask Phone -> Issue receipt
+        if (flowStep === 'booking_ask_phone') {
+            setCustomerPhone(text);
+            setNarratorText(isAr ? 'جاري تأكيد الموعد وإرسال الكرت... ⏳' : 'Confirming booking and sending receipt... ⏳');
+            setTimeout(() => {
+                const bookingRef = generateOrderNum();
+                setMessages(prev => [...prev, {
+                    id: Date.now(),
+                    sender: 'bot',
+                    isReceipt: true,
+                    receiptData: {
+                        isBooking: true,
+                        bookingService,
+                        bookingTime: `${bookingDay.replace('📅 ', '')} - ${bookingTime.replace('🕒 ', '')}`,
+                        customerName,
+                        customerPhone: text,
+                        orderNum: bookingRef
+                    },
+                    timestamp: new Date()
+                }]);
+                setIsTyping(false);
+                setFlowStep('ended');
+                setNarratorText(isAr ? 'تم تأكيد موعد الحجز وإصدار الكرت تلقائياً! 🩺' : 'Appointment booking confirmed and card issued! 🩺');
+                setTimeout(addFinalMsg, 1500);
+            }, 1500);
+            return;
+        }
+
+        // 4. Services Flow: Ask Details -> Ask Company Name
+        if (flowStep === 'services_ask_details') {
+            setNarratorText(isAr ? 'يتم حفظ التفاصيل وطلب الاسم ✍️' : 'Details saved, requesting name ✍️');
+            setTimeout(() => {
+                const msg = isAr 
+                    ? 'شكراً لك! يرجى كتابة الاسم الكريم أو اسم الجهة/الشركة 👇'
+                    : 'Thank you! Please write your full name or company name 👇';
+                setMessages(prev => [...prev, { id: Date.now(), text: msg, sender: 'bot', timestamp: new Date() }]);
+                setIsTyping(false);
+                setFlowStep('services_ask_company');
+            }, 1200);
+            return;
+        }
+
+        // 5. Services Flow: Ask Company Name -> Ask Contact
+        if (flowStep === 'services_ask_company') {
+            setCustomerName(text);
+            setNarratorText(isAr ? 'يتم حفظ الاسم وطلب رقم التواصل 📧' : 'Name saved, requesting contact info 📧');
+            setTimeout(() => {
+                const msg = isAr 
+                    ? 'أخيراً، أدخل بريدك الإلكتروني أو رقم الهاتف لنتمكن من التواصل معك ومناقشة تفاصيل المشروع 👇'
+                    : 'Finally, please enter your email or phone number so our team can reach you 👇';
+                setMessages(prev => [...prev, { id: Date.now(), text: msg, sender: 'bot', timestamp: new Date() }]);
+                setIsTyping(false);
+                setFlowStep('services_ask_contact');
+            }, 1200);
+            return;
+        }
+
+        // 6. Services Flow: Ask Contact -> Issue receipt
+        if (flowStep === 'services_ask_contact') {
+            setCustomerPhone(text);
+            setNarratorText(isAr ? 'جاري تسجيل طلبك وإرسال ملخص الطلب... ⏳' : 'Recording request and sending summary... ⏳');
+            setTimeout(() => {
+                const requestRef = generateOrderNum();
+                setMessages(prev => [...prev, {
+                    id: Date.now(),
+                    sender: 'bot',
+                    isReceipt: true,
+                    receiptData: {
+                        isServices: true,
+                        serviceType,
+                        serviceBudget,
+                        customerName,
+                        customerPhone: text,
+                        orderNum: requestRef
+                    },
+                    timestamp: new Date()
+                }]);
+                setIsTyping(false);
+                setFlowStep('ended');
+                setNarratorText(isAr ? 'تم تسجيل طلب الخدمة وإرسال الكرت بنجاح! 💼' : 'Service request recorded and card issued! 💼');
+                setTimeout(addFinalMsg, 1500);
+            }, 1500);
+            return;
+        }
+
+        // 7. Other Flow: Ask Name -> Ask Phone
+        if (flowStep === 'other_ask_name') {
+            setCustomerName(text);
+            setNarratorText(isAr ? 'يتم حفظ الاسم وطلب رقم الجوال 📱' : 'Name saved, requesting phone number 📱');
+            setTimeout(() => {
+                const msg = isAr 
+                    ? 'شكراً لك! أرسل رقم الجوال لنقوم بالاتصال بك 👇'
+                    : 'Thank you! Please share your phone number so we can call you 👇';
+                setMessages(prev => [...prev, { id: Date.now(), text: msg, sender: 'bot', timestamp: new Date() }]);
+                setIsTyping(false);
+                setFlowStep('other_ask_phone');
+            }, 1200);
+            return;
+        }
+
+        // 8. Other Flow: Ask Phone -> Issue receipt
+        if (flowStep === 'other_ask_phone') {
+            setCustomerPhone(text);
+            setNarratorText(isAr ? 'جاري تسجيل طلب الاتصال... ⏳' : 'Recording callback request... ⏳');
+            setTimeout(() => {
+                const callRef = generateOrderNum();
+                setMessages(prev => [...prev, {
+                    id: Date.now(),
+                    sender: 'bot',
+                    isReceipt: true,
+                    receiptData: {
+                        isOther: true,
+                        customerName,
+                        customerPhone: text,
+                        orderNum: callRef
+                    },
+                    timestamp: new Date()
+                }]);
+                setIsTyping(false);
+                setFlowStep('ended');
+                setNarratorText(isAr ? 'تم تسجيل طلب الاتصال وسيتصل بك أحد ممثلينا قريباً! 📞' : 'Callback request recorded. A representative will contact you soon! 📞');
+                setTimeout(addFinalMsg, 1500);
+            }, 1500);
+            return;
+        }
 
         // Fallback chatbot text reply
         setTimeout(() => {
+            let fallbackMsg = isAr ? 'أهلاً بك! انقر على "تصفح المنتجات" للبدء بالطلب 🛍️' : 'Welcome! Click "Browse Products" to start ordering 🛍️';
+            let buttons = [isAr ? '🛒 تصفح المنتجات' : '🛒 Browse Products'];
+
+            if (niche === 'restaurant') {
+                fallbackMsg = isAr ? 'أهلاً بك! انقر على "تصفح المنيو" للبدء بالطلب 🍔' : 'Welcome! Click "Browse Menu" to start ordering 🍔';
+                buttons = [isAr ? '🍔 تصفح المنيو' : '🍔 Browse Menu'];
+            } else if (niche === 'clinic' || niche === 'salon' || niche === 'consultant') {
+                fallbackMsg = isAr ? 'أهلاً بك! يرجى الضغط على زر "حجز موعد" لتحديد موعدك المناسب 📅' : 'Welcome! Please click "Book Appointment" to choose a suitable time 📅';
+                buttons = [isAr ? '📅 حجز موعد' : '📅 Book Appointment'];
+            } else if (niche === 'services') {
+                fallbackMsg = isAr ? 'أهلاً بك! يرجى الضغط على زر "طلب خدمة" لبدء إرسال طلبك 💼' : 'Welcome! Please click "Request Service" to submit your request 💼';
+                buttons = [isAr ? '💼 طلب خدمة' : '💼 Request Service'];
+            } else if (niche === 'other') {
+                fallbackMsg = isAr ? 'أهلاً بك! يرجى اختيار أحد الأزرار للتواصل معنا 👇' : 'Welcome! Please choose one of the options below to contact us 👇';
+                buttons = isAr ? ['💬 استفسار عام', '📞 طلب اتصال'] : ['💬 General Inquiry', '📞 Request Call'];
+            }
+
             setMessages(prev => [...prev, {
                 id: Date.now(),
-                text: isAr ? 'أهلاً بك! انقر على "تصفح المنتجات" للبدء بالطلب 🛍️' : 'Welcome! Click "Browse Products" to start ordering 🛍️',
+                text: fallbackMsg,
                 sender: 'bot', timestamp: new Date()
             }]);
             setIsTyping(false);
             if (activeButtons.length === 0) {
-                setActiveButtons([isAr ? '🛒 تصفح المنتجات' : '🛒 Browse Products']);
+                setActiveButtons(buttons);
             }
         }, 1000);
     };
@@ -736,11 +1323,20 @@ const ChatSimulatorInner = ({ config, onBack, onBookMeeting }) => {
         setActiveButtons([]);
         setIsTyping(false);
         setIsDemoEnded(false);
+        if (onResetDemo) onResetDemo();
         setFlowStep('welcome');
         setCustomerName('');
         setOrderTotal(0);
         setOrderSummary('');
         setDeliveryMethod('');
+        
+        setBookingService('');
+        setBookingDay('');
+        setBookingTime('');
+        setCustomerPhone('');
+        setServiceType('');
+        setServiceBudget('');
+
         setNarratorText(isAr ? 'يبدأ العميل من جديد 👋' : 'Customer starting over 👋');
         initialized.current = false;
 
@@ -750,16 +1346,72 @@ const ChatSimulatorInner = ({ config, onBack, onBookMeeting }) => {
                 addUserMsg(isAr ? 'هلا 👋' : 'Hello 👋');
                 setIsTyping(true);
                 setTimeout(() => {
-                    setMessages(prev => [...prev, {
-                        id: Date.now(),
-                        text: isAr ? `أهلاً بك مجدداً في متجر ${projectName || 'الذكي'}! 🛍️ كيف يمكنني مساعدتك؟` : `Welcome back to ${projectName || 'Smart'} Store! 🛍️ How can I help you?`,
-                        sender: 'bot', timestamp: new Date()
-                    }]);
+                    let greetMsg = '';
+                    let buttons = [];
+                    let nextStep = 'catalog';
+
+                    if (niche === 'restaurant') {
+                        greetMsg = isAr
+                            ? `أهلاً بك مجدداً في مطعم ${projectName || 'الذكي'}! 🍔 كيف نقدر نخدمك اليوم؟`
+                            : `Welcome back to ${projectName || 'Smart'} Restaurant! 🍔 How can we serve you today?`;
+                        buttons = isAr
+                            ? ['🍔 تصفح المنيو', '🔥 عروض اليوم', '💬 خدمة العملاء']
+                            : ['🍔 Browse Menu', '🔥 Today\'s Offers', '💬 Customer Support'];
+                        nextStep = 'catalog';
+                    } else if (niche === 'ecommerce') {
+                        greetMsg = isAr
+                            ? `أهلاً بك مجدداً في متجر ${projectName || 'الذكي'}! 🛍️ كيف نقدر نخدمك اليوم؟`
+                            : `Welcome back to ${projectName || 'Smart'} Store! 🛍️ How can we help you today?`;
+                        buttons = isAr
+                            ? ['🛒 تصفح المنتجات', '🔥 العروض', '💬 خدمة العملاء']
+                            : ['🛒 Browse Products', '🔥 Offers', '💬 Customer Service'];
+                        nextStep = 'catalog';
+                    } else if (niche === 'clinic') {
+                        greetMsg = isAr
+                            ? `أهلاً بك مجدداً في عيادة ${projectName || 'الطبية'}! 🩺 كيف نقدر نخدمك اليوم؟`
+                            : `Welcome back to ${projectName || 'Smart'} Clinic! 🩺 How can we help you today?`;
+                        buttons = isAr
+                            ? ['📅 حجز موعد', '🩺 الخدمات الطبية', '💬 استفسار']
+                            : ['📅 Book Appointment', '🩺 Medical Services', '💬 Inquiry'];
+                        nextStep = 'clinic_welcome';
+                    } else if (niche === 'salon') {
+                        greetMsg = isAr
+                            ? `أهلاً بك مجدداً في صالون ${projectName || 'للتجميل'}! 💅 كيف نقدر نخدمك اليوم؟`
+                            : `Welcome back to ${projectName || 'Smart'} Salon! 💅 How can we serve you today?`;
+                        buttons = isAr
+                            ? ['📅 حجز موعد', '💅 خدمات الصالون', '💬 استفسار']
+                            : ['📅 Book Appointment', '💅 Salon Services', '💬 Inquiry'];
+                        nextStep = 'salon_welcome';
+                    } else if (niche === 'consultant') {
+                        greetMsg = isAr
+                            ? `أهلاً بك مجدداً مع المستشار ${projectName || 'الذكي'}! 💡 كيف نقدر نخدمك اليوم؟`
+                            : `Welcome back to ${projectName || 'Smart'} Consulting! 💡 How can we assist you today?`;
+                        buttons = isAr
+                            ? ['📅 حجز موعد', '💡 الخدمات الاستشارية', '💬 استفسار']
+                            : ['📅 Book Appointment', '💡 Advisory Services', '💬 Inquiry'];
+                        nextStep = 'consultant_welcome';
+                    } else if (niche === 'services') {
+                        greetMsg = isAr
+                            ? `أهلاً بك مجدداً في شركة ${projectName || 'الذكية'}! 💼 كيف نقدر نخدمك اليوم؟`
+                            : `Welcome back to ${projectName || 'Smart'} Services! 💼 How can we serve you today?`;
+                        buttons = isAr
+                            ? ['💼 طلب خدمة', '✨ خدماتنا', '💬 تواصل معنا']
+                            : ['💼 Request Service', '✨ Our Services', '💬 Contact Support'];
+                        nextStep = 'services_welcome';
+                    } else {
+                        greetMsg = isAr
+                            ? `أهلاً بك مجدداً في ${projectName || 'مشروعنا'}! 👋 كيف نقدر نخدمك اليوم؟`
+                            : `Welcome back to ${projectName || 'our project'}! 👋 How can we assist you today?`;
+                        buttons = isAr
+                            ? ['💬 استفسار عام', '📞 طلب اتصال', '📍 الفرع والموقع']
+                            : ['💬 General Inquiry', '📞 Request Call', '📍 Branch Location'];
+                        nextStep = 'other_welcome';
+                    }
+
+                    setMessages(prev => [...prev, { id: Date.now(), text: greetMsg, sender: 'bot', timestamp: new Date() }]);
                     setIsTyping(false);
-                    setActiveButtons(isAr
-                        ? ['🛒 تصفح المنتجات', '🔥 العروض', '💬 خدمة العملاء']
-                        : ['🛒 Browse Products', '🔥 Offers', '💬 Customer Service']);
-                    setFlowStep('catalog');
+                    setActiveButtons(buttons);
+                    setFlowStep(nextStep);
                 }, 1500);
             }
         }, 300);
@@ -775,20 +1427,84 @@ const ChatSimulatorInner = ({ config, onBack, onBookMeeting }) => {
         setOrderTotal(0);
         setOrderSummary('');
         setDeliveryMethod('');
+
+        setBookingService('');
+        setBookingDay('');
+        setBookingTime('');
+        setCustomerPhone('');
+        setServiceType('');
+        setServiceBudget('');
+
         setNarratorText(isAr ? 'العودة للقائمة الرئيسية 🏠' : 'Returning to main menu 🏠');
 
         setTimeout(() => {
-            const greetMsg = isAr
-                ? `أهلاً بك في متجر ${projectName || 'الذكي'}! 👋 كيف نقدر نخدمك اليوم؟`
-                : `Welcome to ${projectName || 'Smart'} Store! 👋 How can we help you today?`;
+            let greetMsg = '';
+            let buttons = [];
+            let nextStep = 'catalog';
+
+            if (niche === 'restaurant') {
+                greetMsg = isAr
+                    ? `أهلاً بك في مطعم ${projectName || 'الذكي'}! 🍔 كيف نقدر نخدمك اليوم؟`
+                    : `Welcome to ${projectName || 'Smart'} Restaurant! 🍔 How can we serve you today?`;
+                buttons = isAr
+                    ? ['🍔 تصفح المنيو', '🔥 عروض اليوم', '💬 خدمة العملاء']
+                    : ['🍔 Browse Menu', '🔥 Today\'s Offers', '💬 Customer Support'];
+                nextStep = 'catalog';
+            } else if (niche === 'ecommerce') {
+                greetMsg = isAr
+                    ? `أهلاً بك في متجر ${projectName || 'الذكي'}! 🛍️ كيف نقدر نخدمك اليوم?`
+                    : `Welcome to ${projectName || 'Smart'} Store! 🛍️ How can we help you today?`;
+                buttons = isAr
+                    ? ['🛒 تصفح المنتجات', '🔥 العروض', '💬 خدمة العملاء']
+                    : ['🛒 Browse Products', '🔥 Offers', '💬 Customer Service'];
+                nextStep = 'catalog';
+            } else if (niche === 'clinic') {
+                greetMsg = isAr
+                    ? `أهلاً بك في عيادة ${projectName || 'الطبية'}! 🩺 كيف نقدر نخدمك اليوم؟`
+                    : `Welcome to ${projectName || 'Smart'} Clinic! 🩺 How can we help you today?`;
+                buttons = isAr
+                    ? ['📅 حجز موعد', '🩺 الخدمات الطبية', '💬 استفسار']
+                    : ['📅 Book Appointment', '🩺 Medical Services', '💬 Inquiry'];
+                nextStep = 'clinic_welcome';
+            } else if (niche === 'salon') {
+                greetMsg = isAr
+                    ? `أهلاً بك في صالون ${projectName || 'للتجميل'}! 💅 كيف نقدر نخدمك اليوم؟`
+                    : `Welcome to ${projectName || 'Smart'} Salon! 💅 How can we serve you today?`;
+                buttons = isAr
+                    ? ['📅 حجز موعد', '💅 خدمات الصالون', '💬 استفسار']
+                    : ['📅 Book Appointment', '💅 Salon Services', '💬 Inquiry'];
+                nextStep = 'salon_welcome';
+            } else if (niche === 'consultant') {
+                greetMsg = isAr
+                    ? `أهلاً بك مع المستشار ${projectName || 'الذكي'}! 💡 كيف نقدر نخدمك اليوم؟`
+                    : `Welcome to ${projectName || 'Smart'} Consulting! 💡 How can we assist you today?`;
+                buttons = isAr
+                    ? ['📅 حجز موعد', '💡 الخدمات الاستشارية', '💬 استفسار']
+                    : ['📅 Book Appointment', '💡 Advisory Services', '💬 Inquiry'];
+                nextStep = 'consultant_welcome';
+            } else if (niche === 'services') {
+                greetMsg = isAr
+                    ? `أهلاً بك في شركة ${projectName || 'الذكية'}! 💼 كيف نقدر نخدمك اليوم؟`
+                    : `Welcome to ${projectName || 'Smart'} Services! 💼 How can we serve you today?`;
+                buttons = isAr
+                    ? ['💼 طلب خدمة', '✨ خدماتنا', '💬 تواصل معنا']
+                    : ['💼 Request Service', '✨ Our Services', '💬 Contact Support'];
+                nextStep = 'services_welcome';
+            } else {
+                greetMsg = isAr
+                    ? `أهلاً بك في ${projectName || 'مشروعنا'}! 👋 كيف نقدر نخدمك اليوم؟`
+                    : `Welcome to ${projectName || 'our project'}! 👋 How can we assist you today?`;
+                buttons = isAr
+                    ? ['💬 استفسار عام', '📞 طلب اتصال', '📍 الفرع والموقع']
+                    : ['💬 General Inquiry', '📞 Request Call', '📍 Branch Location'];
+                nextStep = 'other_welcome';
+            }
+
             setMessages([
                 { id: Date.now(), text: greetMsg, sender: 'bot', timestamp: new Date() }
             ]);
-            setActiveButtons(isAr
-                ? ['🛒 تصفح المنتجات', '🔥 العروض', '💬 خدمة العملاء']
-                : ['🛒 Browse Products', '🔥 Offers', '💬 Customer Service']
-            );
-            setFlowStep('catalog');
+            setActiveButtons(buttons);
+            setFlowStep(nextStep);
         }, 300);
     };
 

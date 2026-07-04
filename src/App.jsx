@@ -279,13 +279,23 @@ function Phone3D({ children, isAr }) {
 }
 
 /* ═══════════════════ PHONE PREVIEW (ONBOARDING) ═════════════════════════════ */
-function PhonePreview({ isAr = true, projectName, setProjectName, handleStart }) {
+function PhonePreview({ isAr = true, projectName, setProjectName, niche, setNiche, handleStart }) {
+    const niches = [
+        { id: 'restaurant', icon: '🍔', nameAr: 'مطعم أو كافيه', nameEn: 'Restaurant / Cafe' },
+        { id: 'ecommerce', icon: '🛍️', nameAr: 'بيع منتجات', nameEn: 'Selling Products' },
+        { id: 'clinic', icon: '🩺', nameAr: 'عيادة طبية', nameEn: 'Medical Clinic' },
+        { id: 'salon', icon: '💅', nameAr: 'صالون تجميل', nameEn: 'Beauty Salon' },
+        { id: 'consultant', icon: '💡', nameAr: 'مستشار / مدرب', nameEn: 'Consultant / Coach' },
+        { id: 'services', icon: '💼', nameAr: 'بيع خدمات', nameEn: 'Selling Services' },
+        { id: 'other', icon: '✨', nameAr: 'أخرى', nameEn: 'Other' },
+    ];
+
     return (
         <div style={{
             position: 'relative',
             height: '100%', display: 'flex', flexDirection: 'column',
             alignItems: 'center', justifyContent: 'flex-start',
-            padding: '24px 20px 20px', gap: '0',
+            padding: '16px 16px 14px', gap: '0',
             overflow: 'hidden',
             background: '#0a0d0b'
         }}>
@@ -387,58 +397,107 @@ function PhonePreview({ isAr = true, projectName, setProjectName, handleStart })
             }} />
 
             {/* Content Container */}
-            <div style={{ position: 'relative', zIndex: 3, width: '100%', height: '100%', display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
-                <img src="/Logo.png" style={{
-                    width: '54px', marginBottom: '16px',
-                    filter: 'drop-shadow(0 0 16px rgba(37,211,102,0.4))'
-                }} alt="Logo" />
+            <div style={{ position: 'relative', zIndex: 3, width: '100%', height: '100%', display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'space-between' }}>
+                <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', width: '100%' }}>
+                    <img src="/Logo.png" style={{
+                        width: '38px', marginBottom: '8px',
+                        filter: 'drop-shadow(0 0 12px rgba(37,211,102,0.4))'
+                    }} alt="Logo" />
 
-                <div style={{ textAlign: 'center', marginBottom: '20px', width: '100%' }}>
-                    <h2 style={{ color: '#fff', fontSize: '18px', fontWeight: '900', fontFamily: 'Cairo', lineHeight: 1.35, marginBottom: '6px' }}>
-                        {isAr ? 'جرّب نظام البيع الذكي' : 'Try the Smart Sales System'}
-                    </h2>
-                    <p style={{ color: '#a0b0a8', fontSize: '12px', lineHeight: 1.5, fontFamily: 'Cairo' }}>
-                        {isAr ? 'شاهد كيف يتولى النظام الرد على عملائك، عرض الكتالوج، وإرسال الفاتورة تلقائياً! 🤖' : 'Watch how the system auto-replies, shows the catalog, and sends the invoice automatically! 🤖'}
-                    </p>
+                    <div style={{ textAlign: 'center', marginBottom: '10px', width: '100%' }}>
+                        <h2 style={{ color: '#fff', fontSize: '15px', fontWeight: '900', fontFamily: 'Cairo', lineHeight: 1.35, marginBottom: '2px' }}>
+                            {isAr ? 'جرّب نظام البيع الذكي' : 'Try the Smart Sales System'}
+                        </h2>
+                        <p style={{ color: '#a0b0a8', fontSize: '10.5px', lineHeight: 1.4, fontFamily: 'Cairo' }}>
+                            {isAr ? 'اكتشف كيف يشتري عميلك منتجاتك عبر واتساب' : 'Discover how your customers buy your products via WhatsApp'}
+                        </p>
+                    </div>
                 </div>
 
-                <div style={{ width: '100%', marginBottom: '16px' }}>
-                    <label style={{
-                        color: '#c8d8c8', fontSize: '12px', fontWeight: '700',
-                        display: 'block', marginBottom: '8px',
-                        textAlign: isAr ? 'right' : 'left', fontFamily: 'Cairo'
-                    }}>
-                        {isAr ? 'اسم متجرك أو مشروعك' : 'Your store or project name'}
-                    </label>
-                    <input
-                        type="text"
-                        value={projectName}
-                        onChange={(e) => setProjectName(e.target.value)}
-                        placeholder={isAr ? 'مثال: متجر الأناقة، مطعم نوار...' : 'e.g. Noor Store, Burger Hub...'}
-                        className="phone-input-field"
-                        style={{
-                            width: '100%', background: 'rgba(17, 26, 21, 0.6)',
-                            border: '1.5px solid #233e2e',
-                            borderRadius: '14px', padding: '14px 16px',
-                            color: '#e9edef', fontSize: '14px',
-                            fontFamily: 'Cairo', outline: 'none',
-                            textAlign: isAr ? 'right' : 'left',
-                            boxSizing: 'border-box',
-                            transition: 'all 0.3s'
-                        }}
-                    />
+                <div style={{ width: '100%', display: 'flex', flexDirection: 'column', gap: '8px', overflowY: 'auto', maxHeight: '270px', padding: '2px' }} className="scrollbar-thin">
+                    <div style={{ width: '100%' }}>
+                        <label style={{
+                            color: '#c8d8c8', fontSize: '11px', fontWeight: '700',
+                            display: 'block', marginBottom: '4px',
+                            textAlign: isAr ? 'right' : 'left', fontFamily: 'Cairo'
+                        }}>
+                            {isAr ? 'اسم متجرك أو مشروعك' : 'Your store or project name'}
+                        </label>
+                        <input
+                            type="text"
+                            value={projectName}
+                            onChange={(e) => setProjectName(e.target.value)}
+                            placeholder={isAr ? 'مثال: متجر الأناقة، مطعم نوار...' : 'e.g. Noor Store, Burger Hub...'}
+                            className="phone-input-field"
+                            style={{
+                                width: '100%', background: 'rgba(17, 26, 21, 0.6)',
+                                border: '1.5px solid #233e2e',
+                                borderRadius: '12px', padding: '10px 12px',
+                                color: '#e9edef', fontSize: '12.5px',
+                                fontFamily: 'Cairo', outline: 'none',
+                                textAlign: isAr ? 'right' : 'left',
+                                boxSizing: 'border-box',
+                                transition: 'all 0.3s'
+                            }}
+                        />
+                    </div>
+
+                    <div style={{ width: '100%' }}>
+                        <label style={{
+                            color: '#c8d8c8', fontSize: '11px', fontWeight: '700',
+                            display: 'block', marginBottom: '6px',
+                            textAlign: isAr ? 'right' : 'left', fontFamily: 'Cairo'
+                        }}>
+                            {isAr ? 'نوع المشروع أو النشاط' : 'Business Niche / Type'}
+                        </label>
+                        <div style={{
+                            display: 'grid',
+                            gridTemplateColumns: 'repeat(2, minmax(0, 1fr))',
+                            gap: '5px'
+                        }}>
+                            {niches.map(n => (
+                                <button
+                                    key={n.id}
+                                    type="button"
+                                    onClick={() => setNiche(n.id)}
+                                    style={{
+                                        gridColumn: n.id === 'other' ? 'span 2' : 'auto',
+                                        display: 'flex',
+                                        alignItems: 'center',
+                                        justifyContent: 'center',
+                                        gap: '5px',
+                                        padding: '7px 8px',
+                                        background: niche === n.id ? 'rgba(37, 211, 102, 0.15)' : 'rgba(255, 255, 255, 0.03)',
+                                        border: niche === n.id ? '1.5px solid #25d366' : '1px solid rgba(255, 255, 255, 0.08)',
+                                        borderRadius: '10px',
+                                        color: niche === n.id ? '#25d366' : 'rgba(255, 255, 255, 0.8)',
+                                        fontSize: '10.5px',
+                                        fontWeight: 'bold',
+                                        fontFamily: 'Cairo',
+                                        cursor: 'pointer',
+                                        transition: 'all 0.2s'
+                                    }}
+                                >
+                                    <span style={{ fontSize: '12px' }}>{n.icon}</span>
+                                    <span>{isAr ? n.nameAr : n.nameEn}</span>
+                                </button>
+                            ))}
+                        </div>
+                    </div>
                 </div>
 
                 <button
                     onClick={handleStart}
+                    disabled={!projectName.trim()}
                     style={{
-                        width: '100%', padding: '14px',
-                        background: 'linear-gradient(135deg, #fef9c3 0%, #fef08a 100%)',
-                        borderRadius: '14px', border: 'none',
-                        color: '#0e1712', fontSize: '14.5px', fontWeight: '800',
+                        width: '100%', padding: '12px',
+                        background: 'linear-gradient(135deg, #25d366 0%, #128c7e 100%)',
+                        borderRadius: '12px', border: 'none',
+                        color: '#fff', fontSize: '13px', fontWeight: '800',
                         fontFamily: 'Cairo', cursor: 'pointer',
                         transition: 'all 0.3s ease',
-                        boxShadow: '0 4px 15px rgba(254, 240, 138, 0.15)'
+                        boxShadow: '0 4px 15px rgba(37, 211, 102, 0.15)',
+                        opacity: projectName.trim() ? 1 : 0.5
                     }}
                 >
                     {isAr ? '🚀 ابدأ التجربة ←' : '🚀 Start Demo →'}
@@ -449,12 +508,19 @@ function PhonePreview({ isAr = true, projectName, setProjectName, handleStart })
 }
 
 /* ═══════════════════ CONTACT WIDGET ═══════════════════════════════════════════════ */
-function ContactWidget({ lang, view }) {
+function ContactWidget({ lang, view, isDemoEnded }) {
     const [isOpen, setIsOpen] = useState(false);
     const [isVisible, setIsVisible] = useState(false);
     const isAr = lang === 'ar';
 
     useEffect(() => {
+        // If inside the simulator and demo ended (final CTA screen), show the widget!
+        if (view === 'simulator' && isDemoEnded) {
+            setIsVisible(true);
+            return;
+        }
+
+        // If in another state inside simulator (like catalog), hide it!
         if (view !== 'landing') {
             setIsVisible(false);
             return;
@@ -473,11 +539,11 @@ function ContactWidget({ lang, view }) {
         return () => {
             window.removeEventListener('scroll', handleScroll);
         };
-    }, [view]);
+    }, [view, isDemoEnded]);
 
     const handleToggle = () => setIsOpen(!isOpen);
 
-    const contactNumber = '+96802321683';
+    const contactNumber = '+96892321683';
     const emailAddress = 'info@elegant-options.com';
 
     if (!isVisible) return null;
@@ -513,7 +579,7 @@ function ContactWidget({ lang, view }) {
 
                         {/* WhatsApp Option */}
                         <a
-                            href={`https://wa.me/96802321683`}
+                            href={`https://wa.me/96892321683?text=${encodeURIComponent(isAr ? 'اطلعت على عرض التجريبي' : 'I have reviewed the demo')}`}
                             target="_blank"
                             rel="noopener noreferrer"
                             className="flex items-center justify-between hover:bg-white/5 p-1.5 rounded-xl transition-all duration-200"
@@ -584,7 +650,7 @@ function ContactWidget({ lang, view }) {
                             transition={{ duration: 0.15 }}
                         >
                             <Phone size={14} className="text-[#25d366]" />
-                            <span className="font-extrabold text-[12.5px] tracking-wide" style={{ fontFamily: 'Cairo' }}>{isAr ? 'التواصل المباشر والاستفسار' : 'Direct Contact & Inquiry'}</span>
+                            <span className="font-extrabold text-[12.5px] tracking-wide text-[#fef08a]" style={{ fontFamily: 'Cairo' }}>{isAr ? 'للاستفسار والتواصل المباشر' : 'For inquiries & direct contact'}</span>
                         </motion.div>
                     )}
                 </AnimatePresence>
@@ -598,6 +664,13 @@ function ContactWidget({ lang, view }) {
 function BookingModal({ isOpen, onClose, lang }) {
     const isAr = lang === 'ar';
     const [isBooked, setIsBooked] = useState(false);
+
+    // GoHighLevel Calendar IDs
+    // If you duplicate the calendar inside GoHighLevel for Arabic, paste the Arabic calendar ID below:
+    const GHL_CALENDAR_EN = 'xA4kEVDOLF2omAB2JPM4';
+    const GHL_CALENDAR_AR = 'xA4kEVDOLF2omAB2JPM4'; // Replace with Arabic calendar ID if created
+    
+    const activeCalendarId = isAr ? GHL_CALENDAR_AR : GHL_CALENDAR_EN;
 
     useEffect(() => {
         if (isOpen) {
@@ -716,10 +789,10 @@ function BookingModal({ isOpen, onClose, lang }) {
                         {/* Iframe Body */}
                         <div className="flex-1 p-1 bg-[#0A0A0A] overflow-y-auto" style={{ height: '70vh', minHeight: '480px', maxHeight: '650px' }}>
                             <iframe
-                                src={`https://brand.elegant-options.com/widget/booking/xA4kEVDOLF2omAB2JPM4?lang=${isAr ? 'ar' : 'en'}`}
+                                src={`https://brand.elegant-options.com/widget/booking/${activeCalendarId}?lang=${isAr ? 'ar' : 'en'}`}
                                 style={{ width: '100%', height: '100%', minHeight: '620px', border: 'none' }}
                                 scrolling="yes"
-                                id="xA4kEVDOLF2omAB2JPM4_1782505878870"
+                                id={`${activeCalendarId}_1782505878870`}
                             />
                         </div>
                     </>
@@ -734,9 +807,11 @@ function App() {
     const [view, setView] = useState('landing');
     const [lang, setLang] = useState('ar');
     const [projectName, setProjectName] = useState('');
+    const [niche, setNiche] = useState('restaurant');
     const [loadingStep, setLoadingStep] = useState(0);
     const [phoneKey, setPhoneKey] = useState(0);
     const [isBookingOpen, setIsBookingOpen] = useState(false);
+    const [isDemoEnded, setIsDemoEnded] = useState(false);
     const isAr = lang === 'ar';
 
     const startSimulator = () => {
@@ -856,6 +931,8 @@ function App() {
                                     isAr={isAr}
                                     projectName={projectName}
                                     setProjectName={setProjectName}
+                                    niche={niche}
+                                    setNiche={setNiche}
                                     handleStart={startSimulator}
                                 />
                             </Phone3D>
@@ -998,12 +1075,15 @@ function App() {
                             <div className="absolute inset-0 overflow-hidden rounded-[46px]">
                                 <ChatSimulator
                                     key={phoneKey}
-                                    config={{ projectName, niche: 'restaurant', platform: 'whatsapp', lang }}
+                                    config={{ projectName, niche, platform: 'whatsapp', lang }}
                                     onBack={() => {
                                         setView('landing');
                                         setPhoneKey(prev => prev + 1);
+                                        setIsDemoEnded(false);
                                     }}
                                     onBookMeeting={() => setIsBookingOpen(true)}
+                                    onDemoEnded={() => setIsDemoEnded(true)}
+                                    onResetDemo={() => setIsDemoEnded(false)}
                                 />
                             </div>
 
@@ -1013,7 +1093,7 @@ function App() {
                     </motion.div>
                 )}
             </AnimatePresence>
-            <ContactWidget lang={lang} view={view} />
+            <ContactWidget lang={lang} view={view} isDemoEnded={isDemoEnded} />
             <BookingModal isOpen={isBookingOpen} onClose={() => setIsBookingOpen(false)} lang={lang} />
         </div>
     );
