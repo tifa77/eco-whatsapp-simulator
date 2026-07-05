@@ -282,13 +282,23 @@ function Phone3D({ children, isAr }) {
 function PhonePreview({ isAr = true, projectName, setProjectName, niche, setNiche, handleStart }) {
     const niches = [
         { id: 'restaurant', icon: '🍔', nameAr: 'مطعم أو كافيه', nameEn: 'Restaurant / Cafe' },
-        { id: 'ecommerce', icon: '🛍️', nameAr: 'بيع منتجات', nameEn: 'Selling Products' },
-        { id: 'clinic', icon: '🩺', nameAr: 'عيادة طبية', nameEn: 'Medical Clinic' },
-        { id: 'salon', icon: '💅', nameAr: 'صالون تجميل', nameEn: 'Beauty Salon' },
-        { id: 'consultant', icon: '💡', nameAr: 'مستشار / مدرب', nameEn: 'Consultant / Coach' },
-        { id: 'services', icon: '💼', nameAr: 'بيع خدمات', nameEn: 'Selling Services' },
-        { id: 'other', icon: '✨', nameAr: 'أخرى', nameEn: 'Other' },
+        { id: 'ecommerce', icon: '🛍️', nameAr: 'متجر منتجات ملابس وعطور', nameEn: 'Store (Clothes/Perfumes)' },
+        { id: 'clinic', icon: '🩺', nameAr: 'عيادة طبية أسنان وجلدية', nameEn: 'Clinic (Dental/Skin)' },
+        { id: 'salon', icon: '💅', nameAr: 'صالون تجميل وسبا', nameEn: 'Beauty Salon & Spa' },
+        { id: 'consultant', icon: '💡', nameAr: 'مستشار أو مدرب شخصي', nameEn: 'Consultant / Coach' },
+        { id: 'services', icon: '💼', nameAr: 'شركة خدمات وصيانة وبرمجة', nameEn: 'Services (Tech/Cleaning)' },
+        { id: 'other', icon: '✨', nameAr: 'نشاط تجاري آخر', nameEn: 'Other Business' },
     ];
+
+    const placeholders = {
+        restaurant: { ar: 'مثال: مطعم نوار، كافيه لافندر...', en: 'e.g. Lavender Cafe, Burger Joint...' },
+        ecommerce: { ar: 'مثال: متجر الأناقة، دكان عطور...', en: 'e.g. Elegance Boutique, Perfume Shop...' },
+        clinic: { ar: 'مثال: عيادة الشفاء، د. أحمد للأسنان...', en: 'e.g. Al-Shifa Clinic, Dr. Ali Dental...' },
+        salon: { ar: 'مثال: صالون الجمال، ليدي كير...', en: 'e.g. Beauty Salon, Lady Care...' },
+        consultant: { ar: 'مثال: كوتش أحمد، المستشار المالي...', en: 'e.g. Financial Consultant, Coach Ahmed...' },
+        services: { ar: 'مثال: شركة تميز للبرمجيات، شركة تنظيف...', en: 'e.g. Tech Solutions, Cleaning Agency...' },
+        other: { ar: 'مثال: مغسلة الجودة، ورشة الأمل...', en: 'e.g. Quality Carwash, Al-Amal Workshop...' },
+    };
 
     return (
         <div style={{
@@ -427,7 +437,7 @@ function PhonePreview({ isAr = true, projectName, setProjectName, niche, setNich
                             type="text"
                             value={projectName}
                             onChange={(e) => setProjectName(e.target.value)}
-                            placeholder={isAr ? 'مثال: متجر الأناقة، مطعم نوار...' : 'e.g. Noor Store, Burger Hub...'}
+                            placeholder={placeholders[niche]?.[isAr ? 'ar' : 'en'] || (isAr ? 'مثال: متجر الأناقة، مطعم نوار...' : 'e.g. Noor Store, Burger Hub...')}
                             className="phone-input-field"
                             style={{
                                 width: '100%', background: 'rgba(17, 26, 21, 0.6)',
@@ -815,7 +825,16 @@ function App() {
     const isAr = lang === 'ar';
 
     const startSimulator = () => {
-        const name = projectName.trim() || (isAr ? 'متجرنا الذكي' : 'Smart Store');
+        let defaultName = '';
+        if (niche === 'restaurant') defaultName = isAr ? 'مطعم برجر هاوس' : 'Burger House Restaurant';
+        else if (niche === 'ecommerce') defaultName = isAr ? 'متجر الأناقة' : 'Elegance Fashion Store';
+        else if (niche === 'clinic') defaultName = isAr ? 'عيادة الشفاء لطب الأسنان' : 'Al-Shifa Dental Clinic';
+        else if (niche === 'salon') defaultName = isAr ? 'صالون الجمال والمكياج' : 'Beauty Salon & Spa';
+        else if (niche === 'consultant') defaultName = isAr ? 'كوتش أحمد للاستشارات' : 'Coach Ahmed Consulting';
+        else if (niche === 'services') defaultName = isAr ? 'شركة تميز للبرمجيات' : 'Tech Solutions Company';
+        else defaultName = isAr ? 'مغسلة الجودة السريعة' : 'Quality Car Wash';
+
+        const name = projectName.trim() || defaultName;
         setProjectName(name);
         setView('loading');
     };

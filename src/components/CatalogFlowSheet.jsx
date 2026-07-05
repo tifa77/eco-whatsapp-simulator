@@ -102,18 +102,19 @@ export default function CatalogFlowSheet({ isOpen, onClose, onSubmit, lang = 'ar
     const [activeCategory, setActiveCategory] = useState('food');
     const [cartAnim, setCartAnim] = useState(''); // for animation trigger
 
-    useEffect(() => {
-        if (isOpen) {
-            // Set active category based on niche
-            if (niche === 'restaurant' || niche === 'food') {
-                setActiveCategory('food');
-            } else if (niche === 'clinic' || niche === 'beauty') {
-                setActiveCategory('beauty');
-            } else {
-                setActiveCategory('electronics');
-            }
+    const activeCategories = useMemo(() => {
+        if (niche === 'restaurant' || niche === 'food') {
+            return CATEGORIES.filter(c => c.id === 'food');
+        } else {
+            return CATEGORIES.filter(c => c.id !== 'food');
         }
-    }, [isOpen, niche]);
+    }, [niche]);
+
+    useEffect(() => {
+        if (isOpen && activeCategories.length > 0) {
+            setActiveCategory(activeCategories[0].id);
+        }
+    }, [isOpen, activeCategories]);
 
     const handleAdd = (id) => {
         setCart(prev => ({ ...prev, [id]: (prev[id] || 0) + 1 }));
@@ -193,18 +194,20 @@ export default function CatalogFlowSheet({ isOpen, onClose, onSubmit, lang = 'ar
                             </div>
 
                             {/* Categories pills — sticky — Meta style underline */}
-                            <div className="flex gap-4 overflow-x-auto px-4 border-b border-gray-100" style={{ scrollbarWidth: 'none' }}>
-                                {CATEGORIES.map(cat => (
-                                    <button key={cat.id} onClick={() => setActiveCategory(cat.id)}
-                                        className={`shrink-0 pb-2 text-[13px] font-bold transition-all border-b-2 flex items-center gap-1.5
-                                            ${activeCategory === cat.id
-                                                ? 'text-[#00a884] border-[#00a884] font-black'
-                                                : 'text-gray-500 border-transparent hover:text-gray-800'}`}>
-                                        <span>{isAr ? cat.nameAr.split(' ')[0] : cat.nameEn.split(' ')[0]}</span>
-                                        <span className="text-[14px]">{isAr ? cat.nameAr.split(' ')[1] : cat.nameEn.split(' ')[1]}</span>
-                                    </button>
-                                ))}
-                            </div>
+                            {activeCategories.length > 1 && (
+                                <div className="flex gap-4 overflow-x-auto px-4 border-b border-gray-100" style={{ scrollbarWidth: 'none' }}>
+                                    {activeCategories.map(cat => (
+                                        <button key={cat.id} onClick={() => setActiveCategory(cat.id)}
+                                            className={`shrink-0 pb-2 text-[13px] font-bold transition-all border-b-2 flex items-center gap-1.5
+                                                ${activeCategory === cat.id
+                                                    ? 'text-[#00a884] border-[#00a884] font-black'
+                                                    : 'text-gray-500 border-transparent hover:text-gray-800'}`}>
+                                            <span>{isAr ? cat.nameAr.split(' ')[0] : cat.nameEn.split(' ')[0]}</span>
+                                            <span className="text-[14px]">{isAr ? cat.nameAr.split(' ')[1] : cat.nameEn.split(' ')[1]}</span>
+                                        </button>
+                                    ))}
+                                </div>
+                            )}
                         </div>
 
                         {/* ─ Products List (Meta-style 2-column grid) ─ */}
