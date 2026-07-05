@@ -407,14 +407,14 @@ function PhonePreview({ isAr = true, projectName, setProjectName, niche, setNich
             }} />
 
             {/* Content Container */}
-            <div style={{ position: 'relative', zIndex: 3, width: '100%', height: '100%', display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'space-between' }}>
-                <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', width: '100%' }}>
+            <div style={{ position: 'relative', zIndex: 3, width: '100%', height: '100%', display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'flex-start', gap: '12px' }}>
+                <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', width: '100%', marginTop: '10px' }}>
                     <img src="/Logo.png" style={{
                         width: '38px', marginBottom: '8px',
-                        filter: 'drop-shadow(0 0 12px rgba(37,211,102,0.4))'
+                        filter: 'drop-shadow(0 0 12px rgba(0, 122, 255, 0.4))'
                     }} alt="Logo" />
 
-                    <div style={{ textAlign: 'center', marginBottom: '10px', width: '100%' }}>
+                    <div style={{ textAlign: 'center', marginBottom: '4px', width: '100%' }}>
                         <h2 style={{ color: '#fff', fontSize: '15px', fontWeight: '900', fontFamily: 'Cairo', lineHeight: 1.35, marginBottom: '2px' }}>
                             {isAr ? 'جرّب نظام البيع الذكي' : 'Try the Smart Sales System'}
                         </h2>
@@ -431,7 +431,7 @@ function PhonePreview({ isAr = true, projectName, setProjectName, niche, setNich
                             display: 'block', marginBottom: '4px',
                             textAlign: isAr ? 'right' : 'left', fontFamily: 'Cairo'
                         }}>
-                            {isAr ? 'اسم متجرك أو مشروعك' : 'Your store or project name'}
+                            {isAr ? 'اكتب اسم المشروع' : 'Write project name'}
                         </label>
                         <input
                             type="text"
@@ -441,7 +441,7 @@ function PhonePreview({ isAr = true, projectName, setProjectName, niche, setNich
                             className="phone-input-field"
                             style={{
                                 width: '100%', background: 'rgba(17, 26, 21, 0.6)',
-                                border: '1.5px solid #233e2e',
+                                border: '1.5px solid #1e3a5f',
                                 borderRadius: '12px', padding: '10px 12px',
                                 color: '#e9edef', fontSize: '12.5px',
                                 fontFamily: 'Cairo', outline: 'none',
@@ -477,10 +477,10 @@ function PhonePreview({ isAr = true, projectName, setProjectName, niche, setNich
                                         justifyContent: 'center',
                                         gap: '5px',
                                         padding: '7px 8px',
-                                        background: niche === n.id ? 'rgba(37, 211, 102, 0.15)' : 'rgba(255, 255, 255, 0.03)',
-                                        border: niche === n.id ? '1.5px solid #25d366' : '1px solid rgba(255, 255, 255, 0.08)',
+                                        background: niche === n.id ? 'rgba(0, 122, 255, 0.15)' : 'rgba(255, 255, 255, 0.03)',
+                                        border: niche === n.id ? '1.5px solid #007aff' : '1px solid rgba(255, 255, 255, 0.08)',
                                         borderRadius: '10px',
-                                        color: niche === n.id ? '#25d366' : 'rgba(255, 255, 255, 0.8)',
+                                        color: niche === n.id ? '#007aff' : 'rgba(255, 255, 255, 0.8)',
                                         fontSize: '10.5px',
                                         fontWeight: 'bold',
                                         fontFamily: 'Cairo',
@@ -501,13 +501,14 @@ function PhonePreview({ isAr = true, projectName, setProjectName, niche, setNich
                     disabled={!projectName.trim()}
                     style={{
                         width: '100%', padding: '12px',
-                        background: 'linear-gradient(135deg, #25d366 0%, #128c7e 100%)',
+                        background: 'linear-gradient(135deg, #007aff 0%, #0051a8 100%)',
                         borderRadius: '12px', border: 'none',
                         color: '#fff', fontSize: '13px', fontWeight: '800',
                         fontFamily: 'Cairo', cursor: 'pointer',
                         transition: 'all 0.3s ease',
-                        boxShadow: '0 4px 15px rgba(37, 211, 102, 0.15)',
-                        opacity: projectName.trim() ? 1 : 0.5
+                        boxShadow: '0 4px 15px rgba(0, 122, 255, 0.15)',
+                        opacity: projectName.trim() ? 1 : 0.5,
+                        marginTop: 'auto'
                     }}
                 >
                     {isAr ? '🚀 ابدأ التجربة ←' : '🚀 Start Demo →'}
