@@ -327,13 +327,13 @@ function CTAScreen({ lang, onRetry, projectName, onBookMeeting }) {
             >
                 <div className="text-center text-3xl mb-3">⏳</div>
                 <h3 className="text-white font-black text-center text-[15px] mb-2">
-                    {isAr ? 'رؤية النظام بشكل عملي على مشروعك! 🚀' : 'See the System in Action on Your Project! 🚀'}
+                    {isAr ? 'شاهد الأتمتة عملياً على مشروعك! 🚀' : 'See Automation Live on Your Project! 🚀'}
                 </h3>
                 <p className="text-slate-400 text-center text-[12px] leading-relaxed mb-4">
                     {isAr ? (
-                        <>احجز اتصالاً سريعاً الآن لنعرض لك كيف يعمل نظام الأتمتة والردود التلقائية بشكل حي ومباشر ومطابق لنشاطك التجاري.</>
+                        <>احجز اتصالاً سريعاً الآن لنعرض لك كيف يعمل نظام الردود التلقائية والبيع الذكي مباشرة على مشروعك.</>
                     ) : (
-                        <>Book a quick call now so we can show you how the automation and auto-reply system works live, customized for your business.</>
+                        <>Book a quick call now so we can show you how the auto-reply and smart sales system works live on your business.</>
                     )}
                 </p>
                 <button
@@ -341,7 +341,7 @@ function CTAScreen({ lang, onRetry, projectName, onBookMeeting }) {
                     className="w-full bg-gradient-to-r from-teal-500 to-emerald-600 text-white font-black py-3.5 rounded-xl text-[13.5px] shadow-[0_0_20px_rgba(13,148,136,0.4)] mb-2 flex items-center justify-center gap-1.5"
                 >
                     <span>📅</span>
-                    <span>{isAr ? 'حجز اتصال ورؤية النظام عملياً' : 'Book a Call & See Live Demo'}</span>
+                    <span>{isAr ? 'احجز مكالمة العرض المباشر' : 'Book Live Demo Call'}</span>
                 </button>
                 <button
                     onClick={onRetry}
@@ -370,26 +370,26 @@ function CTAScreen({ lang, onRetry, projectName, onBookMeeting }) {
             {/* Main heading */}
             <h3 className="text-white font-black text-center text-[15px] leading-snug mb-2" style={{ fontFamily: 'Cairo' }}>
                 {isAr 
-                    ? 'رؤية النظام بشكل عملي على مشروعك! 🚀' 
-                    : 'See the System in Action on Your Project! 🚀'}
+                    ? 'شاهد الأتمتة عملياً على مشروعك! 🚀' 
+                    : 'See Automation Live on Your Project! 🚀'}
             </h3>
 
             {/* Sub-heading */}
             <p className="text-slate-400 text-center text-[11px] leading-relaxed mb-3.5" style={{ fontFamily: 'Cairo' }}>
                 {isAr 
-                    ? 'احجز اتصالاً أو موعداً سريعاً الآن لنعرض لك كيف يعمل نظام الأتمتة والردود التلقائية بشكل حي ومباشر ومطابق تماماً لنشاطك التجاري.' 
-                    : 'Book a quick call or meeting now so we can show you how the automation and auto-reply system works live, customized for your business.'}
+                    ? 'احجز اتصالاً سريعاً الآن لنعرض لك كيف يعمل نظام الردود التلقائية والبيع الذكي مباشرة على مشروعك التجاري.' 
+                    : 'Book a quick call now so we can show you how the auto-reply and smart sales system works live on your business.'}
             </p>
 
             {/* Explanatory sentence for booking meeting config (No mention of online store) */}
             <p className="text-white/90 text-center text-[10.5px] leading-relaxed mb-3.5 p-3 bg-white/5 rounded-xl border border-white/10" style={{ fontFamily: 'Cairo' }}>
                 {isAr 
-                    ? '💡 سنقوم بتهيئة وتخصيص تجربة حية ومباشرة لنظام واتساب التفاعلي لمشروعك خلال الاتصال لتشاهد قوة الأتمتة بنفسك.'
-                    : '💡 We will configure a live interactive demo of the WhatsApp system for your project during the call so you can witness the power of automation yourself.'}
+                    ? '💡 سنقوم بتخصيص تجربة حية ومباشرة لك في مكالمة مدتها 10 دقائق.'
+                    : '💡 We will customize a live interactive demo for you in a 10-minute call.'}
             </p>
 
             <p className="text-teal-400 text-center text-[11.5px] font-bold mb-3.5" style={{ fontFamily: 'Cairo' }}>
-                {isAr ? '⚡️ احجز استشارتك المجانية لمشاهدة النظام عملياً' : '⚡️ Book your free consultation to see the system in action'}
+                {isAr ? '⚡️ الاستشارة والعرض التوضيحي مجاني 100%' : '⚡️ Demo & consultation is 100% free'}
             </p>
 
             {/* Primary CTA (Book Meeting) */}
@@ -407,7 +407,7 @@ function CTAScreen({ lang, onRetry, projectName, onBookMeeting }) {
                     transition={{ repeat: Infinity, duration: 2.5, ease: 'linear', repeatDelay: 1.5 }}
                     className="absolute inset-0 bg-gradient-to-r from-transparent via-white/20 to-transparent skew-x-12"
                 />
-                <span className="relative z-10">📅 {isAr ? 'حجز اتصال ورؤية النظام عملياً' : 'Book a Call & See Live Demo'}</span>
+                <span className="relative z-10">📅 {isAr ? 'احجز مكالمة العرض المباشر' : 'Book Live Demo Call'}</span>
             </button>
 
             {/* Restart Demo Button (replacing No Thanks) */}
@@ -492,48 +492,48 @@ const ChatSimulatorInner = ({ config, onBack, onBookMeeting, onDemoEnded, onRese
 
                 if (niche === 'restaurant') {
                     greetMsg = isAr
-                        ? `أهلاً بك في مطعم ${projectName || 'الذكي'}! 🍔 كيف نقدر نخدمك اليوم؟`
-                        : `Welcome to ${projectName || 'Smart'} Restaurant! 🍔 How can we serve you today?`;
+                        ? `أهلاً بك في ${projectName || 'مطعمنا'}! 🍔 كيف نقدر نخدمك اليوم؟`
+                        : `Welcome to ${projectName || 'our restaurant'}! 🍔 How can we serve you today?`;
                     buttons = isAr
                         ? ['🍔 تصفح المنيو', '🔥 عروض اليوم', '💬 خدمة العملاء']
                         : ['🍔 Browse Menu', '🔥 Today\'s Offers', '💬 Customer Support'];
                     nextStep = 'catalog';
                 } else if (niche === 'ecommerce') {
                     greetMsg = isAr
-                        ? `أهلاً بك في متجر ${projectName || 'الذكي'}! 🛍️ كيف نقدر نخدمك اليوم؟`
-                        : `Welcome to ${projectName || 'Smart'} Store! 🛍️ How can we help you today?`;
+                        ? `أهلاً بك في ${projectName || 'متجرنا'}! 🛍️ كيف نقدر نخدمك اليوم؟`
+                        : `Welcome to ${projectName || 'our store'}! 🛍️ How can we help you today?`;
                     buttons = isAr
                         ? ['🛒 تصفح المنتجات', '🔥 العروض', '💬 خدمة العملاء']
                         : ['🛒 Browse Products', '🔥 Offers', '💬 Customer Service'];
                     nextStep = 'catalog';
                 } else if (niche === 'clinic') {
                     greetMsg = isAr
-                        ? `أهلاً بك في عيادة ${projectName || 'الطبية'}! 🩺 كيف نقدر نخدمك اليوم؟`
-                        : `Welcome to ${projectName || 'Smart'} Clinic! 🩺 How can we help you today?`;
+                        ? `أهلاً بك في ${projectName || 'عيادتنا'}! 🩺 كيف نقدر نخدمك اليوم؟`
+                        : `Welcome to ${projectName || 'our clinic'}! 🩺 How can we help you today?`;
                     buttons = isAr
                         ? ['📅 حجز موعد', '🩺 الخدمات الطبية', '💬 استفسار']
                         : ['📅 Book Appointment', '🩺 Medical Services', '💬 Inquiry'];
                     nextStep = 'clinic_welcome';
                 } else if (niche === 'salon') {
                     greetMsg = isAr
-                        ? `أهلاً بك في صالون ${projectName || 'للتجميل'}! 💅 كيف نقدر نخدمك اليوم؟`
-                        : `Welcome to ${projectName || 'Smart'} Salon! 💅 How can we serve you today?`;
+                        ? `أهلاً بك في ${projectName || 'صالوننا'}! 💅 كيف نقدر نخدمك اليوم؟`
+                        : `Welcome to ${projectName || 'our salon'}! 💅 How can we serve you today?`;
                     buttons = isAr
                         ? ['📅 حجز موعد', '💅 خدمات الصالون', '💬 استفسار']
                         : ['📅 Book Appointment', '💅 Salon Services', '💬 Inquiry'];
                     nextStep = 'salon_welcome';
                 } else if (niche === 'consultant') {
                     greetMsg = isAr
-                        ? `أهلاً بك مع المستشار ${projectName || 'الذكي'}! 💡 كيف نقدر نخدمك اليوم؟`
-                        : `Welcome to ${projectName || 'Smart'} Consulting! 💡 How can we assist you today?`;
+                        ? `أهلاً بك مع ${projectName || 'مستشارنا'}! 💡 كيف نقدر نخدمك اليوم؟`
+                        : `Welcome to ${projectName || 'our coach'}! 💡 How can we assist you today?`;
                     buttons = isAr
                         ? ['📅 حجز موعد', '💡 الخدمات الاستشارية', '💬 استفسار']
                         : ['📅 Book Appointment', '💡 Advisory Services', '💬 Inquiry'];
                     nextStep = 'consultant_welcome';
                 } else if (niche === 'services') {
                     greetMsg = isAr
-                        ? `أهلاً بك في شركة ${projectName || 'الذكية'}! 💼 كيف نقدر نخدمك اليوم؟`
-                        : `Welcome to ${projectName || 'Smart'} Services! 💼 How can we serve you today?`;
+                        ? `أهلاً بك في ${projectName || 'شركتنا'}! 💼 كيف نقدر نخدمك اليوم؟`
+                        : `Welcome to ${projectName || 'our company'}! 💼 How can we serve you today?`;
                     buttons = isAr
                         ? ['💼 طلب خدمة', '✨ خدماتنا', '💬 تواصل معنا']
                         : ['💼 Request Service', '✨ Our Services', '💬 Contact Support'];
@@ -672,20 +672,34 @@ const ChatSimulatorInner = ({ config, onBack, onBookMeeting, onDemoEnded, onRese
             return;
         }
 
-        // ── Time Choice -> Ask Client Name ──
+        // ── Time Choice -> Directly confirm booking and send receipt (no name request) ──
         if (flowStep === 'booking_time') {
             setBookingTime(btn);
             setIsTyping(true);
-            setNarratorText(isAr ? 'يطلب البوت كتابة اسم العميل ✍️' : 'Bot requesting customer name ✍️');
+            setNarratorText(isAr ? 'جاري تأكيد الموعد وإرسال الكرت... ⏳' : 'Confirming booking and sending receipt... ⏳');
             setTimeout(() => {
-                const msg = isAr 
-                    ? 'من فضلك اكتب الاسم الكريم لتأكيد الحجز 👇'
-                    : 'Please write the client\'s full name to confirm the booking 👇';
-                setMessages(prev => [...prev, { id: Date.now(), text: msg, sender: 'bot', timestamp: new Date() }]);
+                const bookingRef = generateOrderNum();
+                const defaultName = isAr ? 'رقم الواتساب الحالي' : 'Current WhatsApp Number';
+                setCustomerName(defaultName);
+                setMessages(prev => [...prev, {
+                    id: Date.now(),
+                    sender: 'bot',
+                    isReceipt: true,
+                    receiptData: {
+                        isBooking: true,
+                        bookingService,
+                        bookingTime: `${bookingDay.replace('📅 ', '')} - ${btn.replace('🕒 ', '')}`,
+                        customerName: defaultName,
+                        customerPhone: isAr ? 'عبر واتساب الحالي' : 'Via current WhatsApp',
+                        orderNum: bookingRef
+                    },
+                    timestamp: new Date()
+                }]);
                 setIsTyping(false);
-                setActiveButtons([]);
-                setFlowStep('booking_ask_name');
-            }, 1000);
+                setFlowStep('ended');
+                setNarratorText(isAr ? 'تم تأكيد موعد الحجز وإصدار الكرت تلقائياً! 🩺' : 'Appointment booking confirmed and card issued! 🩺');
+                setTimeout(addFinalMsg, 1500);
+            }, 1200);
             return;
         }
 
@@ -1396,48 +1410,48 @@ const ChatSimulatorInner = ({ config, onBack, onBookMeeting, onDemoEnded, onRese
 
             if (niche === 'restaurant') {
                 greetMsg = isAr
-                    ? `أهلاً بك في مطعم ${projectName || 'الذكي'}! 🍔 كيف نقدر نخدمك اليوم؟`
-                    : `Welcome to ${projectName || 'Smart'} Restaurant! 🍔 How can we serve you today?`;
+                    ? `أهلاً بك في ${projectName || 'مطعمنا'}! 🍔 كيف نقدر نخدمك اليوم؟`
+                    : `Welcome to ${projectName || 'our restaurant'}! 🍔 How can we serve you today?`;
                 buttons = isAr
                     ? ['🍔 تصفح المنيو', '🔥 عروض اليوم', '💬 خدمة العملاء']
                     : ['🍔 Browse Menu', '🔥 Today\'s Offers', '💬 Customer Support'];
                 nextStep = 'catalog';
             } else if (niche === 'ecommerce') {
                 greetMsg = isAr
-                    ? `أهلاً بك في متجر ${projectName || 'الذكي'}! 🛍️ كيف نقدر نخدمك اليوم?`
-                    : `Welcome to ${projectName || 'Smart'} Store! 🛍️ How can we help you today?`;
+                    ? `أهلاً بك في ${projectName || 'متجرنا'}! 🛍️ كيف نقدر نخدمك اليوم?`
+                    : `Welcome to ${projectName || 'our store'}! 🛍️ How can we help you today?`;
                 buttons = isAr
                     ? ['🛒 تصفح المنتجات', '🔥 العروض', '💬 خدمة العملاء']
                     : ['🛒 Browse Products', '🔥 Offers', '💬 Customer Service'];
                 nextStep = 'catalog';
             } else if (niche === 'clinic') {
                 greetMsg = isAr
-                    ? `أهلاً بك في عيادة ${projectName || 'الطبية'}! 🩺 كيف نقدر نخدمك اليوم؟`
-                    : `Welcome to ${projectName || 'Smart'} Clinic! 🩺 How can we help you today?`;
+                    ? `أهلاً بك في ${projectName || 'عيادتنا'}! 🩺 كيف نقدر نخدمك اليوم؟`
+                    : `Welcome to ${projectName || 'our clinic'}! 🩺 How can we help you today?`;
                 buttons = isAr
                     ? ['📅 حجز موعد', '🩺 الخدمات الطبية', '💬 استفسار']
                     : ['📅 Book Appointment', '🩺 Medical Services', '💬 Inquiry'];
                 nextStep = 'clinic_welcome';
             } else if (niche === 'salon') {
                 greetMsg = isAr
-                    ? `أهلاً بك في صالون ${projectName || 'للتجميل'}! 💅 كيف نقدر نخدمك اليوم؟`
-                    : `Welcome to ${projectName || 'Smart'} Salon! 💅 How can we serve you today?`;
+                    ? `أهلاً بك في ${projectName || 'صالوننا'}! 💅 كيف نقدر نخدمك اليوم؟`
+                    : `Welcome to ${projectName || 'our salon'}! 💅 How can we serve you today?`;
                 buttons = isAr
                     ? ['📅 حجز موعد', '💅 خدمات الصالون', '💬 استفسار']
                     : ['📅 Book Appointment', '💅 Salon Services', '💬 Inquiry'];
                 nextStep = 'salon_welcome';
             } else if (niche === 'consultant') {
                 greetMsg = isAr
-                    ? `أهلاً بك مع المستشار ${projectName || 'الذكي'}! 💡 كيف نقدر نخدمك اليوم؟`
-                    : `Welcome to ${projectName || 'Smart'} Consulting! 💡 How can we assist you today?`;
+                    ? `أهلاً بك مع ${projectName || 'مستشارنا'}! 💡 كيف نقدر نخدمك اليوم؟`
+                    : `Welcome to ${projectName || 'our coach'}! 💡 How can we assist you today?`;
                 buttons = isAr
                     ? ['📅 حجز موعد', '💡 الخدمات الاستشارية', '💬 استفسار']
                     : ['📅 Book Appointment', '💡 Advisory Services', '💬 Inquiry'];
                 nextStep = 'consultant_welcome';
             } else if (niche === 'services') {
                 greetMsg = isAr
-                    ? `أهلاً بك في شركة ${projectName || 'الذكية'}! 💼 كيف نقدر نخدمك اليوم؟`
-                    : `Welcome to ${projectName || 'Smart'} Services! 💼 How can we serve you today?`;
+                    ? `أهلاً بك في ${projectName || 'شركتنا'}! 💼 كيف نقدر نخدمك اليوم؟`
+                    : `Welcome to ${projectName || 'our company'}! 💼 How can we serve you today?`;
                 buttons = isAr
                     ? ['💼 طلب خدمة', '✨ خدماتنا', '💬 تواصل معنا']
                     : ['💼 Request Service', '✨ Our Services', '💬 Contact Support'];
