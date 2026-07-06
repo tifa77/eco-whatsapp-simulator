@@ -715,7 +715,7 @@ function BookingModal({ isOpen, onClose, lang }) {
 
     return (
         <div 
-            className="fixed inset-0 z-[1000] flex items-center justify-center p-2 sm:p-4 bg-black/85 backdrop-blur-sm overflow-y-auto"
+            className="fixed inset-0 z-[1000] flex items-center justify-center p-2 sm:p-4 bg-black/85 backdrop-blur-sm"
             onClick={onClose}
         >
             <motion.div
@@ -723,23 +723,23 @@ function BookingModal({ isOpen, onClose, lang }) {
                 animate={{ opacity: 1, scale: 1, y: 0 }}
                 exit={{ opacity: 0, scale: 0.95, y: 20 }}
                 onClick={e => e.stopPropagation()}
-                className="bg-zinc-950 border border-white/10 rounded-[24px] sm:rounded-[32px] overflow-hidden shadow-2xl w-full max-w-2xl flex flex-col relative my-auto max-h-[92vh] sm:max-h-none"
+                className="bg-[#0A0A0A] border border-white/10 rounded-[20px] sm:rounded-[28px] overflow-hidden shadow-2xl w-full max-w-3xl flex flex-col relative my-auto h-[90vh] max-h-[750px]"
             >
                 {/* Close Button */}
                 <button
                     onClick={onClose}
-                    className="absolute top-4 right-4 text-white/60 hover:text-white bg-white/5 hover:bg-white/10 w-9 h-9 rounded-full flex items-center justify-center transition-all z-10"
+                    className="absolute top-3.5 right-3.5 text-white/60 hover:text-white bg-white/5 hover:bg-white/10 w-9 h-9 rounded-full flex items-center justify-center transition-all z-20"
                 >
                     <X size={18} />
                 </button>
 
                 {isBooked ? (
-                    <div className="p-8 flex flex-col items-center text-center gap-6" style={{ minHeight: '420px', justifyContent: 'center' }}>
+                    <div className="flex-1 p-6 sm:p-8 flex flex-col items-center justify-center text-center gap-6 overflow-y-auto">
                         <motion.div
                             initial={{ scale: 0 }}
                             animate={{ scale: 1 }}
                             transition={{ type: 'spring', stiffness: 200, damping: 15 }}
-                            className="w-20 h-20 rounded-full bg-green-500/10 border border-green-500/30 flex items-center justify-center text-green-400 shadow-[0_0_40px_rgba(34,197,94,0.15)]"
+                            className="w-20 h-20 rounded-full bg-green-500/10 border border-green-500/30 flex items-center justify-center text-green-400 shadow-[0_0_40px_rgba(34,197,94,0.15)] shrink-0"
                         >
                             <CheckCircle2 size={44} className="animate-pulse" />
                         </motion.div>
@@ -761,11 +761,11 @@ function BookingModal({ isOpen, onClose, lang }) {
                             </h4>
                             <ul className="text-slate-400 text-xs space-y-2" style={{ fontFamily: 'Cairo', textAlign: isAr ? 'right' : 'left' }}>
                                 <li className="flex items-start gap-2">
-                                    <span className="text-[#25d366] mt-0.5">•</span>
+                                    <span className="text-[#0d9488] mt-0.5">•</span>
                                     <span>{isAr ? 'سنرسل لك تفاصيل الموعد ورابط الاجتماع عبر بريدك الإلكتروني.' : 'We will send appointment details and meeting link to your email.'}</span>
                                 </li>
                                 <li className="flex items-start gap-2">
-                                    <span className="text-[#25d366] mt-0.5">•</span>
+                                    <span className="text-[#0d9488] mt-0.5">•</span>
                                     <span>{isAr ? 'سيتواصل معك خبير الأتمتة لدينا هاتفياً أو عبر الواتساب لتأكيد احتياجاتك.' : 'Our automation expert will reach out via call or WhatsApp to confirm your needs.'}</span>
                                 </li>
                             </ul>
@@ -773,7 +773,7 @@ function BookingModal({ isOpen, onClose, lang }) {
 
                         <button
                             onClick={onClose}
-                            className="px-8 py-3 rounded-xl font-black text-sm text-black transition-all hover:opacity-90 active:scale-95 shadow-lg"
+                            className="px-8 py-3 rounded-xl font-black text-sm text-black transition-all hover:opacity-90 active:scale-95 shadow-lg shrink-0"
                             style={{
                                 background: 'linear-gradient(135deg, #fef9c3 0%, #fef08a 100%)',
                                 fontFamily: 'Cairo'
@@ -785,19 +785,20 @@ function BookingModal({ isOpen, onClose, lang }) {
                 ) : (
                     <>
                         {/* Header */}
-                        <div className="px-6 pt-6 pb-3 border-b border-white/5 text-right">
-                            <h3 className="text-white font-black text-[16px] pr-2" style={{ fontFamily: 'Cairo' }}>
+                        <div className="px-6 pt-5 pb-3.5 border-b border-white/5 text-right shrink-0">
+                            <h3 className="text-white font-black text-[15px] pr-6" style={{ fontFamily: 'Cairo' }}>
                                 {isAr ? '📅 حجز موعد اجتماع مجاني' : '📅 Book a Free Meeting'}
                             </h3>
                         </div>
 
                         {/* Iframe Body */}
-                        <div className="flex-1 p-1 bg-[#0A0A0A] overflow-y-auto" style={{ height: '70vh', minHeight: '480px', maxHeight: '650px' }}>
+                        <div className="flex-1 w-full bg-[#0A0A0A] overflow-hidden relative">
                             <iframe
                                 src={`https://brand.elegant-options.com/widget/booking/${activeCalendarId}?lang=${isAr ? 'ar' : 'en'}`}
-                                style={{ width: '100%', height: '100%', minHeight: '620px', border: 'none' }}
+                                style={{ width: '100%', height: '100%', border: 'none' }}
                                 scrolling="yes"
                                 id={`${activeCalendarId}_1782505878870`}
+                                className="w-full h-full"
                             />
                         </div>
                     </>
