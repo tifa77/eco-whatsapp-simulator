@@ -407,11 +407,11 @@ function PhonePreview({ isAr = true, projectName, setProjectName, niche, setNich
             }} />
 
             {/* Content Container */}
-            <div style={{ position: 'relative', zIndex: 3, width: '100%', height: '100%', display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'flex-start', gap: '12px' }}>
+            <div style={{ position: 'relative', zIndex: 3, width: '100%', height: '100%', display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'flex-start', gap: '14px' }}>
                 <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', width: '100%', marginTop: '10px' }}>
                     <img src="/Logo.png" style={{
                         width: '38px', marginBottom: '8px',
-                        filter: 'drop-shadow(0 0 12px rgba(0, 122, 255, 0.4))'
+                        filter: 'drop-shadow(0 0 12px rgba(13, 148, 136, 0.4))'
                     }} alt="Logo" />
 
                     <div style={{ textAlign: 'center', marginBottom: '4px', width: '100%' }}>
@@ -424,7 +424,7 @@ function PhonePreview({ isAr = true, projectName, setProjectName, niche, setNich
                     </div>
                 </div>
 
-                <div style={{ width: '100%', display: 'flex', flexDirection: 'column', gap: '8px', overflowY: 'auto', maxHeight: '270px', padding: '2px' }} className="scrollbar-thin">
+                <div style={{ width: '100%', display: 'flex', flexDirection: 'column', gap: '12px', overflowY: 'auto', maxHeight: '270px', padding: '2px' }} className="scrollbar-thin">
                     <div style={{ width: '100%' }}>
                         <label style={{
                             color: '#c8d8c8', fontSize: '11px', fontWeight: '700',
@@ -441,7 +441,7 @@ function PhonePreview({ isAr = true, projectName, setProjectName, niche, setNich
                             className="phone-input-field"
                             style={{
                                 width: '100%', background: 'rgba(17, 26, 21, 0.6)',
-                                border: '1.5px solid #1e3a5f',
+                                border: '1.5px solid #0d9488',
                                 borderRadius: '12px', padding: '10px 12px',
                                 color: '#e9edef', fontSize: '12.5px',
                                 fontFamily: 'Cairo', outline: 'none',
@@ -460,39 +460,33 @@ function PhonePreview({ isAr = true, projectName, setProjectName, niche, setNich
                         }}>
                             {isAr ? 'نوع المشروع أو النشاط' : 'Business Niche / Type'}
                         </label>
-                        <div style={{
-                            display: 'grid',
-                            gridTemplateColumns: 'repeat(2, minmax(0, 1fr))',
-                            gap: '5px'
-                        }}>
+                        <select
+                            value={niche}
+                            onChange={(e) => setNiche(e.target.value)}
+                            style={{
+                                width: '100%', background: 'rgba(17, 26, 21, 0.6)',
+                                border: '1.5px solid #0d9488',
+                                borderRadius: '12px', padding: '10px 12px',
+                                color: '#e9edef', fontSize: '12.5px',
+                                fontFamily: 'Cairo', outline: 'none',
+                                boxSizing: 'border-box',
+                                cursor: 'pointer',
+                                transition: 'all 0.3s',
+                                appearance: 'none',
+                                backgroundImage: `url("data:image/svg+xml;charset=UTF-8,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%230d9488' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3e%3cpolyline points='6 9 12 15 18 9'/%3e%3c/svg%3e")`,
+                                backgroundRepeat: 'no-repeat',
+                                backgroundPosition: isAr ? 'left 12px center' : 'right 12px center',
+                                backgroundSize: '16px',
+                                paddingLeft: isAr ? '36px' : '12px',
+                                paddingRight: isAr ? '12px' : '36px'
+                            }}
+                        >
                             {niches.map(n => (
-                                <button
-                                    key={n.id}
-                                    type="button"
-                                    onClick={() => setNiche(n.id)}
-                                    style={{
-                                        gridColumn: n.id === 'other' ? 'span 2' : 'auto',
-                                        display: 'flex',
-                                        alignItems: 'center',
-                                        justifyContent: 'center',
-                                        gap: '5px',
-                                        padding: '7px 8px',
-                                        background: niche === n.id ? 'rgba(0, 122, 255, 0.15)' : 'rgba(255, 255, 255, 0.03)',
-                                        border: niche === n.id ? '1.5px solid #007aff' : '1px solid rgba(255, 255, 255, 0.08)',
-                                        borderRadius: '10px',
-                                        color: niche === n.id ? '#007aff' : 'rgba(255, 255, 255, 0.8)',
-                                        fontSize: '10.5px',
-                                        fontWeight: 'bold',
-                                        fontFamily: 'Cairo',
-                                        cursor: 'pointer',
-                                        transition: 'all 0.2s'
-                                    }}
-                                >
-                                    <span style={{ fontSize: '12px' }}>{n.icon}</span>
-                                    <span>{isAr ? n.nameAr : n.nameEn}</span>
-                                </button>
+                                <option key={n.id} value={n.id} style={{ background: '#0a0d0b', color: '#e9edef' }}>
+                                    {n.icon} {isAr ? n.nameAr : n.nameEn}
+                                </option>
                             ))}
-                        </div>
+                        </select>
                     </div>
                 </div>
 
@@ -501,12 +495,12 @@ function PhonePreview({ isAr = true, projectName, setProjectName, niche, setNich
                     disabled={!projectName.trim()}
                     style={{
                         width: '100%', padding: '12px',
-                        background: 'linear-gradient(135deg, #007aff 0%, #0051a8 100%)',
+                        background: 'linear-gradient(135deg, #0d9488 0%, #0f766e 100%)',
                         borderRadius: '12px', border: 'none',
                         color: '#fff', fontSize: '13px', fontWeight: '800',
                         fontFamily: 'Cairo', cursor: 'pointer',
                         transition: 'all 0.3s ease',
-                        boxShadow: '0 4px 15px rgba(0, 122, 255, 0.15)',
+                        boxShadow: '0 4px 15px rgba(13, 148, 136, 0.25)',
                         opacity: projectName.trim() ? 1 : 0.5,
                         marginTop: 'auto'
                     }}

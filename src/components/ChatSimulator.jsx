@@ -322,26 +322,26 @@ function CTAScreen({ lang, onRetry, projectName, onBookMeeting }) {
             <motion.div
                 initial={{ opacity: 0, scale: 0.95 }}
                 animate={{ opacity: 1, scale: 1 }}
-                className="bg-gradient-to-b from-[#0d1117] to-[#050509] rounded-2xl mx-3 p-5 border border-cyan-500/30 shadow-[0_0_30px_rgba(6,182,212,0.1)]"
+                className="bg-gradient-to-b from-[#0d1117] to-[#050509] rounded-2xl mx-3 p-5 border border-teal-500/30 shadow-[0_0_30px_rgba(13,148,136,0.1)]"
                 dir={isAr ? 'rtl' : 'ltr'}
             >
                 <div className="text-center text-3xl mb-3">⏳</div>
                 <h3 className="text-white font-black text-center text-[15px] mb-2">
-                    {isAr ? 'لا تدع فرصة أتمتة مبيعاتك تضيع' : "Don't Let Automation Slip Away"}
+                    {isAr ? 'رؤية النظام بشكل عملي على مشروعك! 🚀' : 'See the System in Action on Your Project! 🚀'}
                 </h3>
                 <p className="text-slate-400 text-center text-[12px] leading-relaxed mb-4">
                     {isAr ? (
-                        <>احجز موعد اجتماعك المجاني الآن للبدء في تخصيص نظام واتساب يبيع ويتابع تلقائياً لمشروعك!</>
+                        <>احجز اتصالاً سريعاً الآن لنعرض لك كيف يعمل نظام الأتمتة والردود التلقائية بشكل حي ومباشر ومطابق لنشاطك التجاري.</>
                     ) : (
-                        <>Book your free meeting now to start customizing a WhatsApp system that sells and follows up for your project automatically!</>
+                        <>Book a quick call now so we can show you how the automation and auto-reply system works live, customized for your business.</>
                     )}
                 </p>
                 <button
                     onClick={onBookMeeting}
-                    className="w-full bg-gradient-to-r from-cyan-500 to-blue-500 text-white font-black py-3.5 rounded-xl text-[13.5px] shadow-[0_0_20px_rgba(6,182,212,0.4)] mb-2 flex items-center justify-center gap-1.5"
+                    className="w-full bg-gradient-to-r from-teal-500 to-emerald-600 text-white font-black py-3.5 rounded-xl text-[13.5px] shadow-[0_0_20px_rgba(13,148,136,0.4)] mb-2 flex items-center justify-center gap-1.5"
                 >
                     <span>📅</span>
-                    <span>{isAr ? 'حجز موعد اجتماع مجاني' : 'Book a Free Meeting'}</span>
+                    <span>{isAr ? 'حجز اتصال ورؤية النظام عملياً' : 'Book a Call & See Live Demo'}</span>
                 </button>
                 <button
                     onClick={onRetry}
@@ -358,8 +358,8 @@ function CTAScreen({ lang, onRetry, projectName, onBookMeeting }) {
         <motion.div
             initial={{ opacity: 0, y: 15 }}
             animate={{ opacity: 1, y: 0 }}
-            className="rounded-2xl mx-3 p-5 border border-cyan-500/30 shadow-[0_0_30px_rgba(6,182,212,0.12)]"
-            style={{ background: 'linear-gradient(160deg, #0d1117 0%, #081d2a 60%, #050509 100%)' }}
+            className="rounded-2xl mx-3 p-5 border border-teal-500/30 shadow-[0_0_30px_rgba(13,148,136,0.12)]"
+            style={{ background: 'linear-gradient(160deg, #0d1117 0%, #08211d 60%, #050509 100%)' }}
             dir={isAr ? 'rtl' : 'ltr'}
         >
             {/* Stars */}
@@ -370,26 +370,26 @@ function CTAScreen({ lang, onRetry, projectName, onBookMeeting }) {
             {/* Main heading */}
             <h3 className="text-white font-black text-center text-[15px] leading-snug mb-2" style={{ fontFamily: 'Cairo' }}>
                 {isAr 
-                    ? 'ضاعف أرباحك ومبيعاتك تلقائياً دون تضييع أي عميل! 📈' 
-                    : 'Double Your Profits & Sales Automatically Without Losing a Single Customer! 📈'}
+                    ? 'رؤية النظام بشكل عملي على مشروعك! 🚀' 
+                    : 'See the System in Action on Your Project! 🚀'}
             </h3>
 
             {/* Sub-heading */}
             <p className="text-slate-400 text-center text-[11px] leading-relaxed mb-3.5" style={{ fontFamily: 'Cairo' }}>
                 {isAr 
-                    ? 'حوّل المحادثات إلى تدفق مستمر من الأرباح. نظام الأتمتة الذكي لدينا يقوم ببيع منتجاتك، تنظيم حجوزاتك، ومتابعة عملائك على مدار 24 ساعة لزيادة دخلك تلقائياً وبأقل جهد!' 
-                    : 'Turn chats into a constant stream of profits. Our smart automation system sells your products, organizes your bookings, and follows up with customers 24 hours a day to scale your revenue automatically!'}
+                    ? 'احجز اتصالاً أو موعداً سريعاً الآن لنعرض لك كيف يعمل نظام الأتمتة والردود التلقائية بشكل حي ومباشر ومطابق تماماً لنشاطك التجاري.' 
+                    : 'Book a quick call or meeting now so we can show you how the automation and auto-reply system works live, customized for your business.'}
             </p>
 
             {/* Explanatory sentence for booking meeting config (No mention of online store) */}
             <p className="text-white/90 text-center text-[10.5px] leading-relaxed mb-3.5 p-3 bg-white/5 rounded-xl border border-white/10" style={{ fontFamily: 'Cairo' }}>
                 {isAr 
-                    ? '💡 احجز موعد اجتماعك المجاني الآن لاستكشاف كيف نقوم بتهيئة وتخصيص نظام الأتمتة بالكامل ليناسب مشروعك ويحقق لك أفضل النتائج.'
-                    : '💡 Book your free meeting now to explore how we configure and customize the automation system to perfectly fit your project and achieve the achieve the best results.'}
+                    ? '💡 سنقوم بتهيئة وتخصيص تجربة حية ومباشرة لنظام واتساب التفاعلي لمشروعك خلال الاتصال لتشاهد قوة الأتمتة بنفسك.'
+                    : '💡 We will configure a live interactive demo of the WhatsApp system for your project during the call so you can witness the power of automation yourself.'}
             </p>
 
-            <p className="text-cyan-400 text-center text-[11.5px] font-bold mb-3.5" style={{ fontFamily: 'Cairo' }}>
-                {isAr ? '⚡️ استثمارك الذكي للنمو بتكلفة أقل من 100 دولار في الشهر' : '⚡️ Your smart growth investment at less than $100/month'}
+            <p className="text-teal-400 text-center text-[11.5px] font-bold mb-3.5" style={{ fontFamily: 'Cairo' }}>
+                {isAr ? '⚡️ احجز استشارتك المجانية لمشاهدة النظام عملياً' : '⚡️ Book your free consultation to see the system in action'}
             </p>
 
             {/* Primary CTA (Book Meeting) */}
@@ -397,8 +397,8 @@ function CTAScreen({ lang, onRetry, projectName, onBookMeeting }) {
                 onClick={onBookMeeting}
                 className="w-full py-3.5 rounded-xl text-white font-black text-[13.5px] mb-3 relative overflow-hidden flex items-center justify-center gap-2 transition-all active:scale-98"
                 style={{
-                    background: 'linear-gradient(135deg, #06b6d4 0%, #2563eb 100%)',
-                    boxShadow: '0 4px 15px rgba(6,182,212,0.3)',
+                    background: 'linear-gradient(135deg, #0d9488 0%, #0f766e 100%)',
+                    boxShadow: '0 4px 15px rgba(13,148,136,0.3)',
                     fontFamily: 'Cairo'
                 }}
             >
@@ -407,7 +407,7 @@ function CTAScreen({ lang, onRetry, projectName, onBookMeeting }) {
                     transition={{ repeat: Infinity, duration: 2.5, ease: 'linear', repeatDelay: 1.5 }}
                     className="absolute inset-0 bg-gradient-to-r from-transparent via-white/20 to-transparent skew-x-12"
                 />
-                <span className="relative z-10">📅 {isAr ? 'حجز موعد اجتماع مجاني' : 'Book a Free Meeting'}</span>
+                <span className="relative z-10">📅 {isAr ? 'حجز اتصال ورؤية النظام عملياً' : 'Book a Call & See Live Demo'}</span>
             </button>
 
             {/* Restart Demo Button (replacing No Thanks) */}
