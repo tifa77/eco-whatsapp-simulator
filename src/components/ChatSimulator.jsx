@@ -425,7 +425,7 @@ function CTAScreen({ lang, onRetry, projectName, onBookMeeting }) {
 
 // ─── Core Component ─────────────────────────────────────────────────────────────
 const ChatSimulatorInner = ({ config, onBack, onBookMeeting, onDemoEnded, onResetDemo }) => {
-    const { projectName, niche, platform, lang = 'ar' } = config;
+    const { projectName, niche, platform, lang = 'ar', otherGoals = ['cs', 'booking', 'sales', 'services'] } = config;
     const isAr = lang === 'ar';
 
     // ── State ──
@@ -542,9 +542,15 @@ const ChatSimulatorInner = ({ config, onBack, onBookMeeting, onDemoEnded, onRese
                     greetMsg = isAr
                         ? `أهلاً بك في ${projectName || 'مشروعنا'}! 👋 ما هي أهدافك أو المشاكل التي تريد حلها؟`
                         : `Welcome to ${projectName || 'our project'}! 👋 What are your goals or problems that you want to solve?`;
-                    buttons = isAr
-                        ? ['🛍️ بيع المنتجات', '📅 حجز موعد', '💬 خدمة العملاء']
-                        : ['🛍️ Product Sales', '📅 Book Appointment', '💬 Customer Service'];
+                    
+                    const activeGoals = otherGoals || ['cs', 'booking', 'sales', 'services'];
+                    const otherButtons = [];
+                    if (activeGoals.includes('sales')) otherButtons.push(isAr ? '🛍️ بيع المنتج' : '🛍️ Product Sales');
+                    if (activeGoals.includes('booking')) otherButtons.push(isAr ? '📅 حجز موعد' : '📅 Book Appointment');
+                    if (activeGoals.includes('services')) otherButtons.push(isAr ? '✨ عرض الخدمات' : '✨ Show Services');
+                    if (activeGoals.includes('cs')) otherButtons.push(isAr ? '💬 خدمة العملاء' : '💬 Customer Support');
+                    
+                    buttons = otherButtons;
                     nextStep = 'other_welcome';
                 }
 
@@ -793,6 +799,7 @@ const ChatSimulatorInner = ({ config, onBack, onBookMeeting, onDemoEnded, onRese
         if (flowStep === 'other_welcome') {
             const isProducts = btn.includes('المنتجات') || btn.includes('Products') || btn.includes('بيع');
             const isBooking = btn.includes('حجز') || btn.includes('Book') || btn.includes('موعد');
+            const isServices = btn.includes('الخدمات') || btn.includes('Services') || btn.includes('عرض');
             setIsTyping(true);
 
             if (isProducts) {
@@ -822,18 +829,39 @@ const ChatSimulatorInner = ({ config, onBack, onBookMeeting, onDemoEnded, onRese
                     setActiveButtons(buttons);
                     setFlowStep('consultant_session');
                 }, 1000);
+            } else if (isServices) {
+                setNarratorText(isAr ? 'عرض الخدمات المتاحة... ✨' : 'Showing available services... ✨');
+                setTimeout(() => {
+                    const msg = isAr 
+                        ? `نقدم في ${projectName || 'مشروعنا'} باقة متكاملة من الخدمات المتخصصة والمصممة لتلبية احتياجاتك بأعلى جودة.`
+                        : `At ${projectName || 'our project'}, we offer a comprehensive suite of specialized services designed to meet your needs.`;
+                    
+                    const activeGoals = otherGoals || ['cs', 'booking', 'sales', 'services'];
+                    const followUp = [];
+                    if (activeGoals.includes('booking')) followUp.push(isAr ? '📅 حجز موعد' : '📅 Book Appointment');
+                    if (activeGoals.includes('cs')) followUp.push(isAr ? '💬 خدمة العملاء' : '💬 Customer Support');
+                    if (followUp.length === 0) followUp.push(isAr ? '🏠 العودة للرئيسية' : '🏠 Back to Main');
+                    
+                    setMessages(prev => [...prev, { id: Date.now(), text: msg, sender: 'bot', timestamp: new Date() }]);
+                    setIsTyping(false);
+                    setActiveButtons(followUp);
+                    setFlowStep('other_welcome');
+                }, 1000);
             } else {
                 setNarratorText(isAr ? 'تحويل لخدمة العملاء 💬' : 'Connecting to customer service 💬');
                 setTimeout(() => {
                     const msg = isAr 
                         ? '💬 أهلاً! فريق خدمة العملاء في خدمتك\n⏰ أوقات العمل: 9 ص - 10 م\n\nكيف يمكننا مساعدتك؟'
                         : '💬 Hello! Our customer service team is here for you\n⏰ Hours: 9 AM - 10 PM\n\nHow can we help you?';
+                    
+                    const activeGoals = otherGoals || ['cs', 'booking', 'sales', 'services'];
+                    const followUp = [];
+                    if (activeGoals.includes('booking')) followUp.push(isAr ? '📅 حجز موعد' : '📅 Book Appointment');
+                    followUp.push(isAr ? '🏠 العودة للرئيسية' : '🏠 Back to Main');
+                    
                     setMessages(prev => [...prev, { id: Date.now(), text: msg, sender: 'bot', timestamp: new Date() }]);
                     setIsTyping(false);
-                    setActiveButtons(isAr 
-                        ? ['📅 حجز موعد', '🏠 العودة للرئيسية'] 
-                        : ['📅 Book Appointment', '🏠 Back to Main']
-                    );
+                    setActiveButtons(followUp);
                     setFlowStep('cs_writing_inquiry'); // let them write inquiry
                 }, 1000);
             }
@@ -1466,9 +1494,15 @@ const ChatSimulatorInner = ({ config, onBack, onBookMeeting, onDemoEnded, onRese
                 greetMsg = isAr
                     ? `أهلاً بك في ${projectName || 'مشروعنا'}! 👋 ما هي أهدافك أو المشاكل التي تريد حلها؟`
                     : `Welcome to ${projectName || 'our project'}! 👋 What are your goals or problems that you want to solve?`;
-                buttons = isAr
-                    ? ['🛍️ بيع المنتجات', '📅 حجز موعد', '💬 خدمة العملاء']
-                    : ['🛍️ Product Sales', '📅 Book Appointment', '💬 Customer Service'];
+                
+                const activeGoals = otherGoals || ['cs', 'booking', 'sales', 'services'];
+                const otherButtons = [];
+                if (activeGoals.includes('sales')) otherButtons.push(isAr ? '🛍️ بيع المنتج' : '🛍️ Product Sales');
+                if (activeGoals.includes('booking')) otherButtons.push(isAr ? '📅 حجز موعد' : '📅 Book Appointment');
+                if (activeGoals.includes('services')) otherButtons.push(isAr ? '✨ عرض الخدمات' : '✨ Show Services');
+                if (activeGoals.includes('cs')) otherButtons.push(isAr ? '💬 خدمة العملاء' : '💬 Customer Support');
+                
+                buttons = otherButtons;
                 nextStep = 'other_welcome';
             }
 

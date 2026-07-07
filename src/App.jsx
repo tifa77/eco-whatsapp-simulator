@@ -279,7 +279,7 @@ function Phone3D({ children, isAr }) {
 }
 
 /* ═══════════════════ PHONE PREVIEW (ONBOARDING) ═════════════════════════════ */
-function PhonePreview({ isAr = true, projectName, setProjectName, niche, setNiche, handleStart }) {
+function PhonePreview({ isAr = true, projectName, setProjectName, niche, setNiche, handleStart, otherGoals, setOtherGoals }) {
     const niches = [
         { id: 'restaurant', icon: '🍔', nameAr: 'مطعم أو كافيه', nameEn: 'Restaurant / Cafe' },
         { id: 'ecommerce', icon: '🛍️', nameAr: 'متجر منتجات ملابس وعطور', nameEn: 'Store (Clothes/Perfumes)' },
@@ -424,7 +424,7 @@ function PhonePreview({ isAr = true, projectName, setProjectName, niche, setNich
                     </div>
                 </div>
 
-                <div style={{ width: '100%', display: 'flex', flexDirection: 'column', gap: '12px', overflowY: 'auto', maxHeight: '270px', padding: '2px' }} className="scrollbar-thin">
+                <div style={{ width: '100%', display: 'flex', flexDirection: 'column', gap: '12px', overflowY: 'auto', maxHeight: niche === 'other' ? '330px' : '270px', padding: '2px' }} className="scrollbar-thin">
                     <div style={{ width: '100%' }}>
                         <label style={{
                             color: '#c8d8c8', fontSize: '11px', fontWeight: '700',
@@ -488,6 +488,62 @@ function PhonePreview({ isAr = true, projectName, setProjectName, niche, setNich
                             ))}
                         </select>
                     </div>
+
+                    {niche === 'other' && (
+                        <div style={{ width: '100%', marginTop: '4px' }}>
+                            <label style={{
+                                color: '#c8d8c8', fontSize: '11px', fontWeight: '700',
+                                display: 'block', marginBottom: '8px',
+                                textAlign: isAr ? 'right' : 'left', fontFamily: 'Cairo'
+                            }}>
+                                {isAr ? 'اختر أهداف الأتمتة لمشروعك (اختيار متعدد):' : 'Select automation goals for your project (multi-select):'}
+                            </label>
+                            <div style={{ display: 'grid', gridTemplateColumns: 'repeat(2, 1fr)', gap: '8px', direction: isAr ? 'rtl' : 'ltr' }}>
+                                {[
+                                    { id: 'cs', labelAr: '💬 خدمة العملاء', labelEn: '💬 Customer Support' },
+                                    { id: 'booking', labelAr: '📅 حجز موعد', labelEn: '📅 Book Appointment' },
+                                    { id: 'sales', labelAr: '🛍️ بيع المنتج', labelEn: '🛍️ Product Sales' },
+                                    { id: 'services', labelAr: '✨ عرض الخدمات', labelEn: '✨ Show Services' }
+                                ].map((goal) => {
+                                    const isSelected = otherGoals.includes(goal.id);
+                                    return (
+                                        <button
+                                            key={goal.id}
+                                            type="button"
+                                            onClick={() => {
+                                                if (isSelected) {
+                                                    if (otherGoals.length > 1) {
+                                                        setOtherGoals(otherGoals.filter(g => g !== goal.id));
+                                                    }
+                                                } else {
+                                                    setOtherGoals([...otherGoals, goal.id]);
+                                                }
+                                            }}
+                                            style={{
+                                                background: isSelected ? 'rgba(13, 148, 136, 0.2)' : 'rgba(17, 26, 21, 0.4)',
+                                                border: isSelected ? '1.5px solid #0d9488' : '1.5px solid rgba(255, 255, 255, 0.08)',
+                                                borderRadius: '10px',
+                                                padding: '8px 4px',
+                                                color: isSelected ? '#5eead4' : '#9ca3af',
+                                                fontSize: '11px',
+                                                fontWeight: 'bold',
+                                                fontFamily: 'Cairo',
+                                                cursor: 'pointer',
+                                                textAlign: 'center',
+                                                transition: 'all 0.2s ease',
+                                                display: 'flex',
+                                                alignItems: 'center',
+                                                justifyContent: 'center',
+                                                gap: '4px'
+                                            }}
+                                        >
+                                            {isAr ? goal.labelAr : goal.labelEn}
+                                        </button>
+                                    );
+                                })}
+                            </div>
+                        </div>
+                    )}
                 </div>
 
                 <button
@@ -818,6 +874,7 @@ function App() {
     const [phoneKey, setPhoneKey] = useState(0);
     const [isBookingOpen, setIsBookingOpen] = useState(false);
     const [isDemoEnded, setIsDemoEnded] = useState(false);
+    const [otherGoals, setOtherGoals] = useState(['cs', 'booking', 'sales', 'services']);
     const isAr = lang === 'ar';
 
     const startSimulator = () => {
@@ -949,6 +1006,8 @@ function App() {
                                     niche={niche}
                                     setNiche={setNiche}
                                     handleStart={startSimulator}
+                                    otherGoals={otherGoals}
+                                    setOtherGoals={setOtherGoals}
                                 />
                             </Phone3D>
                         </motion.div>
@@ -1090,7 +1149,7 @@ function App() {
                             <div className="absolute inset-0 overflow-hidden rounded-[46px]">
                                 <ChatSimulator
                                     key={phoneKey}
-                                    config={{ projectName, niche, platform: 'whatsapp', lang }}
+                                    config={{ projectName, niche, platform: 'whatsapp', lang, otherGoals }}
                                     onBack={() => {
                                         setView('landing');
                                         setPhoneKey(prev => prev + 1);
