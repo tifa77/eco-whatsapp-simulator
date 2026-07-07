@@ -416,10 +416,10 @@ function PhonePreview({ isAr = true, projectName, setProjectName, niche, setNich
 
                     <div style={{ textAlign: 'center', marginBottom: '4px', width: '100%' }}>
                         <h2 style={{ color: '#fff', fontSize: '15px', fontWeight: '900', fontFamily: 'Cairo', lineHeight: 1.35, marginBottom: '2px' }}>
-                            {isAr ? 'جرّب نظام البيع الذكي' : 'Try the Smart Sales System'}
+                            {isAr ? 'جرّب أتمتة واتساب الذكية' : 'Try Smart WhatsApp Automation'}
                         </h2>
                         <p style={{ color: '#a0b0a8', fontSize: '10.5px', lineHeight: 1.4, fontFamily: 'Cairo' }}>
-                            {isAr ? 'اكتشف كيف يشتري عميلك منتجاتك عبر واتساب' : 'Discover how your customers buy your products via WhatsApp'}
+                            {isAr ? 'اكتشف كيف يخدم البوت عملاءك ويؤتمت أعمالك' : 'Discover how the bot serves your customers & automates business'}
                         </p>
                     </div>
                 </div>
@@ -911,38 +911,38 @@ function App() {
     }, [view]);
 
     const t = isAr ? {
-        headline: 'حوّل واتساب إلى آلة بيع فعّالة',
-        sub: 'ضاعف مبيعاتك 3 أضعاف',
-        desc1: 'اعرض منتجاتك، استقبل الطلبات، وتابع العملاء تلقائياً',
+        headline: 'حوّل واتساب إلى آلة مبيعات وحجوزات فعّالة',
+        sub: 'أتمتة ذكية بالكامل لخدماتك ومبيعاتك',
+        desc1: 'اعرض خدماتك ومنتجاتك، استقبل الحجوزات، وأتمت الردود تلقائياً',
         desc2: 'كل شيء يتم داخل واتساب — بسرعة واحترافية',
-        btn: 'تجربة بيع أسهل... ومبيعات أعلى',
-        hint: '👇 اكتب اسم مشروعك وشاهد كيف يبيع واتساب بدلاً عنك',
-        loading: 'جاري بناء متجرك...',
-        counter: 'أكثر من 100+ متجر يستخدم النظام للبيع عبر واتساب',
+        btn: 'تجربة أتمتة أسهل... وكفاءة أعلى',
+        hint: '👇 ادخل اسم مشروعك وشاهد كيف يخدم واتساب عملائك بدلاً عنك',
+        loading: 'جاري إنشاء نسختك التجريبية...',
+        counter: 'أكثر من 100+ نشاط تجاري يستخدم النظام للأتمتة عبر واتساب',
         trust: '⭐ موثوق من +100 نشاط تجاري',
         ai: '🤖 مدعوم بالذكاء الاصطناعي والأتمتة',
-        placeholder: 'اكتب اسم مشروعك أو متجرك هنا...'
+        placeholder: 'ادخل اسم مشروعك هنا...'
     } : {
-        headline: 'Turn WhatsApp into a Powerful Sales Machine',
-        sub: 'Triple your sales',
-        desc1: 'Showcase products, receive orders, and follow up automatically',
+        headline: 'Turn WhatsApp into an Efficient Sales & Booking Machine',
+        sub: 'Fully smart automation for your services & sales',
+        desc1: 'Showcase services & products, receive bookings, and automate replies',
         desc2: 'Everything inside WhatsApp — fast and professional',
-        btn: 'Easier selling... higher sales',
-        hint: '👇 Enter your project name and see how WhatsApp sells for you',
-        loading: 'Building your store...',
-        counter: '100+ stores already selling via WhatsApp',
+        btn: 'Easier automation... higher efficiency',
+        hint: '👇 Enter your project name and see how WhatsApp serves your clients',
+        loading: 'Creating your demo...',
+        counter: '100+ businesses already automating via WhatsApp',
         trust: '⭐ Trusted by 100+ businesses',
         ai: '🤖 AI & Automation Powered',
-        placeholder: 'Enter your project or store name...'
+        placeholder: 'Enter your project name...'
     };
 
     const loadingMessages = isAr ? [
         '🔍 جاري تحليل وتجهيز بيانات مشروعك...',
-        `🛍️ جاري بناء الكاتلوج الذكي لـ "${projectName}"...`,
+        `⚙️ جاري بناء مسارات الأتمتة والسيناريو لـ "${projectName}"...`,
         '⚙️ جاري تشغيل خوادم الأتمتة والرد الذكي...'
     ] : [
         '🔍 Analyzing your project details...',
-        `🛍️ Building smart catalog for "${projectName}"...`,
+        `⚙️ Building smart automation paths for "${projectName}"...`,
         '⚙️ Activating AI automation servers...'
     ];
 
