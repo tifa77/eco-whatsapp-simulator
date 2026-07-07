@@ -1071,7 +1071,7 @@ function App() {
                         <motion.div initial={{ opacity: 0, y: -10 }} animate={{ opacity: 1, y: 0 }} className="text-center mb-4 z-10">
                             <img src="/Logo.png" alt="Logo" className="h-8 w-auto mx-auto mb-1.5 drop-shadow-[0_0_12px_rgba(37,211,102,0.4)]" />
                             <h1 className="text-sm font-bold bg-gradient-to-r from-green-400 to-cyan-400 bg-clip-text text-transparent">
-                                {isAr ? 'تتبع مسار العملاء وبيع المنتجات تلقائياً 🛍️' : 'Track Customer Journeys & Sell Products Automatically 🛍️'}
+                                {isAr ? 'تتبع مسار العملاء لعرض خدماتك ومنتجاتك 🛍️' : 'Track Customer Journeys to Showcase Services & Products 🛍️'}
                             </h1>
                         </motion.div>
 

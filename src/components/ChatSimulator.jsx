@@ -519,8 +519,8 @@ const ChatSimulatorInner = ({ config, onBack, onBookMeeting, onDemoEnded, onRese
                         ? `أهلاً بك في ${projectName || 'صالوننا'}! 💅 كيف نقدر نخدمك اليوم؟`
                         : `Welcome to ${projectName || 'our salon'}! 💅 How can we serve you today?`;
                     buttons = isAr
-                        ? ['📅 حجز موعد', '💅 خدمات الصالون', '💬 استفسار']
-                        : ['📅 Book Appointment', '💅 Salon Services', '💬 Inquiry'];
+                        ? ['📅 حجز موعد', '💅 الخدمات']
+                        : ['📅 Book Appointment', '💅 Services'];
                     nextStep = 'salon_welcome';
                 } else if (niche === 'consultant') {
                     greetMsg = isAr
@@ -540,11 +540,11 @@ const ChatSimulatorInner = ({ config, onBack, onBookMeeting, onDemoEnded, onRese
                     nextStep = 'services_welcome';
                 } else {
                     greetMsg = isAr
-                        ? `أهلاً بك في ${projectName || 'مشروعنا'}! 👋 كيف نقدر نخدمك اليوم؟`
-                        : `Welcome to ${projectName || 'our project'}! 👋 How can we assist you today?`;
+                        ? `أهلاً بك في ${projectName || 'مشروعنا'}! 👋 ما هي أهدافك أو المشاكل التي تريد حلها؟`
+                        : `Welcome to ${projectName || 'our project'}! 👋 What are your goals or problems that you want to solve?`;
                     buttons = isAr
-                        ? ['💬 استفسار عام', '📞 طلب اتصال', '📍 الفرع والموقع']
-                        : ['💬 General Inquiry', '📞 Request Call', '📍 Branch Location'];
+                        ? ['🛍️ بيع المنتجات', '📅 حجز موعد', '💬 خدمة العملاء']
+                        : ['🛍️ Product Sales', '📅 Book Appointment', '💬 Customer Service'];
                     nextStep = 'other_welcome';
                 }
 
@@ -611,8 +611,8 @@ const ChatSimulatorInner = ({ config, onBack, onBookMeeting, onDemoEnded, onRese
                     setMessages(prev => [...prev, { id: Date.now(), text: msg, sender: 'bot', timestamp: new Date() }]);
                     setIsTyping(false);
                     setActiveButtons(isAr 
-                        ? ['📅 حجز موعد', '💬 استفسار'] 
-                        : ['📅 Book Appointment', '💬 Inquiry']
+                        ? ['📅 حجز موعد', '💬 خدمة العملاء'] 
+                        : ['📅 Book Appointment', '💬 Customer Support']
                     );
                 }, 1200);
             } else {
@@ -791,44 +791,50 @@ const ChatSimulatorInner = ({ config, onBack, onBookMeeting, onDemoEnded, onRese
 
         // ── Other Niche Welcome Options ──
         if (flowStep === 'other_welcome') {
-            const isCallback = btn.includes('اتصال') || btn.includes('Call');
-            const isLocation = btn.includes('الفرع') || btn.includes('Location') || btn.includes('موقع');
+            const isProducts = btn.includes('المنتجات') || btn.includes('Products') || btn.includes('بيع');
+            const isBooking = btn.includes('حجز') || btn.includes('Book') || btn.includes('موعد');
             setIsTyping(true);
 
-            if (isCallback) {
-                setNarratorText(isAr ? 'يطلب البوت كتابة الاسم لطلب الاتصال ✍️' : 'Bot requesting name for callback ✍️');
+            if (isProducts) {
+                setNarratorText(isAr ? 'عرض منتجات متجرنا للتجربة 🛒' : 'Showing our products for testing 🛒');
                 setTimeout(() => {
                     const msg = isAr 
-                        ? 'يسعدنا جداً الاتصال بك! من فضلك اكتب الاسم الكريم أولاً 👇'
-                        : 'We would love to call you! Please write your full name first 👇';
+                        ? 'بكل سرور! جاري عرض المنتجات المتاحة للتجربة. يرجى النقر على زر التصفح أدناه 👇'
+                        : 'Sure! Loading available products for testing. Please click the browse button below 👇';
                     setMessages(prev => [...prev, { id: Date.now(), text: msg, sender: 'bot', timestamp: new Date() }]);
                     setIsTyping(false);
-                    setActiveButtons([]);
-                    setFlowStep('other_ask_name');
+                    setActiveButtons([
+                        isAr ? '🛒 تصفح المنتجات' : '🛒 Browse Products'
+                    ]);
+                    setFlowStep('catalog');
                 }, 1000);
-            } else if (isLocation) {
-                setNarratorText(isAr ? 'إرسال معلومات الفرع الجغرافي 📍' : 'Sending branch location info 📍');
+            } else if (isBooking) {
+                setNarratorText(isAr ? 'يطلب البوت اختيار الخدمة المطلوبة للموعد 📋' : 'Bot requesting service type for booking 📋');
                 setTimeout(() => {
                     const msg = isAr 
-                        ? `📍 فرعنا الرئيسي يقع في:\nسلطنة عُمان، مسقط، الخوير، شارع المها.\n⏰ ساعات العمل: 9 ص - 9 م`
-                        : `📍 Our main branch is located at:\nMuscat, Al Khuwair, Al Maha St, Oman.\n⏰ Working Hours: 9 AM - 9 PM`;
+                        ? 'رائع! يرجى اختيار الخدمة المطلوبة لحجز موعدك التوضيحي:'
+                        : 'Great! Please select the desired service to book your demo appointment:';
+                    const buttons = isAr 
+                        ? ['💻 استشارة أتمتة', '✨ تهيئة النظام', '📞 مكالمة توضيحية'] 
+                        : ['💻 Automation Consult', '✨ System Config', '📞 Briefing Call'];
+                    setMessages(prev => [...prev, { id: Date.now(), text: msg, sender: 'bot', timestamp: new Date() }]);
+                    setIsTyping(false);
+                    setActiveButtons(buttons);
+                    setFlowStep('consultant_session');
+                }, 1000);
+            } else {
+                setNarratorText(isAr ? 'تحويل لخدمة العملاء 💬' : 'Connecting to customer service 💬');
+                setTimeout(() => {
+                    const msg = isAr 
+                        ? '💬 أهلاً! فريق خدمة العملاء في خدمتك\n⏰ أوقات العمل: 9 ص - 10 م\n\nكيف يمكننا مساعدتك؟'
+                        : '💬 Hello! Our customer service team is here for you\n⏰ Hours: 9 AM - 10 PM\n\nHow can we help you?';
                     setMessages(prev => [...prev, { id: Date.now(), text: msg, sender: 'bot', timestamp: new Date() }]);
                     setIsTyping(false);
                     setActiveButtons(isAr 
-                        ? ['💬 استفسار عام', '📞 طلب اتصال'] 
-                        : ['💬 General Inquiry', '📞 Request Call']
+                        ? ['📅 حجز موعد', '🏠 العودة للرئيسية'] 
+                        : ['📅 Book Appointment', '🏠 Back to Main']
                     );
-                }, 1200);
-            } else {
-                setNarratorText(isAr ? 'فتح نموذج الاستفسار 📋' : 'Opening inquiry form 📋');
-                setTimeout(() => {
-                    const msg = isAr 
-                        ? 'تفضل باعتراض استفسارك بالتفصيل هنا وسيقوم فريقنا بالرد الفوري 👇'
-                        : 'Please write your inquiry details here and our team will respond shortly 👇';
-                    setMessages(prev => [...prev, { id: Date.now(), text: msg, sender: 'bot', timestamp: new Date() }]);
-                    setIsTyping(false);
-                    setActiveButtons([]);
-                    setFlowStep('cs_writing_inquiry');
+                    setFlowStep('cs_writing_inquiry'); // let them write inquiry
                 }, 1000);
             }
             return;
@@ -1437,8 +1443,8 @@ const ChatSimulatorInner = ({ config, onBack, onBookMeeting, onDemoEnded, onRese
                     ? `أهلاً بك في ${projectName || 'صالوننا'}! 💅 كيف نقدر نخدمك اليوم؟`
                     : `Welcome to ${projectName || 'our salon'}! 💅 How can we serve you today?`;
                 buttons = isAr
-                    ? ['📅 حجز موعد', '💅 خدمات الصالون', '💬 استفسار']
-                    : ['📅 Book Appointment', '💅 Salon Services', '💬 Inquiry'];
+                    ? ['📅 حجز موعد', '💅 الخدمات']
+                    : ['📅 Book Appointment', '💅 Services'];
                 nextStep = 'salon_welcome';
             } else if (niche === 'consultant') {
                 greetMsg = isAr
@@ -1458,11 +1464,11 @@ const ChatSimulatorInner = ({ config, onBack, onBookMeeting, onDemoEnded, onRese
                 nextStep = 'services_welcome';
             } else {
                 greetMsg = isAr
-                    ? `أهلاً بك في ${projectName || 'مشروعنا'}! 👋 كيف نقدر نخدمك اليوم؟`
-                    : `Welcome to ${projectName || 'our project'}! 👋 How can we assist you today?`;
+                    ? `أهلاً بك في ${projectName || 'مشروعنا'}! 👋 ما هي أهدافك أو المشاكل التي تريد حلها؟`
+                    : `Welcome to ${projectName || 'our project'}! 👋 What are your goals or problems that you want to solve?`;
                 buttons = isAr
-                    ? ['💬 استفسار عام', '📞 طلب اتصال', '📍 الفرع والموقع']
-                    : ['💬 General Inquiry', '📞 Request Call', '📍 Branch Location'];
+                    ? ['🛍️ بيع المنتجات', '📅 حجز موعد', '💬 خدمة العملاء']
+                    : ['🛍️ Product Sales', '📅 Book Appointment', '💬 Customer Service'];
                 nextStep = 'other_welcome';
             }
 
