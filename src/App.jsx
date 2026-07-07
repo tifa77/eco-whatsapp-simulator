@@ -431,7 +431,7 @@ function PhonePreview({ isAr = true, projectName, setProjectName, niche, setNich
                             display: 'block', marginBottom: '4px',
                             textAlign: isAr ? 'right' : 'left', fontFamily: 'Cairo'
                         }}>
-                            {isAr ? 'اكتب اسم المشروع' : 'Write project name'}
+                            {isAr ? 'ادخل اسم مشروعك' : 'Enter your project name'}
                         </label>
                         <input
                             type="text"
