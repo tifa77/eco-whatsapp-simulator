@@ -605,6 +605,7 @@ function ContactWidget({ lang, view, isDemoEnded }) {
     const handleToggle = () => setIsOpen(!isOpen);
 
     const contactNumber = '+96892321683';
+    const displayContactNumber = '+968 92321683';
     const emailAddress = 'info@elegant-options.com';
 
     if (!isVisible) return null;
@@ -628,7 +629,7 @@ function ContactWidget({ lang, view, isDemoEnded }) {
                         >
                             <div className="flex-1 pr-3 text-right">
                                 <div className="text-white font-extrabold text-[13px]">{isAr ? 'اتصال' : 'Call'}</div>
-                                <div className="text-white/40 text-[11px] font-mono mt-0.5" dir="ltr">{contactNumber}</div>
+                                <div className="text-white/40 text-[11px] font-mono mt-0.5" dir="ltr">{displayContactNumber}</div>
                             </div>
                             <div className="w-9 h-9 rounded-full bg-[#a78566] text-white flex items-center justify-center shadow-md shrink-0">
                                 <Phone size={16} />
@@ -640,14 +641,14 @@ function ContactWidget({ lang, view, isDemoEnded }) {
 
                         {/* WhatsApp Option */}
                         <a
-                            href={`https://wa.me/96892321683?text=${encodeURIComponent(isAr ? 'اطلعت على عرض التجريبي' : 'I have reviewed the demo')}`}
+                            href={`https://wa.me/96892321683?text=${encodeURIComponent(isAr ? 'اطلعت على العرض التجريبي' : 'I have reviewed the demo')}`}
                             target="_blank"
                             rel="noopener noreferrer"
                             className="flex items-center justify-between hover:bg-white/5 p-1.5 rounded-xl transition-all duration-200"
                         >
                             <div className="flex-1 pr-3 text-right">
                                 <div className="text-white font-extrabold text-[13px]">{isAr ? 'واتساب' : 'WhatsApp'}</div>
-                                <div className="text-white/40 text-[11px] font-mono mt-0.5" dir="ltr">{contactNumber}</div>
+                                <div className="text-white/40 text-[11px] font-mono mt-0.5" dir="ltr">{displayContactNumber}</div>
                             </div>
                             <div className="w-9 h-9 rounded-full bg-[#25d366] text-white flex items-center justify-center shadow-md shrink-0">
                                 <MessageCircle size={16} />
